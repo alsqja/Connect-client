@@ -2,11 +2,14 @@ import styled from "styled-components";
 import { TextField } from "../../components/TextField";
 import { useCallback, useEffect, useState } from "react";
 import { useLogin } from "../../hooks/session";
+import { useSetRecoilState } from "recoil";
+import { userState } from "../../stores/session";
 
 export const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loginReq, loginRes] = useLogin();
+  const setTokens = useSetRecoilState(userState);
 
   const handleLogin = useCallback(() => {
     loginReq(email, password);
@@ -14,9 +17,9 @@ export const Login = () => {
 
   useEffect(() => {
     if (loginRes.called && loginRes.data) {
-      console.log(loginRes.data.data.accessToken);
+      setTokens(loginRes.data.data);
     }
-  }, [loginRes]);
+  }, [loginRes, setTokens]);
 
   return (
     <Wrapper>
