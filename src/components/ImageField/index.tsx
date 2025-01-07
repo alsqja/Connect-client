@@ -58,9 +58,10 @@ export const ImageField = ({ setImageFile, image, setImage }: IProps) => {
       const file = event.dataTransfer.files?.[0];
       if (file) {
         readFile(file);
+        setImageFile(file);
       }
     },
-    [readFile]
+    [readFile, setImageFile]
   );
 
   const handleWrapperClick = useCallback(() => {
