@@ -4,12 +4,14 @@ import { useCallback, useEffect, useState } from "react";
 import { useLogin } from "../../hooks/session";
 import { useSetRecoilState } from "recoil";
 import { userState } from "../../stores/session";
+import { useNavigate } from "react-router-dom";
 
 export const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loginReq, loginRes] = useLogin();
   const setTokens = useSetRecoilState(userState);
+  const navigate = useNavigate();
 
   const handleLogin = useCallback(() => {
     loginReq(email, password);
@@ -20,6 +22,10 @@ export const Login = () => {
       setTokens(loginRes.data.data);
     }
   }, [loginRes, setTokens]);
+
+  const handleNavigate = useCallback(() => {
+    navigate("/signup");
+  }, [navigate]);
 
   return (
     <Wrapper>
@@ -37,6 +43,7 @@ export const Login = () => {
           아이디가 없으신가요?
           <span
             style={{ color: "#828282", marginLeft: "5px", cursor: "pointer" }}
+            onClick={handleNavigate}
           >
             회원가입
           </span>
