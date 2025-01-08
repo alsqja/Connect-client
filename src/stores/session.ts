@@ -1,4 +1,4 @@
-import { IToken } from "../hooks";
+import { IUserWithToken } from "../hooks";
 import { atom, DefaultValue, selector } from "recoil";
 import { recoilPersist } from "recoil-persist";
 
@@ -31,7 +31,7 @@ export const hasSessionSelector = selector<boolean>({
   key: "session/has-session",
 });
 
-export const userState = atom<IToken | null>({
+export const userState = atom<IUserWithToken | null>({
   default: null,
   key: "session/user",
   effects_UNSTABLE: [persistAtom],

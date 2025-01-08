@@ -62,11 +62,15 @@ export const useAxios = (): UseAxiosType => {
         setError(error);
         if (e.response.status === 401) {
           setTokens({
+            id: tokens?.id || null,
+            role: tokens?.role || null,
+            memberType: tokens?.memberType || null,
+            expiredDate: tokens?.expiredDate || null,
             accessToken: "",
             refreshToken: tokens ? tokens.refreshToken : null,
           });
         }
-        if (e.response.data.message === "유효하지 않은 토큰입니다.") {
+        if (e.response.data.code === "INVALID_TOKEN") {
           axios
             .post(
               "auth/refresh",
@@ -75,6 +79,10 @@ export const useAxios = (): UseAxiosType => {
             )
             .then((res) => {
               setTokens({
+                id: tokens?.id || null,
+                role: tokens?.role || null,
+                memberType: tokens?.memberType || null,
+                expiredDate: tokens?.expiredDate || null,
                 accessToken: res.data.data.accessToken,
                 refreshToken: res.data.data.refreshToken,
               });
@@ -82,6 +90,8 @@ export const useAxios = (): UseAxiosType => {
             })
             .catch((e) => {
               setTokens(null);
+              alert("다시 로그인 해주세요.");
+              window.location.replace("/login");
             });
         }
         throw error;
