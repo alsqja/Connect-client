@@ -1,11 +1,12 @@
 import styled from "styled-components";
 import { AdminNaviData } from "./data";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 export const AdminSidebar = () => {
   const location = useLocation();
   const [page, setPage] = useState(1);
+  const navigate = useNavigate();
 
   useEffect(() => {
     console.log(location.pathname);
@@ -16,7 +17,11 @@ export const AdminSidebar = () => {
   return (
     <Wrapper>
       {AdminNaviData.map((el) => (
-        <Nav key={el.id} focus={page === el.id}>
+        <Nav
+          key={el.id}
+          focus={page === el.id}
+          onClick={() => navigate(el.path)}
+        >
           {el.label}
         </Nav>
       ))}

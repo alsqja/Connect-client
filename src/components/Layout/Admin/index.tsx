@@ -18,7 +18,7 @@ export const AdminLayout = ({ children }: IProps) => {
       window.location.replace("/login");
       return;
     }
-  }, []);
+  }, [user]);
 
   return (
     <Wrapper>

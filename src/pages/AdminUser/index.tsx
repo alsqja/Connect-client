@@ -3,7 +3,7 @@ import { AdminLayout } from "../../components/Layout/Admin";
 import { UserTable } from "./UserTable";
 import { useCallback, useEffect, useState } from "react";
 import { IAdminUpdateUserData, IUserData } from "./data";
-import { useGetAdminUsers, useUpdateAdminUser } from "../../hooks/adminUser";
+import { useGetAdminUsers, useUpdateAdminUser } from "../../hooks/adminApi";
 import { PaginationContainer } from "../../components/Pagination/PaginationContainer";
 
 export const AdminUser = () => {
@@ -64,6 +64,9 @@ const Wrapper = styled.div`
   height: calc(100vh - 160px);
   padding: 20px;
   overflow: scroll;
+  scrollbar-width: none;
+  border: 1px solid black;
+  border-radius: 10px;
 `;
 
 const Title = styled.div`

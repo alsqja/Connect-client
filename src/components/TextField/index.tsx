@@ -70,13 +70,13 @@ const InputBox = styled.input`
   box-sizing: border-box;
   border: 0.5px solid #eaeaea;
   &:focus {
-    border: 2px solid #1db177;
+    border: 2px solid #007bff;
   }
   &:focus ~ span,
   &:valid ~ span {
     top: -5px;
     font-size: 14px;
-    color: #1db177;
+    color: skyblue;
   }
 `;
 
