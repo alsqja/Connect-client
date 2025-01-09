@@ -16,8 +16,8 @@ export const AdminNaviData: INaviData[] = [
   },
   {
     id: 3,
-    path: "/admin/c",
-    label: "매출 통계",
+    path: "/admin/category",
+    label: "카테고리 관리",
   },
   {
     id: 4,
