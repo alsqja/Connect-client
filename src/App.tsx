@@ -6,6 +6,7 @@ import { PointPage } from "./pages/Point";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './assets/styles/globalStyle.css'
 import { AdminUser } from "./pages/AdminUser";
+import { AdminCategory } from "./pages/AdminCategory";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Route path="/signup" element={<Signup/>}/>
         <Route path="/admin/user" element={<AdminUser/>}/>
         <Route path="/point" element={<PointPage/>}/>
+        <Route path="/admin/category" element={<AdminCategory />} />
       </Routes>
     </BrowserRouter>
   );
