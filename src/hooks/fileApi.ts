@@ -8,7 +8,7 @@ export const uploadFile = async (file: File | null) => {
     }
 
     const response = await axios.post(`http://localhost:8080/api/file-url`, {
-      params: { fileName: file.name },
+      fileName: file.name,
     });
     const presignedUrl = response.data.data.url;
 
@@ -19,7 +19,6 @@ export const uploadFile = async (file: File | null) => {
     });
 
     if (result.status === 200) {
-      console.log("File uploaded successfully!");
       return response.data.data.fileName;
     } else {
       console.error("File upload failed:", result);

@@ -11,4 +11,5 @@ const Wrapper = styled.div`
   border-bottom: 1px solid black;
   background-color: white;
   top: 0;
+  left: 0;
 `;

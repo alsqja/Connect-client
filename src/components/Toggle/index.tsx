@@ -49,7 +49,7 @@ const Wrapper = styled.div`
 `;
 
 const Container = styled.div<{ width?: number }>`
-  width: ${({ width }) => (width ? `${width}px` : "calc(100% - 20px)")};
+  width: ${({ width }) => (width ? `${width}px` : "100%")};
   height: 50px;
   display: flex;
   padding: 0 10px;
@@ -68,7 +68,7 @@ const Container = styled.div<{ width?: number }>`
 `;
 
 const Item = styled.div<{ width?: number }>`
-  width: ${({ width }) => (width ? `${width}px` : "calc(100% - 40px)")};
+  width: ${({ width }) => (width ? `${width}px` : "100%")};
   height: 40px;
   padding: 0 20px;
   cursor: pointer;

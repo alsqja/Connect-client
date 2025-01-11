@@ -96,7 +96,7 @@ const Item = styled.div`
   padding: 10px;
   border-bottom: 1px solid #eaeaea;
   align-items: center;
-  height: 20px;
+  height: 40px;
   cursor: pointer;
 `;
 
