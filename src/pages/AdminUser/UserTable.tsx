@@ -99,7 +99,6 @@ export const TableWrapper = styled.div`
 export const StyledTable = styled.table`
   width: 100%;
   border-collapse: collapse;
-  margin-top: 20px;
 `;
 
 export const TableHeader = styled.thead`
