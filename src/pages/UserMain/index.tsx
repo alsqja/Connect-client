@@ -9,6 +9,7 @@ import { DateSelector } from "../../components/DateSelector";
 import { TextField } from "../../components/TextField";
 import { Dropdown, IOption } from "../../components/Dropdown";
 import { useGetAllCategories } from "../../hooks/adminApi";
+import { SearchMap } from "../../components/Map";
 
 export const UserMain = () => {
   const [schedules, setSchedules] = useState<ICalendarSchedule[]>([]);
@@ -26,6 +27,14 @@ export const UserMain = () => {
   const [scheduleDetail, setScheduleDetail] = useState("");
   const [contentDetail, setContentDetail] = useState("");
   const [postScheduleReq, postScheduleRes] = useCreateSchedule();
+  const [searchValue, setSearchValue] = useState("");
+  const [map, setMap] = useState(false);
+  const [address, setAddress] = useState("");
+  const [latitude, setLatitude] = useState();
+  const [longitude, setLongitude] = useState();
+  const [activeDate, setActiveDate] = useState(
+    new Date().toISOString().split("T")[0]
+  );
 
   useEffect(() => {
     getCateReq();
@@ -42,8 +51,8 @@ export const UserMain = () => {
   }, [getCateRes]);
 
   useEffect(() => {
-    getSchedulesReq(null, null, new Date().toISOString().split("T")[0]);
-  }, []);
+    getSchedulesReq(null, null, activeDate);
+  }, [activeDate]);
 
   useEffect(() => {
     if (getSchedulesRes.called && getSchedulesRes.data) {
@@ -65,6 +74,10 @@ export const UserMain = () => {
     setActiveSub(undefined);
     setContentDetail("");
     setScheduleDetail("");
+    setSearchValue("");
+    setAddress("");
+    setLatitude(undefined);
+    setLongitude(undefined);
   }, []);
 
   const handleClickCate = useCallback(
@@ -93,6 +106,11 @@ export const UserMain = () => {
       return;
     }
 
+    if (!contentDetail) {
+      alert("일정 내용을 입력해주세요.");
+      return;
+    }
+
     if (subCates.find((el) => el.id === activeSub.id)) {
       alert("이미 선택한 하위 카테고리입니다");
       setActiveCate(undefined);
@@ -112,16 +130,29 @@ export const UserMain = () => {
   }, [activeSub, contentDetail, subCates]);
 
   const handleSubmit = useCallback(() => {
+    if (!latitude || !longitude) {
+      alert("장소를 선택해주세요");
+      return;
+    }
     postScheduleReq({
       date: selectedDate,
       title: name,
       details: scheduleDetail,
       contents: subCates,
-      address: "임시 주소",
-      latitude: 37.531544,
-      longitude: 127.066708,
+      address: address,
+      latitude: latitude,
+      longitude: longitude,
     });
-  }, [name, postScheduleReq, scheduleDetail, selectedDate, subCates]);
+  }, [
+    address,
+    latitude,
+    longitude,
+    name,
+    postScheduleReq,
+    scheduleDetail,
+    selectedDate,
+    subCates,
+  ]);
 
   useEffect(() => {
     if (postScheduleRes.data && postScheduleRes.called) {
@@ -130,11 +161,37 @@ export const UserMain = () => {
     }
   }, [postScheduleRes]);
 
+  const handleMapClose = useCallback(() => {
+    if (!address) {
+      setSearchValue("");
+    }
+    setMap(false);
+  }, [address]);
+
+  const handleAddress = useCallback((place: any) => {
+    setAddress(place.address_name);
+    setLatitude(place.y);
+    setLongitude(place.x);
+    setSearchValue(place.place_name);
+    setMap(false);
+  }, []);
+
+  const handleRemoveSubCate = useCallback(
+    (index: number) => {
+      setSubCates((prevSubCates) => prevSubCates.filter((_, i) => i !== index));
+    },
+    [setSubCates]
+  );
+
   return (
     <UserLayout>
       <div style={{ width: "100%" }}>
         <div style={{ width: "100%", height: "100px" }}>쿠폰</div>
-        <Calendar schedules={schedules} handleClick={handleClick} />
+        <Calendar
+          schedules={schedules}
+          handleClick={handleClick}
+          setActiveDate={setActiveDate}
+        />
       </div>
       {open && (
         <TitleModal title="일정 생성" width={500} onClose={handleClose}>
@@ -150,13 +207,25 @@ export const UserMain = () => {
               일정 이름
               <TextField title="일정 이름" value={name} onChange={setName} />
             </FlexContainer>
+            <FlexContainer style={{ margin: "0 0 10px 0" }}>
+              장소
+              <FlexContainer style={{ width: "320px" }}>
+                <input
+                  value={searchValue}
+                  onChange={(e) => setSearchValue(e.target.value)}
+                />
+                <SearchButton onClick={() => setMap(true)}>검색</SearchButton>
+              </FlexContainer>
+            </FlexContainer>
             <FlexContainer>
               컨텐츠
               <ContentContainer>
-                {subCates.map((i) => (
+                {subCates.map((i, index) => (
                   <Label key={i.id}>
                     {i.name}
-                    <RemoveButton>x</RemoveButton>
+                    <RemoveButton onClick={() => handleRemoveSubCate(index)}>
+                      x
+                    </RemoveButton>
                   </Label>
                 ))}
                 <AddLabelButton onClick={() => setSubOpen(true)}>
@@ -181,10 +250,12 @@ export const UserMain = () => {
         >
           <ModalContainer>
             <SubContentContainer>
-              {subCates.map((el) => (
+              {subCates.map((el, index) => (
                 <Label key={el.id}>
                   {el.name}
-                  <RemoveButton>x</RemoveButton>
+                  <RemoveButton onClick={() => handleRemoveSubCate(index)}>
+                    x
+                  </RemoveButton>
                 </Label>
               ))}
             </SubContentContainer>
@@ -215,6 +286,14 @@ export const UserMain = () => {
             </BtnContainer>
           </ModalContainer>
         </TitleModal>
+      )}
+      {map && (
+        <SearchMap
+          searchValue={searchValue}
+          setSearchValue={setSearchValue}
+          onClose={handleMapClose}
+          handleAddress={handleAddress}
+        />
       )}
     </UserLayout>
   );
@@ -333,4 +412,17 @@ const Btn = styled.div`
   border-radius: 5px;
   border: 1px solid black;
   margin-top: 5px;
+`;
+
+const SearchButton = styled.button`
+  padding: 8px 16px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #0056b3;
+  }
 `;

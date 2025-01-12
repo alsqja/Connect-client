@@ -5,9 +5,10 @@ import { ICalendarSchedule } from "../../pages/UserMain/data";
 interface IProps {
   schedules: ICalendarSchedule[];
   handleClick: (date: string | null) => void;
+  setActiveDate: React.Dispatch<React.SetStateAction<string>>;
 }
 
-export const Calendar = ({ schedules, handleClick }: IProps) => {
+export const Calendar = ({ schedules, handleClick, setActiveDate }: IProps) => {
   const [currentDate, setCurrentDate] = useState(new Date());
 
   const firstDayOfMonth = new Date(
@@ -31,15 +32,23 @@ export const Calendar = ({ schedules, handleClick }: IProps) => {
   ).getDate();
 
   const handlePrevMonth = () => {
-    setCurrentDate(
-      new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1)
+    const date = new Date(
+      currentDate.getFullYear(),
+      currentDate.getMonth() - 1,
+      2
     );
+    setCurrentDate(date);
+    setActiveDate(date.toISOString().split("T")[0]);
   };
 
   const handleNextMonth = () => {
-    setCurrentDate(
-      new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1)
+    const date = new Date(
+      currentDate.getFullYear(),
+      currentDate.getMonth() + 1,
+      2
     );
+    setCurrentDate(date);
+    setActiveDate(date.toISOString().split("T")[0]);
   };
 
   const dates = [];
