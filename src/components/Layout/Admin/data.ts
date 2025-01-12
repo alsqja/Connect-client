@@ -3,6 +3,7 @@ export interface INaviData {
   label: string;
   id: number;
 }
+
 export const AdminNaviData: INaviData[] = [
   {
     id: 1,
@@ -11,8 +12,8 @@ export const AdminNaviData: INaviData[] = [
   },
   {
     id: 2,
-    path: "/admin/b",
-    label: "매출 통계",
+    path: "/admin/payment",
+    label: "결제 내역",
   },
   {
     id: 3,
