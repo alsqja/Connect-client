@@ -45,12 +45,13 @@ export const AdminUser = () => {
           users={users}
           setUsers={setUsers}
           handleUpdate={handleUpdate}
+          page={page}
         />
         <PaginationContainer
           activePage={page}
           itemsCountPerPage={10}
           totalItemsCount={totalElements}
-          pageRangeDisplayed={5}
+          pageRangeDisplayed={10}
           onPageChange={(page: number) => setPage(page)}
         />
       </Wrapper>

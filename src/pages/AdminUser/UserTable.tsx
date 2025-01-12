@@ -6,8 +6,9 @@ interface IProps {
   users: IUserData[];
   setUsers: Dispatch<SetStateAction<IUserData[]>>;
   handleUpdate: (id: number, data: IAdminUpdateUserData) => void;
+  page: number;
 }
-export const UserTable = ({ users, setUsers, handleUpdate }: IProps) => {
+export const UserTable = ({ users, setUsers, handleUpdate, page }: IProps) => {
   const handleEdit = (id: number, field: string, value: string | boolean) => {
     const updatedUsers = users.map((user) =>
       user.id === id ? { ...user, [field]: value } : user
@@ -26,9 +27,9 @@ export const UserTable = ({ users, setUsers, handleUpdate }: IProps) => {
           </tr>
         </TableHeader>
         <TableBody>
-          {users.map((user) => (
+          {users.map((user, index) => (
             <tr key={user.id}>
-              <td>{user.id}</td>
+              <td>{10 * (page - 1) + index + 1}</td>
               <td>{user.name}</td>
               <td>{user.birth}</td>
               <td>{user.gender === "MAN" ? "남" : "여"}</td>

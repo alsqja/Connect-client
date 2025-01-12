@@ -17,7 +17,7 @@ export interface IUserData {
 }
 
 export const tableHeaders: string[] = [
-  "ID",
+  "No",
   "이름",
   "생년월일",
   "성별",

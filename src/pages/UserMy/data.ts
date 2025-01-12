@@ -52,3 +52,13 @@ export interface UpdateUserData {
   oldPassword: string | null;
   newPassword: string | null;
 }
+
+export interface ISchedule {
+  id: number;
+  date: string;
+  title: string;
+  details: string;
+  contentNames: string[];
+  createdAt: string;
+  updatedAt: string;
+}

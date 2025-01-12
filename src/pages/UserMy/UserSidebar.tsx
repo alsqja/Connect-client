@@ -1,11 +1,19 @@
 import styled from "styled-components";
 import { UserSidebarData } from "./data";
 
-export const UserSidebar = () => {
+interface IProps {
+  selected: number;
+  handleSelected: (index: number) => void;
+}
+export const UserSidebar = ({ selected, handleSelected }: IProps) => {
   return (
     <Wrapper>
       {UserSidebarData.map((el) => (
-        <Cell isSelected={el.id === 1} key={el.id}>
+        <Cell
+          isSelected={el.id === selected}
+          key={el.id}
+          onClick={() => handleSelected(el.id)}
+        >
           {el.label}
         </Cell>
       ))}
