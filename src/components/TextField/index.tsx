@@ -45,7 +45,7 @@ export const TextField = ({
 
 const InputWrapper = styled.div<{ width: number }>`
   width: ${({ width }) => width}px;
-  height: 55px;
+  height: 52px;
   position: relative;
   margin: 15px 0;
 `;
