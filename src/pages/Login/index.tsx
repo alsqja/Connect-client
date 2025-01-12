@@ -20,8 +20,14 @@ export const Login = () => {
   useEffect(() => {
     if (loginRes.called && loginRes.data) {
       setTokens(loginRes.data.data);
+
+      if (loginRes.data.data.role === "ADMIN") {
+        navigate("/admin/user");
+      } else {
+        navigate("/");
+      }
     }
-  }, [loginRes, setTokens]);
+  }, [loginRes, navigate, setTokens]);
 
   const handleNavigate = useCallback(() => {
     navigate("/signup");

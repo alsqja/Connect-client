@@ -5,7 +5,7 @@ import { useCallback, useMemo, useState } from "react";
 
 export interface IOption {
   id: number;
-  label: string | number;
+  label: string;
 }
 
 export interface DropdownProps {
@@ -71,7 +71,7 @@ export const Dropdown = ({
 };
 
 const Wrapper = styled.div<{ width?: number }>`
-  width: ${({ width }) => (width ? `${width}px` : "calc(100% - 20px)")};
+  width: ${({ width }) => (width ? `${width}px` : "100%")};
   position: relative;
   margin: 20px 0;
 `;
