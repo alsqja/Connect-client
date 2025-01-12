@@ -7,3 +7,13 @@ body {
   justify-content: center; */
   background-color: #f3f3f3;
 }
+
+.react-datepicker {
+  z-index: 1050; /* 원하는 z-index 값 */
+}
+.react-datepicker__portal {
+  z-index: 1050; /* 모달 z-index */
+}
+.react-datepicker__popover {
+  z-index: 1050; /* 팝업 z-index */
+}
