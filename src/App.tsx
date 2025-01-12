@@ -8,6 +8,7 @@ import "./assets/styles/globalStyle.css";
 import { AdminUser } from "./pages/AdminUser";
 import { AdminCategory } from "./pages/AdminCategory";
 import { UserMain } from "./pages/UserMain";
+import { UserMy } from "./pages/UserMy";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Route path="/point" element={<PointPage />} />
         <Route path="/admin/category" element={<AdminCategory />} />
         <Route path="/" element={<UserMain />} />
+        <Route path="/user/my" element={<UserMy />} />
       </Routes>
     </BrowserRouter>
   );

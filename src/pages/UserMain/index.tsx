@@ -198,21 +198,25 @@ export const UserMain = () => {
           <ModalContainer>
             <FlexContainer>
               날짜
-              <DateSelector
-                initialDate={selectedDate}
-                onDateChange={(date: string) => setSelectedDate(date)}
-              />
+              <div style={{ width: "320px" }}>
+                <DateSelector
+                  initialDate={selectedDate}
+                  onDateChange={(date: string) => setSelectedDate(date)}
+                />
+              </div>
             </FlexContainer>
             <FlexContainer>
-              일정 이름
-              <TextField title="일정 이름" value={name} onChange={setName} />
+              제목
+              <TextField title="일정 제목" value={name} onChange={setName} />
             </FlexContainer>
-            <FlexContainer style={{ margin: "0 0 10px 0" }}>
+            <FlexContainer>
               장소
               <FlexContainer style={{ width: "320px" }}>
-                <input
+                <TextField
                   value={searchValue}
-                  onChange={(e) => setSearchValue(e.target.value)}
+                  onChange={setSearchValue}
+                  width={250}
+                  title=""
                 />
                 <SearchButton onClick={() => setMap(true)}>검색</SearchButton>
               </FlexContainer>
@@ -415,7 +419,7 @@ const Btn = styled.div`
 `;
 
 const SearchButton = styled.button`
-  padding: 8px 16px;
+  padding: 13px 18px;
   background-color: #007bff;
   color: white;
   border: none;

@@ -40,14 +40,27 @@ const Wrapper = styled.div`
   position: fixed;
   left: 30px;
   top: 100px;
-  padding: 10px 0;
+  overflow: hidden;
 `;
 
 const Nav = styled.div<{ focus: boolean }>`
-  padding: 15px 5px;
-  border-bottom: 1px solid black;
-  width: 200px;
-  flex: 1;
+  height: 46px;
+  margin: 0;
+  padding: 0 10px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  background-color: ${({ focus }) => (focus ? "#f1f1f1" : "white")};
+  position: relative;
   cursor: pointer;
-  background-color: ${({ focus }) => focus && "#f1f1f1"};
+
+  &:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 10px;
+    right: 10px;
+    height: 1px;
+    background-color: #dbdbdb;
+  }
 `;

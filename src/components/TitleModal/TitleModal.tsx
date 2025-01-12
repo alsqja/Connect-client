@@ -41,7 +41,7 @@ const Wrapper = styled(({ width, fullWidth, print, ...props }: ModalProps) => (
   border-radius: 10px;
   padding: 0 16px 16px 16px;
   background-color: white;
-  box-shadow: 0 2px 4px 0 #bbf0db;
+  box-shadow: 0 3px 4px 0 gray;
   width: 21cm;
   ${({ fullWidth, width }) => !fullWidth && `max-width: ${width}px;`}
   ${({ print }) =>
