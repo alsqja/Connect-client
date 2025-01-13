@@ -9,18 +9,23 @@ import { AdminUser } from "./pages/AdminUser";
 import { AdminCategory } from "./pages/AdminCategory";
 import { UserMain } from "./pages/UserMain";
 import { UserMy } from "./pages/UserMy";
+import { AdminPaymentManage } from "./pages/AdminPaymentManage";
+import { Payment } from "./pages/Payment";
 
 function App() {
+
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/admin/user" element={<AdminUser />} />
-        <Route path="/point" element={<PointPage />} />
-        <Route path="/admin/category" element={<AdminCategory />} />
-        <Route path="/" element={<UserMain />} />
-        <Route path="/user/my" element={<UserMy />} />
+        <Route path="/login" element={<Login/>}/>
+        <Route path="/signup" element={<Signup/>}/>
+        <Route path="/admin/user" element={<AdminUser/>}/>
+        <Route path="/point" element={<PointPage/>}/>
+        <Route path="/admin/category" element={<AdminCategory/>}/>
+        <Route path="/" element={<UserMain/>}/>
+        <Route path="/user/my" element={<UserMy/>}/>
+        <Route path="/admin/payment" element={<AdminPaymentManage/>}/>
+        <Route path="/payment" element={<Payment/>}/>
       </Routes>
     </BrowserRouter>
   );

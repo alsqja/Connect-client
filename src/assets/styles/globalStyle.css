@@ -11,9 +11,23 @@ body {
 .react-datepicker {
   z-index: 1050; /* 원하는 z-index 값 */
 }
+
 .react-datepicker__portal {
   z-index: 1050; /* 모달 z-index */
 }
+
 .react-datepicker__popover {
   z-index: 1050; /* 팝업 z-index */
+}
+
+:root {
+  --main-color-5: rgba(212, 206, 255, 0.5);
+  --main-color: rgba(212, 206, 255);
+
+  --button-active-color-5: rgba(183, 173, 255, 0.5);
+  --button-active-color: rgba(183, 173, 255, 1);
+}
+
+.w-10 {
+  width: 100px;
 }

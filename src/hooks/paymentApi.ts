@@ -1,14 +1,6 @@
 import { useAxios } from "./axios";
 import { useCallback } from "react";
-
-export interface PaymentRequestType {
-  payUid: string,
-  portoneUid: string,
-  amount: number,
-  details: string,
-  type: string,
-  status: string,
-}
+import { PaymentCancelRequest, PaymentRequestType, PaymentType } from "../pages/AdminPaymentManage/data";
 
 export const usePostPayments = () => {
   const [request, response] = useAxios();
@@ -20,6 +12,33 @@ export const usePostPayments = () => {
       data
     });
   }, [request]);
+
+  return [run, response] as [typeof run, typeof response];
+}
+
+export const useGetPayments = () => {
+  const [request, response] = useAxios();
+
+  const run = useCallback((payType: PaymentType, page: number, size: number) => {
+    return request({
+      method: 'GET',
+      url: `/payments?payType=${payType}&page=${page}&size=${size}`,
+    })
+  }, [response]);
+
+  return [run, response] as [typeof run, typeof response];
+}
+
+export const useCancelPayment = () => {
+  const [request, response] = useAxios();
+
+  const run = useCallback((data: PaymentCancelRequest) => {
+    return request({
+      method: 'POST',
+      url: '/payments/cancel',
+      data
+    })
+  }, [response]);
 
   return [run, response] as [typeof run, typeof response];
 }

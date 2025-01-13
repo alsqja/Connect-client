@@ -2,7 +2,8 @@ import { useCallback, useState } from "react";
 import * as PortOne from "@portone/browser-sdk/v2";
 import styled from "styled-components";
 import Button from "react-bootstrap/Button";
-import { PaymentRequestType, usePostPayments } from "../../hooks/paymentApi";
+import { PaymentRequestType } from "../AdminPaymentManage/data";
+import { usePostPayments } from "../../hooks/paymentApi";
 
 export const PointPage = () => {
   const [chargePoint, setChargePoint] = useState(0);
