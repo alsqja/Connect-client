@@ -4,6 +4,7 @@ import { UserLayout } from "../../components/Layout/User";
 import { UserSidebar } from "./UserSidebar";
 import { Profile } from "./Profile";
 import { ScheduleTable } from "./ScheduleTable";
+import { PaymentTable } from "./PaymentTable";
 
 export const UserMy = () => {
   const [selected, setSelected] = useState(1);
@@ -16,11 +17,12 @@ export const UserMy = () => {
     <UserLayout>
       <Container>
         <SidebarWrapper>
-          <UserSidebar handleSelected={handleSelected} selected={selected} />
+          <UserSidebar handleSelected={handleSelected} selected={selected}/>
         </SidebarWrapper>
         <MainContent>
-          {selected === 1 && <Profile />}
-          {selected === 3 && <ScheduleTable />}
+          {selected === 1 && <Profile/>}
+          {selected === 2 && <PaymentTable/>}
+          {selected === 3 && <ScheduleTable/>}
         </MainContent>
       </Container>
     </UserLayout>
