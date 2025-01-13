@@ -157,9 +157,10 @@ export const UserMain = () => {
   useEffect(() => {
     if (postScheduleRes.data && postScheduleRes.called) {
       alert("일정이 생성되었습니다.");
-      window.location.reload();
+      setSchedules((p) => [...p, postScheduleRes.data.data]);
+      handleClose();
     }
-  }, [postScheduleRes]);
+  }, [postScheduleRes, handleClose]);
 
   const handleMapClose = useCallback(() => {
     if (!address) {

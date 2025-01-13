@@ -55,3 +55,51 @@ export const useDeleteSchedule = () => {
 
   return [run, response] as [typeof run, typeof response];
 };
+
+export const useGetScheduleContent = () => {
+  const [request, response] = useAxios();
+
+  const run = useCallback(
+    (id: number) => {
+      return request({
+        url: `schedules/${id}/sub-categories`,
+        method: "GET",
+      });
+    },
+    [request]
+  );
+
+  return [run, response] as [typeof run, typeof response];
+};
+
+export const useGetSchedule = () => {
+  const [request, response] = useAxios();
+
+  const run = useCallback(
+    (id: number) => {
+      return request({
+        url: `/schedules/${id}`,
+        method: "GET",
+      });
+    },
+    [request]
+  );
+
+  return [run, response] as [typeof run, typeof response];
+};
+
+export const useGetScheduleMatching = () => {
+  const [request, response] = useAxios();
+
+  const run = useCallback(
+    (id: number) => {
+      return request({
+        url: `schedules/${id}/matchings`,
+        method: "GET",
+      });
+    },
+    [request]
+  );
+
+  return [run, response] as [typeof run, typeof response];
+};

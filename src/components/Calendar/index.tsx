@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { ICalendarSchedule } from "../../pages/UserMain/data";
+import { useNavigate } from "react-router-dom";
 
 interface IProps {
   schedules: ICalendarSchedule[];
@@ -10,6 +11,7 @@ interface IProps {
 
 export const Calendar = ({ schedules, handleClick, setActiveDate }: IProps) => {
   const [currentDate, setCurrentDate] = useState(new Date());
+  const navigate = useNavigate();
 
   const firstDayOfMonth = new Date(
     currentDate.getFullYear(),
@@ -119,7 +121,11 @@ export const Calendar = ({ schedules, handleClick, setActiveDate }: IProps) => {
                 >
                   <DateText>{date.day}</DateText>
                   {event ? (
-                    <EventLabel>{event.title}</EventLabel>
+                    <EventLabel
+                      onClick={() => navigate(`/schedule/${event.id}`)}
+                    >
+                      {event.title}
+                    </EventLabel>
                   ) : (
                     date.isCurrentMonth && (
                       <AddEventButton onClick={() => handleClick(fullDate)}>
