@@ -19,10 +19,10 @@ export const usePostPayments = () => {
 export const useGetPayments = () => {
   const [request, response] = useAxios();
 
-  const run = useCallback((payType: PaymentType, page: number, size: number) => {
+  const run = useCallback((payType: PaymentType | undefined, page: number, size: number) => {
     return request({
       method: 'GET',
-      url: `/payments?payType=${payType}&page=${page}&size=${size}`,
+      url: `/payments?payType=${payType ? payType : ""}&page=${page}&size=${size}`,
     })
   }, [response]);
 

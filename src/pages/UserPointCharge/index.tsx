@@ -5,7 +5,7 @@ import Button from "react-bootstrap/Button";
 import { PaymentRequestType } from "../AdminPaymentManage/data";
 import { usePostPayments } from "../../hooks/paymentApi";
 
-export const PointPage = () => {
+export const UserPointCharge = () => {
   const [chargePoint, setChargePoint] = useState(0);
   const [payReq] = usePostPayments();
   const pointImg = ["P1", "P2", "P3", "P4", "P5", "P6"];
@@ -59,7 +59,7 @@ export const PointPage = () => {
         className={chargePoint / 1000 - 1 === index ? "active" : "normal"}
         onClick={() => setChargePoint((index + 1) * 1000)}
       >
-        <img src={require(`../../assets/images/${url}.png`)} alt="" />
+        <img src={require(`../../assets/images/${url}.png`)} alt=""/>
         <div>{((index + 1) * 100).toLocaleString("ko-KR")} P</div>
         <div>{((index + 1) * 1000).toLocaleString("ko-KR")} 원</div>
       </PointCard>
@@ -146,9 +146,9 @@ const PointCard = styled.div`
   }
 
   background-color: ${(props) =>
-    props.className === "active" ? "rgba(212, 206, 255, 0.5)" : "#FFFFFF"};
+      props.className === "active" ? "rgba(212, 206, 255, 0.5)" : "#FFFFFF"};
   box-shadow: ${(props) =>
-    props.className === "active" ? "inset 2px 2px 4px #A9A1FF" : "unset"};
+      props.className === "active" ? "inset 2px 2px 4px #A9A1FF" : "unset"};
 `;
 
 const NoticePoint = styled.div`

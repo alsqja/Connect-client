@@ -1,11 +1,13 @@
 import styled from "styled-components";
 import { AdminLayout } from "../../components/Layout/Admin";
-import { FormControl, Modal, Table } from "react-bootstrap";
+import { FormControl, Modal } from "react-bootstrap";
 import { useCancelPayment, useGetPayments } from "../../hooks/paymentApi";
 import { useCallback, useEffect, useState } from "react";
 import { PaymentData } from "./data";
 import { PaginationContainer } from "../../components/Pagination/PaginationContainer";
 import Button from "react-bootstrap/Button";
+import { StyledTable, TableBody, TableHeader } from "../../components/StyledTable/tableStyle";
+
 
 export const AdminPaymentManage = () => {
   const [getPointPay, getPointPayRes] = useGetPayments();
@@ -85,43 +87,47 @@ export const AdminPaymentManage = () => {
       <AdminLayout>
         <Wrapper>
           <Title>결제 내역 - 포인트</Title>
-          <TableStyle striped bordered size="sm">
-            <tr>
-              <th style={{ width: "50px" }}></th>
-              <th style={{ width: "120px" }}>타입</th>
-              <th style={{ width: "120px" }}>결제 상태</th>
-              <th style={{ width: "250px" }}>결제 ID</th>
-              <th style={{ width: "250px" }}>tId</th>
-              <th style={{ width: "250px" }}>결제 내용</th>
-              <th>결제 유저 이메일</th>
-              <th style={{ width: "120Px" }}>결제 금액</th>
-              <th style={{ width: "200px" }}>결제일</th>
-              <th style={{ width: "100px" }}>취소</th>
-            </tr>
-            <tbody>
-            {
-              pointData.map((point: PaymentData, index) => {
-                return (
-                  <tr key={index}>
-                    <td className="centerAlign">{index + 1 + (10 * (pointPage - 1))}</td>
-                    <td>{point.type}</td>
-                    <td>{point.status}</td>
-                    <td>{point.payUid}</td>
-                    <td>{point.portoneUid}</td>
-                    <td>{point.details}</td>
-                    <td>{point.userEmail}</td>
-                    <td>{point.amount.toLocaleString("ko-KR")} 원</td>
-                    <td>{point.createdAt.toString().split(".")[0].replace("T", " ")}</td>
-                    <td className="centerAlign">
-                      <CancelBtn disabled={point.status !== "PAID"}
-                                 onClick={() => cancelClickHandler(point.id, point.amount)}>취소</CancelBtn>
-                    </td>
-                  </tr>
-                )
-              })
-            }
-            </tbody>
-          </TableStyle>
+          <TableWrapper>
+            <StyledTable>
+              <TableHeader>
+                <tr>
+                  <th style={{ width: "50px" }}></th>
+                  <th style={{ width: "120px" }}>타입</th>
+                  <th style={{ width: "120px" }}>결제 상태</th>
+                  <th style={{ width: "250px" }}>결제 ID</th>
+                  <th style={{ width: "250px" }}>tId</th>
+                  <th style={{ width: "250px" }}>결제 내용</th>
+                  <th>결제 유저 이메일</th>
+                  <th style={{ width: "120Px" }}>결제 금액</th>
+                  <th style={{ width: "200px" }}>결제일</th>
+                  <th style={{ width: "100px" }}>취소</th>
+                </tr>
+              </TableHeader>
+              <TableBody>
+                {
+                  pointData.map((point: PaymentData, index) => {
+                    return (
+                      <tr key={index}>
+                        <td className="centerAlign">{index + 1 + (10 * (pointPage - 1))}</td>
+                        <td>{point.type}</td>
+                        <td>{point.status}</td>
+                        <td>{point.payUid}</td>
+                        <td>{point.portoneUid}</td>
+                        <td>{point.details}</td>
+                        <td>{point.userEmail}</td>
+                        <td>{point.amount.toLocaleString("ko-KR")} 원</td>
+                        <td>{point.createdAt.toString().split(".")[0].replace("T", " ")}</td>
+                        <td className="centerAlign">
+                          <CancelBtn disabled={point.status !== "PAID"}
+                                     onClick={() => cancelClickHandler(point.id, point.amount)}>취소</CancelBtn>
+                        </td>
+                      </tr>
+                    )
+                  })
+                }
+              </TableBody>
+            </StyledTable>
+          </TableWrapper>
           <PaginationContainer
             activePage={pointPage}
             itemsCountPerPage={10}
@@ -130,44 +136,48 @@ export const AdminPaymentManage = () => {
             onPageChange={(page: number) => setPointPage(page)}
           />
           <Title>결제 내역 - 구독</Title>
-          <TableStyle striped bordered size="sm">
-            <tr>
-              <th style={{ width: "50px" }}></th>
-              <th style={{ width: "120px" }}>타입</th>
-              <th style={{ width: "120px" }}>결제 상태</th>
-              <th style={{ width: "250px" }}>결제 ID</th>
-              <th style={{ width: "250px" }}>tId</th>
-              <th style={{ width: "250px" }}>결제 내용</th>
-              <th>결제 유저 이메일</th>
-              <th style={{ width: "120px" }}>결제 금액</th>
-              <th style={{ width: "200px" }}>결제일</th>
-              <th style={{ width: "100px" }}>취소</th>
-            </tr>
-            <tbody>
-            {
-              subscribeData.map((subscribe: PaymentData, index) => {
-                return (
-                  <tr key={index}>
-                    <td className="centerAlign">{index + 1 + (10 * (subPage - 1))}</td>
-                    <td>{subscribe.type}</td>
-                    <td>{subscribe.status}</td>
-                    <td>{subscribe.payUid}</td>
-                    <td>{subscribe.portoneUid}</td>
-                    <td>{subscribe.details}</td>
-                    <td>{subscribe.userEmail}</td>
-                    <td>{subscribe.amount.toLocaleString("ko-KR")} 원</td>
-                    <td>{subscribe.createdAt.toString().split(".")[0].replace("T", " ")}</td>
-                    <td className="centerAlign">
-                      <CancelBtn disabled={subscribe.status !== "PAID"}
-                                 onClick={() => cancelClickHandler(subscribe.id, subscribe.amount)}>
-                        취소</CancelBtn>
-                    </td>
-                  </tr>
-                )
-              })
-            }
-            </tbody>
-          </TableStyle>
+          <TableWrapper>
+            <StyledTable>
+              <TableHeader>
+                <tr>
+                  <th style={{ width: "50px" }}></th>
+                  <th style={{ width: "120px" }}>타입</th>
+                  <th style={{ width: "120px" }}>결제 상태</th>
+                  <th style={{ width: "250px" }}>결제 ID</th>
+                  <th style={{ width: "250px" }}>tId</th>
+                  <th style={{ width: "250px" }}>결제 내용</th>
+                  <th>결제 유저 이메일</th>
+                  <th style={{ width: "120px" }}>결제 금액</th>
+                  <th style={{ width: "200px" }}>결제일</th>
+                  <th style={{ width: "100px" }}>취소</th>
+                </tr>
+              </TableHeader>
+              <TableBody>
+                {
+                  subscribeData.map((subscribe: PaymentData, index) => {
+                    return (
+                      <tr key={index}>
+                        <td className="centerAlign">{index + 1 + (10 * (subPage - 1))}</td>
+                        <td>{subscribe.type}</td>
+                        <td>{subscribe.status}</td>
+                        <td>{subscribe.payUid}</td>
+                        <td>{subscribe.portoneUid}</td>
+                        <td>{subscribe.details}</td>
+                        <td>{subscribe.userEmail}</td>
+                        <td>{subscribe.amount.toLocaleString("ko-KR")} 원</td>
+                        <td>{subscribe.createdAt.toString().split(".")[0].replace("T", " ")}</td>
+                        <td className="centerAlign">
+                          <CancelBtn disabled={subscribe.status !== "PAID"}
+                                     onClick={() => cancelClickHandler(subscribe.id, subscribe.amount)}>
+                            취소</CancelBtn>
+                        </td>
+                      </tr>
+                    )
+                  })
+                }
+              </TableBody>
+            </StyledTable>
+          </TableWrapper>
           <PaginationContainer
             activePage={subPage}
             itemsCountPerPage={10}
@@ -208,28 +218,15 @@ const Wrapper = styled.div`
   border-radius: 10px;
 `;
 
+const TableWrapper = styled.div`
+  height: calc(50% - 42px);
+  overflow: scroll;
+  scrollbar-width: none;
+`
+
 const Title = styled.div`
   font-size: 25px;
-  margin-bottom: 20px;
 `;
-
-const TableStyle = styled(Table)`
-  th {
-    text-align: center;
-    border: 1px solid #dee2e6;
-  }
-
-  tr {
-    height: 35px;
-  }
-
-  td {
-    font-size: 14px;
-    padding: 3px 15px;
-    align-content: center;
-    text-align: center;
-  }
-`
 
 const CancelBtn = styled.button`
   width: 70px;
