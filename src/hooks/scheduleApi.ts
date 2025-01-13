@@ -39,3 +39,19 @@ export const useCreateSchedule = () => {
 
   return [run, response] as [typeof run, typeof response];
 };
+
+export const useDeleteSchedule = () => {
+  const [request, response] = useAxios();
+
+  const run = useCallback(
+    (id: number) => {
+      return request({
+        url: `schedules/${id}`,
+        method: "DELETE",
+      });
+    },
+    [request]
+  );
+
+  return [run, response] as [typeof run, typeof response];
+};
