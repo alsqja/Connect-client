@@ -5,4 +5,7 @@ export interface IUserWithToken {
   role: "USER" | "ADMIN" | null;
   memberType: "PREMIUM" | null;
   expiredDate: string | null;
+  name: string | null;
+  profileUrl: string | null;
+  email: string | null;
 }

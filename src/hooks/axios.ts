@@ -69,14 +69,13 @@ export const useAxios = (): UseAxiosType => {
         setError(error);
 
         if (e.response.status === 401) {
-          setTokens({
-            id: tokens?.id || null,
-            role: tokens?.role || null,
-            memberType: tokens?.memberType || null,
-            expiredDate: tokens?.expiredDate || null,
-            accessToken: "",
-            refreshToken: tokens ? tokens.refreshToken : null,
-          });
+          setTokens(
+            (p) =>
+              p && {
+                ...p,
+                accessToken: "",
+              }
+          );
 
           if (e.response.data.code === "INVALID_TOKEN") {
             if (!isRefreshing) {
@@ -89,14 +88,14 @@ export const useAxios = (): UseAxiosType => {
                   { withCredentials: true }
                 )
                 .then((res) => {
-                  setTokens({
-                    id: tokens?.id || null,
-                    role: tokens?.role || null,
-                    memberType: tokens?.memberType || null,
-                    expiredDate: tokens?.expiredDate || null,
-                    accessToken: res.data.data.accessToken,
-                    refreshToken: res.data.data.refreshToken,
-                  });
+                  setTokens(
+                    (p) =>
+                      p && {
+                        ...p,
+                        accessToken: res.data.data.accessToken,
+                        refreshToken: res.data.data.refreshToken,
+                      }
+                  );
 
                   onRrefreshed(res.data.data.accessToken);
                 })

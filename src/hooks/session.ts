@@ -20,3 +20,16 @@ export const useLogin = () => {
 
   return [run, response] as [typeof run, typeof response];
 };
+
+export const useLogout = () => {
+  const [request, response] = useAxios();
+
+  const run = useCallback(() => {
+    return request({
+      url: "auth/logout",
+      method: "POST",
+    });
+  }, [request]);
+
+  return [run, response] as [typeof run, typeof response];
+};

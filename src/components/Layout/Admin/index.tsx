@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { AdminSidebar } from "./AdminSidebar";
 import { useRecoilValue } from "recoil";
 import { userState } from "../../../stores/session";
+import { UserHeader } from "../User/UserHeader";
 
 interface IProps {
   children: React.ReactNode;
@@ -22,7 +23,7 @@ export const AdminLayout = ({ children }: IProps) => {
 
   return (
     <Wrapper>
-      <AdminHeader />
+      <UserHeader />
       <AdminSidebar />
       <Container>{user?.role === "ADMIN" && children}</Container>
     </Wrapper>

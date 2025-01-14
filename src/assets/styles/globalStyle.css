@@ -31,3 +31,12 @@ body {
 .w-10 {
   width: 100px;
 }
+
+div {
+  user-select: none; /* 드래그 비활성화 */
+}
+
+input,
+textarea {
+  user-select: text; /* 드래그 활성화 */
+}
