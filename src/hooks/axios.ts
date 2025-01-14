@@ -111,9 +111,19 @@ export const useAxios = (): UseAxiosType => {
             }
 
             return new Promise<AxiosResponse<any>>((resolve) => {
-              subscribers.push((token: string) => {
+              subscribers.push(async (token: string) => {
                 config!.headers!.Authorization = `Bearer ${token}`;
-                resolve(axios(config!));
+                try {
+                  const res = await axios(config!);
+                  setData(res.data);
+                  resolve(res);
+                } catch (e: any) {
+                  const error = e?.response?.data?.message
+                    ? e?.response?.data?.message
+                    : e;
+                  setError(error);
+                  throw error;
+                }
               });
             });
           }
