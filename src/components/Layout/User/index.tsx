@@ -19,6 +19,8 @@ const Wrapper = styled.div`
   height: 100vh;
   width: 100%;
   position: fixed;
+  overflow-y: scroll;
+  scrollbar-width: none;
 `;
 
 const Container = styled.div`
