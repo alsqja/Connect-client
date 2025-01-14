@@ -20,6 +20,14 @@ const axios = Axios.create({
   baseURL: "http://localhost:8080/api",
 });
 
+let isRefreshing = false;
+let subscribers: ((token: string) => void)[] = [];
+
+const onRrefreshed = (token: string) => {
+  subscribers.forEach((callback) => callback(token));
+  subscribers = [];
+};
+
 export const useAxios = (): UseAxiosType => {
   const [tokens, setTokens] = useRecoilState(userState);
 
@@ -54,12 +62,12 @@ export const useAxios = (): UseAxiosType => {
         setData(res?.data);
 
         return res;
-        // eslint-disable-next-line no-useless-catch
       } catch (e: any) {
         const error = e?.response?.data?.message
           ? e?.response?.data?.message
           : e;
         setError(error);
+
         if (e.response.status === 401) {
           setTokens({
             id: tokens?.id || null,
@@ -69,30 +77,46 @@ export const useAxios = (): UseAxiosType => {
             accessToken: "",
             refreshToken: tokens ? tokens.refreshToken : null,
           });
-        }
-        if (e.response.data.code === "INVALID_TOKEN") {
-          axios
-            .post(
-              "auth/refresh",
-              { refreshToken: tokens?.refreshToken },
-              { withCredentials: true }
-            )
-            .then((res) => {
-              setTokens({
-                id: tokens?.id || null,
-                role: tokens?.role || null,
-                memberType: tokens?.memberType || null,
-                expiredDate: tokens?.expiredDate || null,
-                accessToken: res.data.data.accessToken,
-                refreshToken: res.data.data.refreshToken,
+
+          if (e.response.data.code === "INVALID_TOKEN") {
+            if (!isRefreshing) {
+              isRefreshing = true;
+
+              axios
+                .post(
+                  "auth/refresh",
+                  { refreshToken: tokens?.refreshToken },
+                  { withCredentials: true }
+                )
+                .then((res) => {
+                  setTokens({
+                    id: tokens?.id || null,
+                    role: tokens?.role || null,
+                    memberType: tokens?.memberType || null,
+                    expiredDate: tokens?.expiredDate || null,
+                    accessToken: res.data.data.accessToken,
+                    refreshToken: res.data.data.refreshToken,
+                  });
+
+                  onRrefreshed(res.data.data.accessToken);
+                })
+                .catch(() => {
+                  setTokens(null);
+                  alert("다시 로그인 해주세요.");
+                  window.location.replace("/login");
+                })
+                .finally(() => {
+                  isRefreshing = false;
+                });
+            }
+
+            return new Promise<AxiosResponse<any>>((resolve) => {
+              subscribers.push((token: string) => {
+                config!.headers!.Authorization = `Bearer ${token}`;
+                resolve(axios(config!));
               });
-              window.location.reload();
-            })
-            .catch((e) => {
-              setTokens(null);
-              alert("다시 로그인 해주세요.");
-              window.location.replace("/login");
             });
+          }
         }
         throw error;
       } finally {
