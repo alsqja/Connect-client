@@ -1,10 +1,12 @@
 import styled from "styled-components";
 import { TextField } from "../../components/TextField";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useLogin } from "../../hooks/session";
 import { useSetRecoilState } from "recoil";
 import { userState } from "../../stores/session";
 import { useNavigate } from "react-router-dom";
+import NaverLogin from "../../components/NaverLogin";
+import axios from "axios";
 
 export const Login = () => {
   const [email, setEmail] = useState("");
@@ -12,6 +14,7 @@ export const Login = () => {
   const [loginReq, loginRes] = useLogin();
   const setTokens = useSetRecoilState(userState);
   const navigate = useNavigate();
+  const isRequestSent = useRef(false);
 
   const handleLogin = useCallback(() => {
     loginReq(email, password);
@@ -32,6 +35,30 @@ export const Login = () => {
   const handleNavigate = useCallback(() => {
     navigate("/signup");
   }, [navigate]);
+
+  useEffect(() => {
+    // 현재 URL에서 code와 state 추출
+    const urlParams = new URLSearchParams(window.location.search);
+    const code = urlParams.get("code");
+    const state = urlParams.get("state");
+
+    if (code && state && !isRequestSent.current) {
+      isRequestSent.current = true;
+
+      axios
+        .get("http://localhost:8080/api/auth/login/naver/code", {
+          params: { code, state },
+        })
+        .then((response) => {
+          setTokens(response.data.data);
+          navigate("/");
+        })
+        .catch((error) => {
+          console.error("로그인 실패", error);
+          alert("로그인에 실패했습니다.");
+        });
+    }
+  }, [navigate, setTokens]);
 
   return (
     <Wrapper>
@@ -54,6 +81,7 @@ export const Login = () => {
             회원가입
           </span>
         </div>
+        <NaverLogin />
       </Container>
     </Wrapper>
   );
