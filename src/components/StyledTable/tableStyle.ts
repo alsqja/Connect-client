@@ -8,6 +8,8 @@ const StyledTable = styled.table`
 
 const TableHeader = styled.thead`
   background-color: #f4f4f4;
+  position: sticky;
+  top: 0;
 
   th {
     padding: 10px;
@@ -49,6 +51,8 @@ const TableWrapper = styled.div`
   margin: 20px auto;
   overflow-x: auto;
   background-color: white;
+  max-height: calc(100vh - 300px);
+  overflow-y: scroll;
 `;
 
 export { StyledTable, TableHeader, TableBody, TableWrapper };

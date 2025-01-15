@@ -62,3 +62,18 @@ export interface ISchedule {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface IReportListData {
+  id: number;
+  fromId: number;
+  fromName: string;
+  toId: number;
+  toName: string;
+  scheduleId: number;
+  scheduleTitle: string;
+  scheduleDate: string;
+  matchingId: number;
+  content: string;
+  createdAt: string;
+  updatedAt: string;
+}
