@@ -187,7 +187,6 @@ export const UserMain = () => {
   return (
     <UserLayout>
       <div style={{ width: "100%" }}>
-        <div style={{ width: "100%", height: "100px" }}>쿠폰</div>
         <Calendar
           schedules={schedules}
           handleClick={handleClick}

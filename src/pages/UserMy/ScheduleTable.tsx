@@ -3,7 +3,12 @@ import styled from "styled-components";
 import { ISchedule } from "./data";
 import { PaginationContainer } from "../../components/Pagination/PaginationContainer";
 import { useDeleteSchedule, useGetAllSchedules } from "../../hooks/scheduleApi";
-import { StyledTable, TableBody, TableHeader, TableWrapper } from "../../components/StyledTable/tableStyle";
+import {
+  StyledTable,
+  TableBody,
+  TableHeader,
+  TableWrapper,
+} from "../../components/StyledTable/tableStyle";
 
 export const ScheduleTable = () => {
   const [schedules, setSchedules] = useState<ISchedule[]>([]);
@@ -36,68 +41,80 @@ export const ScheduleTable = () => {
     }
   };
 
-  if (schedules.length === 0) {
-    return (
-      <TableWrapper>
-        <div style={{ width: "100%", padding: "150px 0", textAlign: "center" }}>
-          일정이 없습니다.
-        </div>
-      </TableWrapper>
-    );
-  }
-
   return (
-    <TableWrapper>
-      <StyledTable>
-        <TableHeader>
-          <tr>
-            <th>No</th>
-            <th>날짜</th>
-            <th>제목</th>
-            <th>상세 내용</th>
-            <th>컨텐츠</th>
-            <th>생성일</th>
-            <th>수정일</th>
-            <th>작업</th>
-          </tr>
-        </TableHeader>
-        <TableBody>
-          {schedules.map((schedule, index) => (
-            <tr key={schedule.id}>
-              <td>{10 * (page - 1) + index + 1}</td>
-              <td>{schedule.date}</td>
-              <td>{schedule.title}</td>
-              <td>{schedule.details}</td>
-              <td>
-                {schedule.contentNames.length > 1
-                  ? schedule.contentNames[0] +
-                    " 외 " +
-                    (schedule.contentNames.length - 1)
-                  : schedule.contentNames[0]}
-              </td>
-              <td>{new Date(schedule.createdAt).toLocaleString()}</td>
-              <td>{new Date(schedule.updatedAt).toLocaleString()}</td>
-              <td>
-                <DeleteButton onClick={() => handleDelete(schedule.id)}>
-                  삭제
-                </DeleteButton>
-              </td>
-            </tr>
-          ))}
-        </TableBody>
-      </StyledTable>
-      {totalElements > 10 && (
-        <PaginationContainer
-          activePage={page}
-          itemsCountPerPage={10}
-          totalItemsCount={totalElements}
-          pageRangeDisplayed={5}
-          onPageChange={(page: number) => setPage(page)}
-        />
+    <>
+      <Title>일정 내역</Title>
+      {schedules.length > 0 ? (
+        <>
+          <TableWrapper>
+            <StyledTable>
+              <TableHeader>
+                <tr>
+                  <th style={{ width: "50px" }}>No</th>
+                  <th style={{ width: "150px" }}>날짜</th>
+                  <th style={{ width: "150px" }}>제목</th>
+                  <th style={{ width: "250px" }}>상세 내용</th>
+                  <th style={{ width: "150px" }}>컨텐츠</th>
+                  <th style={{ width: "150px" }}>생성일</th>
+                  <th style={{ width: "150px" }}>수정일</th>
+                  <th style={{ width: "150px" }}>작업</th>
+                </tr>
+              </TableHeader>
+              <TableBody>
+                {schedules.map((schedule, index) => (
+                  <tr key={schedule.id}>
+                    <td>{10 * (page - 1) + index + 1}</td>
+                    <td>{schedule.date}</td>
+                    <td>{schedule.title}</td>
+                    <td>{schedule.details}</td>
+                    <td>
+                      {schedule.contentNames.length > 1
+                        ? schedule.contentNames[0] +
+                          " 외 " +
+                          (schedule.contentNames.length - 1)
+                        : schedule.contentNames[0]}
+                    </td>
+                    <td>
+                      {schedule.createdAt
+                        .toString()
+                        .split(".")[0]
+                        .replace("T", " ")}
+                    </td>
+                    <td>
+                      {schedule.updatedAt
+                        .toString()
+                        .split(".")[0]
+                        .replace("T", " ")}
+                    </td>
+                    <td>
+                      <DeleteButton onClick={() => handleDelete(schedule.id)}>
+                        삭제
+                      </DeleteButton>
+                    </td>
+                  </tr>
+                ))}
+              </TableBody>
+            </StyledTable>
+          </TableWrapper>
+          <PaginationContainer
+            activePage={page}
+            itemsCountPerPage={10}
+            totalItemsCount={totalElements}
+            pageRangeDisplayed={5}
+            onPageChange={(page: number) => setPage(page)}
+          />
+        </>
+      ) : (
+        <>일정 내역이 없습니다.</>
       )}
-    </TableWrapper>
+    </>
   );
 };
+
+const Title = styled.div`
+  font-size: 25px;
+  margin-bottom: 20px;
+`;
 
 const DeleteButton = styled.button`
   padding: 5px 12px;
