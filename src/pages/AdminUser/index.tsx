@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import { AdminLayout } from "../../components/Layout/Admin";
 import { UserTable } from "./UserTable";
 import { useCallback, useEffect, useState } from "react";
 import { IAdminUpdateUserData, IUserData } from "./data";
@@ -38,7 +37,7 @@ export const AdminUser = () => {
   }, [updateUserRes]);
 
   return (
-    <AdminLayout>
+    <>
       <Wrapper>
         <Title>유저 관리</Title>
         <UserTable
@@ -55,7 +54,7 @@ export const AdminUser = () => {
           onPageChange={(page: number) => setPage(page)}
         />
       </Wrapper>
-    </AdminLayout>
+    </>
   );
 };
 

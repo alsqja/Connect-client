@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import { AdminLayout } from "../../components/Layout/Admin";
 import { FormControl, Modal } from "react-bootstrap";
 import { useCancelPayment, useGetPayments } from "../../hooks/paymentApi";
 import { useCallback, useEffect, useState } from "react";
@@ -7,6 +6,7 @@ import { PaymentData } from "./data";
 import { PaginationContainer } from "../../components/Pagination/PaginationContainer";
 import Button from "react-bootstrap/Button";
 import { StyledTable, TableBody, TableHeader } from "../../components/StyledTable/tableStyle";
+import MainColorButton from "../../components/Button/MainColorButton";
 
 
 export const AdminPaymentManage = () => {
@@ -88,7 +88,7 @@ export const AdminPaymentManage = () => {
 
   return (
     <>
-      <AdminLayout>
+      <>
         <Wrapper>
           <Title>결제 내역 - 포인트</Title>
           <TableWrapper>
@@ -122,8 +122,8 @@ export const AdminPaymentManage = () => {
                         <td>{point.amount.toLocaleString("ko-KR")} 원</td>
                         <td>{point.createdAt.toString().split(".")[0].replace("T", " ")}</td>
                         <td className="centerAlign">
-                          <CancelBtn disabled={point.status !== "PAID"}
-                                     onClick={() => cancelClickHandler(point.id, point.amount)}>취소</CancelBtn>
+                          <MainColorButton disabled={point.status !== "PAID"}
+                                           onClick={() => cancelClickHandler(point.id, point.amount)}>취소</MainColorButton>
                         </td>
                       </tr>
                     )
@@ -171,9 +171,9 @@ export const AdminPaymentManage = () => {
                         <td>{subscribe.amount.toLocaleString("ko-KR")} 원</td>
                         <td>{subscribe.createdAt.toString().split(".")[0].replace("T", " ")}</td>
                         <td className="centerAlign">
-                          <CancelBtn disabled={subscribe.status !== "PAID"}
-                                     onClick={() => cancelClickHandler(subscribe.id, subscribe.amount)}>
-                            취소</CancelBtn>
+                          <MainColorButton disabled={subscribe.status !== "PAID"}
+                                           onClick={() => cancelClickHandler(subscribe.id, subscribe.amount)}>
+                            취소</MainColorButton>
                         </td>
                       </tr>
                     )
@@ -190,7 +190,7 @@ export const AdminPaymentManage = () => {
             onPageChange={(page: number) => setSubPage(page)}
           />
         </Wrapper>
-      </AdminLayout>
+      </>
       <Modal show={open} onHide={modalClose}>
         <Modal.Header closeButton>
           <Modal.Title>취소 사유</Modal.Title>
@@ -226,23 +226,13 @@ const TableWrapper = styled.div`
   height: calc(50% - 42px);
   overflow: scroll;
   scrollbar-width: none;
+  
+  td button {
+    width: 70px;
+  }
 `
 
 const Title = styled.div`
   font-size: 25px;
 `;
 
-const CancelBtn = styled.button`
-  width: 70px;
-  padding: 5px 10px;
-  font-size: 15px;
-  border: unset;
-  background-color: var(--main-color);
-  border-radius: 5px;
-  overflow: hidden;
-  
-  &:active, &:hover {
-    background-color: var(--button-active-color);
-    color: #fff;
-  }
-`

@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useState } from "react";
-import { UserLayout } from "../../components/Layout/User";
 import { ScheduleDetail } from "./ScheduleDetail";
 import { ScheduleMatching } from "./ScheduleMatching";
 import { useGetSchedule } from "../../hooks/scheduleApi";
@@ -34,11 +33,11 @@ export const UserSchedule = () => {
   }, [getRes]);
 
   if (!schedule) {
-    return <UserLayout>로딩중</UserLayout>;
+    return <>로딩중</>;
   }
 
   return (
-    <UserLayout>
+    <>
       <ScheduleDetail id={id} title={schedule.title} date={schedule.date} />
       <ScheduleMatching
         id={id}
@@ -46,6 +45,6 @@ export const UserSchedule = () => {
         postMatchingRes={postMatchingRes}
         schedule={schedule}
       />
-    </UserLayout>
+    </>
   );
 };

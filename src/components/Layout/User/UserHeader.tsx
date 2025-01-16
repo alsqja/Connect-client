@@ -6,13 +6,15 @@ import { useRecoilState } from "recoil";
 import { IUserWithToken } from "../../../hooks";
 import { userState } from "../../../stores/session";
 import { useLogout } from "../../../hooks/session";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import MainColorButton from "../../Button/MainColorButton";
 
 export const UserHeader = () => {
   const [user, setUser] = useRecoilState<IUserWithToken | null>(userState);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [logoutReq, logoutRes] = useLogout();
   const navigate = useNavigate();
+  const { pathname } = useLocation();
 
   const handleDropdownToggle = () => {
     setDropdownOpen((prev) => !prev);
@@ -31,29 +33,34 @@ export const UserHeader = () => {
   }, [logoutRes, setUser]);
 
   const handleMyPage = () => {
-    navigate("/user/my");
+    navigate("/user/my/profile");
   };
 
   return (
     <Wrapper>
       <Container>
         <Logo src={logo} alt="logo" onClick={() => navigate("/")} />
-        {user ? (
-          <UserProfile onClick={handleDropdownToggle}>
-            <ProfileImage src={user?.profileUrl || ""} alt="user profile" />
-            <UserName>{user?.name}</UserName>
-          </UserProfile>
-        ) : (
-          <>로그인</>
-        )}
-        {dropdownOpen && (
-          <Dropdown>
-            {user?.role === "USER" && (
-              <DropdownItem onClick={handleMyPage}>마이페이지</DropdownItem>
-            )}
-            <DropdownItem onClick={handleLogout}>로그아웃</DropdownItem>
-          </Dropdown>
-        )}
+        <RightHeader>
+          {pathname !== "/point" &&
+              <MainColorButton onClick={() => navigate("/point")}>포인트 충전</MainColorButton>
+          }
+          {user ? (
+            <UserProfile onClick={handleDropdownToggle}>
+              <ProfileImage src={user?.profileUrl || ""} alt="user profile" />
+              <UserName>{user?.name}</UserName>
+            </UserProfile>
+          ) : (
+            <>로그인</>
+          )}
+          {dropdownOpen && (
+            <Dropdown>
+              {user?.role === "USER" && (
+                <DropdownItem onClick={handleMyPage}>마이페이지</DropdownItem>
+              )}
+              <DropdownItem onClick={handleLogout}>로그아웃</DropdownItem>
+            </Dropdown>
+          )}
+        </RightHeader>
       </Container>
     </Wrapper>
   );
@@ -71,8 +78,8 @@ const Wrapper = styled.div`
 `;
 
 const Container = styled.div`
-  max-width: 1440px;
-  margin: auto;
+  max-width: 100vw;
+  padding: 10px 50px;
   height: 100%;
   display: flex;
   justify-content: space-between;
@@ -88,11 +95,21 @@ const Logo = styled.img`
   cursor: pointer;
 `;
 
+const RightHeader = styled.div`
+  display: flex;
+  flex-direction: row;
+  
+  button {
+    margin-right: 30px;
+    width: 100px;
+  }
+`
+
 const UserProfile = styled.div`
   display: flex;
   align-items: center;
   cursor: pointer;
-  margin-right: 20px;
+  margin-right: 10px;
   position: relative;
 `;
 
@@ -128,7 +145,7 @@ const DropdownItem = styled.div`
   color: #333;
   cursor: pointer;
   transition: background-color 0.2s;
-
+  
   &:hover {
     background-color: #f5f5f5;
   }

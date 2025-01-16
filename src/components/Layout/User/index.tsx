@@ -1,15 +1,18 @@
 import styled from "styled-components";
 import { UserHeader } from "./UserHeader";
+import { Outlet } from "react-router-dom"
 
 interface IProps {
   children: React.ReactNode;
 }
 
-export const UserLayout = ({ children }: IProps) => {
+export const UserLayout = () => {
   return (
     <Wrapper>
       <UserHeader />
-      <Container>{children}</Container>
+      <Container>
+        <Outlet />
+      </Container>
     </Wrapper>
   );
 };
@@ -19,8 +22,8 @@ const Wrapper = styled.div`
   height: 100vh;
   width: 100%;
   position: fixed;
-  /* overflow-y: scroll;
-  scrollbar-width: none; */
+  overflow-y: scroll;
+  scrollbar-width: none;
 `;
 
 const Container = styled.div`

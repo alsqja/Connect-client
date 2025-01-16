@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import { AdminLayout } from "../../components/Layout/Admin";
 import { Toggle } from "../../components/Toggle";
 import {
   useDeleteCate,
@@ -281,7 +280,7 @@ export const AdminCategory = () => {
   }, [deleteSubRes]);
 
   return (
-    <AdminLayout>
+    <>
       <Wrapper>
         <Title>카테고리 관리</Title>
         <Container>
@@ -387,7 +386,7 @@ export const AdminCategory = () => {
           </PostContainer>
         </Container>
       </Wrapper>
-    </AdminLayout>
+    </>
   );
 };
 

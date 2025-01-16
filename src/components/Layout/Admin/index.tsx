@@ -1,16 +1,16 @@
 import React, { useEffect } from "react";
-import { AdminHeader } from "./AdminHeader";
 import styled from "styled-components";
 import { AdminSidebar } from "./AdminSidebar";
 import { useRecoilValue } from "recoil";
 import { userState } from "../../../stores/session";
 import { UserHeader } from "../User/UserHeader";
+import { Outlet } from "react-router-dom";
 
 interface IProps {
   children: React.ReactNode;
 }
 
-export const AdminLayout = ({ children }: IProps) => {
+export const AdminLayout = () => {
   const user = useRecoilValue(userState);
 
   useEffect(() => {
@@ -25,7 +25,7 @@ export const AdminLayout = ({ children }: IProps) => {
     <Wrapper>
       <UserHeader />
       <AdminSidebar />
-      <Container>{user?.role === "ADMIN" && children}</Container>
+      <Container>{user?.role === "ADMIN" && <Outlet />}</Container>
     </Wrapper>
   );
 };

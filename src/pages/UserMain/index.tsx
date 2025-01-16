@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import { UserLayout } from "../../components/Layout/User";
 import { Calendar } from "../../components/Calendar";
 import { useCallback, useEffect, useState } from "react";
 import { ICalendarSchedule, IPostSubCategories } from "./data";
@@ -88,8 +87,8 @@ export const UserMain = () => {
           getCateRes.data.data
             .filter((el: any) => el.id === selected.id)[0]
             .subCategories.map((sub: any) => {
-              return { id: sub.id, label: sub.name };
-            })
+            return { id: sub.id, label: sub.name };
+          })
         );
       }
     },
@@ -185,7 +184,7 @@ export const UserMain = () => {
   );
 
   return (
-    <UserLayout>
+    <UserMainContainer>
       <div style={{ width: "100%" }}>
         <Calendar
           schedules={schedules}
@@ -299,9 +298,19 @@ export const UserMain = () => {
           handleAddress={handleAddress}
         />
       )}
-    </UserLayout>
+    </UserMainContainer>
   );
 };
+
+const UserMainContainer = styled.div`
+  background-color: #fff;
+  width: 1000px;
+  height: 750px;
+  margin: 0 150px;
+  align-content: center;
+  border-radius: 10px;
+  border: 1px solid #000;
+`
 
 const ModalContainer = styled.div`
   width: 100%;
@@ -349,7 +358,7 @@ const RemoveButton = styled.button`
   cursor: pointer;
   height: 30px;
   width: 30px;
-
+  
   &:hover {
     color: #2f29a8;
   }
@@ -367,7 +376,7 @@ const AddLabelButton = styled.button`
   font-size: 20px;
   color: #333;
   cursor: pointer;
-
+  
   &:hover {
     background-color: #f5f5f5;
   }
@@ -425,7 +434,7 @@ const SearchButton = styled.button`
   border: none;
   border-radius: 4px;
   cursor: pointer;
-
+  
   &:hover {
     background-color: #0056b3;
   }

@@ -1,22 +1,34 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
-import { UserLayout } from "../../components/Layout/User";
 import { UserSidebar } from "./UserSidebar";
 import { Profile } from "./Profile";
 import { ScheduleTable } from "./ScheduleTable";
 import { PaymentTable } from "./PaymentTable";
 import { ReportTable } from "./ReportTable";
 import { PointTable } from "./PointTable";
+import { useNavigate, useParams } from "react-router-dom";
+import { pathNum } from "./data";
 
 export const UserMy = () => {
+  const { type } = useParams<{ type: string }>();
   const [selected, setSelected] = useState(1);
+  const navigate = useNavigate();
 
   const handleSelected = useCallback((id: number) => {
     setSelected(id);
+    navigate(`/user/my/${pathNum[id - 1]}`)
+  }, []);
+
+  useEffect(() => {
+    pathNum.map((data, index) => {
+      if (data === type) {
+        handleSelected(index + 1);
+      }
+    })
   }, []);
 
   return (
-    <UserLayout>
+    <>
       <Container>
         <SidebarWrapper>
           <UserSidebar handleSelected={handleSelected} selected={selected} />
@@ -29,7 +41,7 @@ export const UserMy = () => {
           {selected === 6 && <ReportTable />}
         </MainContent>
       </Container>
-    </UserLayout>
+    </>
   );
 };
 

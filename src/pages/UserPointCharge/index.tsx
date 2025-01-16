@@ -4,11 +4,14 @@ import styled from "styled-components";
 import Button from "react-bootstrap/Button";
 import { PaymentRequestType } from "../AdminPaymentManage/data";
 import { usePostPayments } from "../../hooks/paymentApi";
+import Arrow from "../../../src/assets/images/arrow-left-solid.svg"
+import { useNavigate } from "react-router-dom";
 
 export const UserPointCharge = () => {
   const [chargePoint, setChargePoint] = useState(0);
   const [payReq] = usePostPayments();
   const pointImg = ["P1", "P2", "P3", "P4", "P5", "P6"];
+  const navigate = useNavigate();
 
   const paymentTest = useCallback(
     (body: PaymentRequestType) => {
@@ -38,9 +41,9 @@ export const UserPointCharge = () => {
             portoneUid: result.txId,
             amount: chargePoint,
             details:
-              chargePoint +
+              chargePoint.toLocaleString("ko-KR") +
               "원이 충전되었습니다.( " +
-              chargePoint / 10 +
+              (chargePoint / 10).toLocaleString("ko-KR") +
               " P )",
             type: "POINT",
             status: "PAID",
@@ -59,7 +62,7 @@ export const UserPointCharge = () => {
         className={chargePoint / 1000 - 1 === index ? "active" : "normal"}
         onClick={() => setChargePoint((index + 1) * 1000)}
       >
-        <img src={require(`../../assets/images/${url}.png`)} alt=""/>
+        <img src={require(`../../assets/images/${url}.png`)} alt="" />
         <div>{((index + 1) * 100).toLocaleString("ko-KR")} P</div>
         <div>{((index + 1) * 1000).toLocaleString("ko-KR")} 원</div>
       </PointCard>
@@ -68,8 +71,12 @@ export const UserPointCharge = () => {
 
   return (
     <Wrapper>
-      <Title>포인트 충전</Title>
       <Container>
+        <BackButton onClick={() => navigate(-1)}>
+          <ImageButton src={Arrow} />
+          <div>돌아가기</div>
+        </BackButton>
+        <Title>포인트 충전</Title>
         <CardReplace>
           {pointImg.map((url, index) => {
             return PointCards(url, index);
@@ -91,12 +98,24 @@ export const UserPointCharge = () => {
   );
 };
 
+const ImageButton = styled.img`
+  width: 15px;
+  height: 20px;
+  margin-right: 10px;
+`
+
+const BackButton = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: left;
+`
+
 const Wrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
-  height: 100vh;
   flex-direction: column;
 `;
 
