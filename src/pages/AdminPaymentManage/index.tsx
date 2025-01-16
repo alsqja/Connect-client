@@ -43,7 +43,13 @@ export const AdminPaymentManage = () => {
 
   const cancelPayment = useCallback(
     (paymentId: number, amount: number, reason: string) => {
-      cancelPay({ paymentId, amount, reason }).then(() => alert("결제 취소 요청이 성공했습니다."));
+      cancelPay({ paymentId, amount, reason }).then(() =>
+        alert("결제 취소 요청이 성공했습니다.")
+      ).catch(() => alert("결제 취소 요청을 실패했습니다.")
+      ).finally(() => {
+        modalClose();
+        window.location.reload();
+      });
     }, [getSubPay])
 
   useEffect(() => {
@@ -73,8 +79,6 @@ export const AdminPaymentManage = () => {
     } else {
       alert("결제 취소에 실패했습니다.");
     }
-    modalClose();
-    window.location.reload();
   }
 
   const modalClose = useCallback(() => {
@@ -194,7 +198,7 @@ export const AdminPaymentManage = () => {
         <Modal.Body>
           <div style={{ paddingBottom: "10px" }}>취소 사유를 입력해 주세요.</div>
           <FormControl type="text" id="reasonText" onChange={(event) =>
-            setReqData((prevState) => ({ ...prevState, reason: event.target.value }))}/>
+            setReqData((prevState) => ({ ...prevState, reason: event.target.value }))} />
         </Modal.Body>
         <Modal.Footer style={{ justifyContent: "center", padding: "5px 10px" }}>
           <Button onClick={modalButtonControl} variant="danger" size="sm">취소하기</Button>
@@ -236,7 +240,7 @@ const CancelBtn = styled.button`
   background-color: var(--main-color);
   border-radius: 5px;
   overflow: hidden;
-
+  
   &:active, &:hover {
     background-color: var(--button-active-color);
     color: #fff;

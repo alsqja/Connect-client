@@ -41,6 +41,7 @@ export interface ProfileData {
   isActiveMatching: boolean;
   membershipType: string;
   expiredDate: string;
+  point: number;
   createdAt: string;
   updatedAt: string;
 }
@@ -74,6 +75,16 @@ export interface IReportListData {
   scheduleDate: string;
   matchingId: number;
   content: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface GetPointData {
+  id: number;
+  amount: number;
+  pointChange: number;
+  details: string;
+  pointUseType: "CHANGE" | "CHARGE" | "USE" | "REFUND";
   createdAt: string;
   updatedAt: string;
 }

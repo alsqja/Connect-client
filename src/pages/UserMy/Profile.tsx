@@ -125,16 +125,22 @@ export const Profile = () => {
       </ImageWrapper>
       <InfoWrapper>
         <SubscriptionInfo>
-          <strong>구독 상태</strong>
-          {profile.expiredDate ? (
-            <SubscriptionText>
-              현재 구독은{" "}
-              <SubscriptionDate>{profile.expiredDate}</SubscriptionDate>일
-              만료됩니다.
-            </SubscriptionText>
-          ) : (
-            <SubscriptionText>구독 정보가 없습니다.</SubscriptionText>
-          )}
+          <div>
+            <strong>구독 상태</strong>
+            {profile.expiredDate ? (
+              <SubscriptionText>
+                현재 구독은{" "}
+                <SubscriptionDate>{profile.expiredDate}</SubscriptionDate>일
+                만료됩니다.
+              </SubscriptionText>
+            ) : (
+              <SubscriptionText>구독 정보가 없습니다.</SubscriptionText>
+            )}
+          </div>
+          <div>
+            <strong>소유 포인트 : </strong>
+            {profile.point} P
+          </div>
         </SubscriptionInfo>
         <ProfileForm>
           <ProfileItem>
@@ -240,7 +246,7 @@ const ImageWrapper = styled.div`
   border-radius: 20px;
   cursor: pointer;
   position: relative;
-
+  
   &:hover {
     background-color: #f5f5f5;
   }
@@ -273,7 +279,14 @@ const InfoWrapper = styled.div`
 `;
 
 const SubscriptionInfo = styled.div`
+  width: 100%;
   margin-bottom: 20px;
+  display: flex;
+  flex-direction: row;
+  
+  div {
+    width: 50%;
+  }
 `;
 
 const SubscriptionText = styled.p`
@@ -310,7 +323,7 @@ const Value = styled.span`
 const ToggleSwitch = styled.div`
   display: flex;
   align-items: center;
-
+  
   input {
     margin-right: 10px;
     cursor: pointer;
@@ -335,7 +348,7 @@ const SubmitButton = styled.button`
   padding: 10px 20px;
   border-radius: 6px;
   cursor: pointer;
-
+  
   &:hover {
     background-color: #0056b3;
   }

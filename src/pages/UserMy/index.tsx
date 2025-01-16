@@ -6,6 +6,7 @@ import { Profile } from "./Profile";
 import { ScheduleTable } from "./ScheduleTable";
 import { PaymentTable } from "./PaymentTable";
 import { ReportTable } from "./ReportTable";
+import { PointTable } from "./PointTable";
 
 export const UserMy = () => {
   const [selected, setSelected] = useState(1);
@@ -24,6 +25,7 @@ export const UserMy = () => {
           {selected === 1 && <Profile />}
           {selected === 2 && <PaymentTable />}
           {selected === 3 && <ScheduleTable />}
+          {selected === 4 && <PointTable />}
           {selected === 6 && <ReportTable />}
         </MainContent>
       </Container>
