@@ -88,3 +88,5 @@ export interface GetPointData {
   createdAt: string;
   updatedAt: string;
 }
+
+export const pathNum = ["profile", "payment", "schedule", "point", "coupon", "report", "notfound", "notice"];
