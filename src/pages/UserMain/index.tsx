@@ -87,8 +87,8 @@ export const UserMain = () => {
           getCateRes.data.data
             .filter((el: any) => el.id === selected.id)[0]
             .subCategories.map((sub: any) => {
-            return { id: sub.id, label: sub.name };
-          })
+              return { id: sub.id, label: sub.name };
+            })
         );
       }
     },
@@ -310,7 +310,7 @@ const UserMainContainer = styled.div`
   align-content: center;
   border-radius: 10px;
   border: 1px solid #000;
-`
+`;
 
 const ModalContainer = styled.div`
   width: 100%;
@@ -358,7 +358,7 @@ const RemoveButton = styled.button`
   cursor: pointer;
   height: 30px;
   width: 30px;
-  
+
   &:hover {
     color: #2f29a8;
   }
@@ -376,7 +376,7 @@ const AddLabelButton = styled.button`
   font-size: 20px;
   color: #333;
   cursor: pointer;
-  
+
   &:hover {
     background-color: #f5f5f5;
   }
@@ -434,7 +434,7 @@ const SearchButton = styled.button`
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  
+
   &:hover {
     background-color: #0056b3;
   }

@@ -7,9 +7,12 @@ export const uploadFile = async (file: File | null) => {
       return;
     }
 
-    const response = await axios.post(`http://localhost:8080/api/file-url`, {
-      fileName: file.name,
-    });
+    const response = await axios.post(
+      `http://ec2-52-79-121-235.ap-northeast-2.compute.amazonaws.com:8080/api/file-url`,
+      {
+        fileName: file.name,
+      }
+    );
     const presignedUrl = response.data.data.url;
 
     const result = await axios.put(presignedUrl, file, {

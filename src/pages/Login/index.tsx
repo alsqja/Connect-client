@@ -81,7 +81,7 @@ export const Login = () => {
             회원가입
           </span>
         </div>
-        <NaverLogin />
+        {/* <NaverLogin /> */}
       </Container>
     </Wrapper>
   );
