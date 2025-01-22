@@ -209,7 +209,7 @@ export const ScheduleMatching = ({
       {detailModal && (
         <ScheduleModal
           onClose={() => setDetailModal(false)}
-          id={id}
+          id={matching?.toScheduleId}
           handleSubmit={() => matching && handleUpdate(matching?.id, "PENDING")}
         />
       )}
