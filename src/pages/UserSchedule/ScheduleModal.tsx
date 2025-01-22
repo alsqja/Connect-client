@@ -6,7 +6,7 @@ import { useGetSchedule, useGetScheduleContent } from "../../hooks/scheduleApi";
 
 interface Props {
   onClose: () => void;
-  id: number;
+  id: number | undefined;
   handleSubmit: () => void;
 }
 
@@ -17,6 +17,11 @@ export const ScheduleModal = ({ onClose, id, handleSubmit }: Props) => {
   const [getContentsReq, getContentsRes] = useGetScheduleContent();
 
   useEffect(() => {
+    if (!id) {
+      alert("일정정보를 불러올 수 없습니다.");
+      window.location.reload();
+      return;
+    }
     getScheduleReq(id);
     getContentsReq(id);
   }, [id]);
