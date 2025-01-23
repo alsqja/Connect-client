@@ -11,6 +11,7 @@ export interface ISchedule {
   date: string;
   title: string;
   details: string;
+  count: number;
   createdAt: string;
   updatedAt: string;
 }

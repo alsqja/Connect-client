@@ -6,9 +6,10 @@ import { useGetScheduleContent } from "../../hooks/scheduleApi";
 interface IProps {
   id: number;
   title: string;
+  details: string;
   date: string;
 }
-export const ScheduleDetail = ({ id, title, date }: IProps) => {
+export const ScheduleDetail = ({ id, title, date, details }: IProps) => {
   const [contents, setContents] = useState<IContent[]>([]);
   const [getReq, getRes] = useGetScheduleContent();
 
@@ -25,6 +26,7 @@ export const ScheduleDetail = ({ id, title, date }: IProps) => {
   return (
     <Container>
       <Header>{date + " " + title}</Header>
+      <Footer>{details}</Footer>
       <ContentWrapper>
         {contents.map((content) => (
           <Card key={content.id} imageUrl={content.subCategoryImageUrl || ""}>
@@ -114,4 +116,10 @@ const CategoryName = styled.h3`
 const Description = styled.p`
   font-size: 16px;
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+`;
+
+const Footer = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
 `;
