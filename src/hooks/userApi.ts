@@ -49,3 +49,37 @@ export const useUpdateProfile = () => {
 
   return [run, response] as [typeof run, typeof response];
 };
+
+export const useSendEmail = () => {
+  const [request, response] = useAxios();
+
+  const run = useCallback(
+    (email: string) => {
+      return request({
+        url: "auth/email",
+        method: "POST",
+        data: { email },
+      });
+    },
+    [request]
+  );
+
+  return [run, response] as [typeof run, typeof response];
+};
+
+export const useVerifyEmailCode = () => {
+  const [request, response] = useAxios();
+
+  const run = useCallback(
+    (email: string, code: string) => {
+      return request({
+        url: "auth/email/verify",
+        method: "POST",
+        data: { email, code },
+      });
+    },
+    [request]
+  );
+
+  return [run, response] as [typeof run, typeof response];
+};
