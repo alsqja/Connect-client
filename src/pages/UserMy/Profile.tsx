@@ -121,6 +121,11 @@ export const Profile = () => {
           accept="image/*"
           onChange={handleImageUpload}
         />
+        <FeedButtonWrapper>
+          <FeedButton onClick={() => (window.location.href = "/feed")}>
+            피드보기
+          </FeedButton>
+        </FeedButtonWrapper>
       </ImageWrapper>
       <InfoWrapper>
         <SubscriptionInfo>
@@ -240,7 +245,7 @@ const ImageWrapper = styled.div`
   align-items: center;
   justify-content: center;
   width: 300px;
-  height: 400px;
+  height: 500px;
   border: 2px dashed #ccc;
   border-radius: 20px;
   cursor: pointer;
@@ -260,7 +265,7 @@ const ProfileImage = styled.img`
 
 const UploadMessage = styled.span`
   position: absolute;
-  bottom: 10px;
+  bottom: 70px;
   color: white;
   font-size: 14px;
   text-align: center;
@@ -347,6 +352,29 @@ const SubmitButton = styled.button`
   padding: 10px 20px;
   border-radius: 6px;
   cursor: pointer;
+
+  &:hover {
+    background-color: #0056b3;
+  }
+`;
+
+const FeedButtonWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  width: 100%;
+`;
+
+const FeedButton = styled.button`
+  width: 80%;
+  padding: 12px 0;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  text-align: center;
+  cursor: pointer;
+  margin-top: 10px; /* 이미지와의 간격 */
 
   &:hover {
     background-color: #0056b3;
