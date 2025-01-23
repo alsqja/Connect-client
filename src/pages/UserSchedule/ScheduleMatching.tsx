@@ -75,7 +75,10 @@ export const ScheduleMatching = ({
 
   useEffect(() => {
     if (postMatchingRes.called && postMatchingRes.error) {
-      alert("반경 10KM 내 일정이 없습니다.");
+      if (postMatchingRes.error.includes("없는 데이터"))
+        alert("반경 10KM 내 일정이 없습니다.");
+      if (postMatchingRes.error.includes("포인트"))
+        alert("포인트가 부족합니다.");
       return;
     }
 
@@ -191,7 +194,9 @@ export const ScheduleMatching = ({
           )}
         </ScrollableContainer>
       </Section>
-      <Button onClick={handleSubmit}>매칭 찾기</Button>
+      <Button onClick={handleSubmit}>{`매칭 찾기 ${
+        5 - schedule.count > 0 ? `무료 ${5 - schedule.count}회` : "(50P)"
+      }`}</Button>
       {modal && (
         <MatchingModal
           onClose={() => {

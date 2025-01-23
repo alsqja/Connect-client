@@ -38,7 +38,12 @@ export const UserSchedule = () => {
 
   return (
     <>
-      <ScheduleDetail id={id} title={schedule.title} date={schedule.date} />
+      <ScheduleDetail
+        id={id}
+        title={schedule.title}
+        date={schedule.date}
+        details={schedule.details}
+      />
       <ScheduleMatching
         id={id}
         handleSubmit={handleSubmit}
