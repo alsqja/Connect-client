@@ -91,8 +91,7 @@ export const Profile = () => {
     if (imageFile) {
       const result = await uploadFile(imageFile);
 
-      const profileUrl =
-        "https://connect-images1.s3.ap-northeast-2.amazonaws.com/" + result;
+      const profileUrl = process.env.REACT_APP_IMAGE_URL + result;
 
       updateReq({ ...updateValues, profileUrl });
     } else {
@@ -246,7 +245,7 @@ const ImageWrapper = styled.div`
   border-radius: 20px;
   cursor: pointer;
   position: relative;
-  
+
   &:hover {
     background-color: #f5f5f5;
   }
@@ -283,7 +282,7 @@ const SubscriptionInfo = styled.div`
   margin-bottom: 20px;
   display: flex;
   flex-direction: row;
-  
+
   div {
     width: 50%;
   }
@@ -323,7 +322,7 @@ const Value = styled.span`
 const ToggleSwitch = styled.div`
   display: flex;
   align-items: center;
-  
+
   input {
     margin-right: 10px;
     cursor: pointer;
@@ -348,7 +347,7 @@ const SubmitButton = styled.button`
   padding: 10px 20px;
   border-radius: 6px;
   cursor: pointer;
-  
+
   &:hover {
     background-color: #0056b3;
   }

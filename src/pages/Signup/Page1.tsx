@@ -65,7 +65,6 @@ export const Page1 = ({
       alert("인증되었습니다.");
       setIsVerified(true);
       setIsCounting(false);
-      setIsVerified(false);
       return;
     }
     if (verifyRes.called && !verifyRes.loading && verifyRes.error) {
