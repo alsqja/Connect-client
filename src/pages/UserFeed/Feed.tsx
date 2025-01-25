@@ -1,21 +1,49 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { Post } from "./data";
+import { FeedDetailModal } from "./FeedDetailModal";
+import { FeedEditModal } from "./FeedEditModal";
 
 interface FeedProps {
   posts: Post[];
+  currentUserId: number;
+  feedUserId: number;
 }
 
-export const Feed = ({ posts }: FeedProps) => {
+export const Feed = ({ posts, currentUserId, feedUserId }: FeedProps) => {
+  const [selectedPost, setSelectedPost] = useState<Post | null>(null);
+  const [isEdit, setIsEdit] = useState(false);
+
   return (
-    <GridContainer>
-      {posts.map((post) => (
-        <PostItem key={post.id}>
-          <PostImage src={post.url} alt="post" />
-          {/* <Description>{post.description}</Description> */}
-        </PostItem>
-      ))}
-    </GridContainer>
+    <>
+      <GridContainer>
+        {posts.map((post) => (
+          <PostItem key={post.id} onClick={() => setSelectedPost(post)}>
+            <PostImage src={post.url} alt="post" />
+          </PostItem>
+        ))}
+      </GridContainer>
+      {selectedPost && (
+        <FeedDetailModal
+          postId={selectedPost.id}
+          onClose={() => setSelectedPost(null)}
+          currentUserId={currentUserId}
+          feedUserId={feedUserId}
+          handleEdit={() => setIsEdit(true)}
+        />
+      )}
+      {isEdit && (
+        <FeedEditModal
+          post={{
+            id: selectedPost?.id as number,
+            url: selectedPost?.url as string,
+            description: selectedPost?.description as string,
+          }}
+          onClose={() => setIsEdit(false)}
+          feedUserId={feedUserId}
+        />
+      )}
+    </>
   );
 };
 
@@ -31,23 +59,16 @@ const PostItem = styled.div`
   overflow: hidden;
   border-radius: 8px;
   border: 1px solid #222;
+  cursor: pointer;
 `;
 
 const PostImage = styled.img`
   width: 100%;
   height: 300px;
   object-fit: cover;
-  cursor: pointer;
-`;
+  transition: transform 0.2s ease-in-out;
 
-const Description = styled.p`
-  padding: 10px;
-  font-size: 14px;
-  color: #fff;
-  background: rgba(0, 0, 0, 0.6);
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  margin: 0;
-  text-align: center;
+  &:hover {
+    transform: scale(1.05);
+  }
 `;

@@ -47,7 +47,11 @@ export const UserFeed = () => {
         <FeedUploadModal onClose={() => setIsModalOpen(false)} id={userId} />
       )}
       {posts.length > 0 ? (
-        <Feed posts={posts} />
+        <Feed
+          posts={posts}
+          currentUserId={user?.id as number}
+          feedUserId={profile?.id as number}
+        />
       ) : (
         <NoPosts>피드가 없습니다.</NoPosts>
       )}
