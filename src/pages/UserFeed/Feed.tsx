@@ -12,7 +12,7 @@ export const Feed = ({ posts }: FeedProps) => {
       {posts.map((post) => (
         <PostItem key={post.id}>
           <PostImage src={post.url} alt="post" />
-          <Description>{post.description}</Description>
+          {/* <Description>{post.description}</Description> */}
         </PostItem>
       ))}
     </GridContainer>
@@ -35,8 +35,9 @@ const PostItem = styled.div`
 
 const PostImage = styled.img`
   width: 100%;
-  height: 100%;
+  height: 300px;
   object-fit: cover;
+  cursor: pointer;
 `;
 
 const Description = styled.p`

@@ -1,5 +1,6 @@
 import { useCallback } from "react";
 import { useAxios } from "./axios";
+import { uploadFile } from "./fileApi";
 
 export const useGetAllFeed = () => {
   const [request, response] = useAxios();
@@ -29,6 +30,26 @@ export const useGetProfile = () => {
       return request({
         url: `users/${id}`,
         method: "GET",
+      });
+    },
+    [request]
+  );
+
+  return [run, response] as [typeof run, typeof response];
+};
+
+export const useCreateFeed = () => {
+  const [request, response] = useAxios();
+
+  const run = useCallback(
+    (url: string, id: number, description: string) => {
+      return request({
+        url: `/users/${id}/images`,
+        method: "POST",
+        data: {
+          url,
+          description,
+        },
       });
     },
     [request]

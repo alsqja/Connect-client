@@ -1,99 +1,33 @@
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { FeedProfile } from "./FeedProfile";
 import { Feed } from "./Feed";
-import { useEffect, useState } from "react";
 import { IFeedProfile, Post } from "./data";
 import { useGetAllFeed, useGetProfile } from "../../hooks/feedApi";
+import { useRecoilValue } from "recoil";
+import { userState } from "../../stores/session";
+import { FeedUploadModal } from "./FeedUploadModal";
 
 export const UserFeed = () => {
-  const userId =
-    +window.location.pathname.split("/")[
-      window.location.pathname.split("/").length - 2
-    ];
+  const user = useRecoilValue(userState);
+  const userId = +window.location.pathname.split("/").slice(-2, -1)[0];
 
   const [posts, setPosts] = useState<Post[]>([]);
   const [getReq, getRes] = useGetAllFeed();
   const [page, setPage] = useState(1);
   const [getProfileReq, getProfileRes] = useGetProfile();
   const [profile, setProfile] = useState<IFeedProfile>();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
-    if (!userId) {
-      return;
-    }
+    if (!userId) return;
     getReq(userId, page);
     getProfileReq(userId);
   }, [page]);
 
   useEffect(() => {
     if (getRes.called && getRes.data) {
-      setPosts([
-        ...getRes.data.data.data,
-        {
-          id: 1,
-          userId: 1,
-          url: "https://connect-images1.s3.ap-northeast-2.amazonaws.com/0da74490-b23d-4165-9dcf-a96da8c216dc_image+(2).png",
-          description: "description",
-          createdAt: "2025-01-24T09:23:30.787931",
-          updatedAt: "2025-01-24T09:23:30.787931",
-        },
-        {
-          id: 1,
-          userId: 1,
-          url: "https://connect-images1.s3.ap-northeast-2.amazonaws.com/0da74490-b23d-4165-9dcf-a96da8c216dc_image+(2).png",
-          description: "description",
-          createdAt: "2025-01-24T09:23:30.787931",
-          updatedAt: "2025-01-24T09:23:30.787931",
-        },
-        {
-          id: 1,
-          userId: 1,
-          url: "https://connect-images1.s3.ap-northeast-2.amazonaws.com/0da74490-b23d-4165-9dcf-a96da8c216dc_image+(2).png",
-          description: "description",
-          createdAt: "2025-01-24T09:23:30.787931",
-          updatedAt: "2025-01-24T09:23:30.787931",
-        },
-        {
-          id: 1,
-          userId: 1,
-          url: "https://connect-images1.s3.ap-northeast-2.amazonaws.com/0da74490-b23d-4165-9dcf-a96da8c216dc_image+(2).png",
-          description: "description",
-          createdAt: "2025-01-24T09:23:30.787931",
-          updatedAt: "2025-01-24T09:23:30.787931",
-        },
-        {
-          id: 1,
-          userId: 1,
-          url: "https://connect-images1.s3.ap-northeast-2.amazonaws.com/0da74490-b23d-4165-9dcf-a96da8c216dc_image+(2).png",
-          description: "description",
-          createdAt: "2025-01-24T09:23:30.787931",
-          updatedAt: "2025-01-24T09:23:30.787931",
-        },
-        {
-          id: 1,
-          userId: 1,
-          url: "https://connect-images1.s3.ap-northeast-2.amazonaws.com/0da74490-b23d-4165-9dcf-a96da8c216dc_image+(2).png",
-          description: "description",
-          createdAt: "2025-01-24T09:23:30.787931",
-          updatedAt: "2025-01-24T09:23:30.787931",
-        },
-        {
-          id: 1,
-          userId: 1,
-          url: "https://connect-images1.s3.ap-northeast-2.amazonaws.com/0da74490-b23d-4165-9dcf-a96da8c216dc_image+(2).png",
-          description: "description",
-          createdAt: "2025-01-24T09:23:30.787931",
-          updatedAt: "2025-01-24T09:23:30.787931",
-        },
-        {
-          id: 1,
-          userId: 1,
-          url: "https://connect-images1.s3.ap-northeast-2.amazonaws.com/0da74490-b23d-4165-9dcf-a96da8c216dc_image+(2).png",
-          description: "description",
-          createdAt: "2025-01-24T09:23:30.787931",
-          updatedAt: "2025-01-24T09:23:30.787931",
-        },
-      ]);
+      setPosts([...getRes.data.data.data]);
     }
   }, [getRes]);
 
@@ -106,10 +40,16 @@ export const UserFeed = () => {
   return (
     <Container>
       <FeedProfile profile={profile} />
+      {user?.id === userId && (
+        <AddPostButton onClick={() => setIsModalOpen(true)}>+</AddPostButton>
+      )}
+      {isModalOpen && (
+        <FeedUploadModal onClose={() => setIsModalOpen(false)} id={userId} />
+      )}
       {posts.length > 0 ? (
         <Feed posts={posts} />
       ) : (
-        <div style={{ marginTop: "20px" }}>피드가 없습니다.</div>
+        <NoPosts>피드가 없습니다.</NoPosts>
       )}
     </Container>
   );
@@ -119,5 +59,33 @@ const Container = styled.div`
   width: 1000px;
   margin: 0 auto;
   padding: 20px;
-  min-height: 100vh;
+  min-height: calc(100vh - 200px);
+  position: relative;
+`;
+
+const AddPostButton = styled.button`
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  border: 2px dashed #ccc;
+  width: 50px;
+  height: 50px;
+  font-size: 32px;
+  line-height: 50px;
+  text-align: center;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease-in-out;
+
+  &:hover {
+    transform: scale(1.1);
+    border-color: #007bff;
+  }
+`;
+
+const NoPosts = styled.div`
+  margin-top: 20px;
+  text-align: center;
+  color: #777;
+  font-size: 18px;
 `;
