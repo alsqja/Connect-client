@@ -9,9 +9,11 @@ export const AdminSidebar = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log(location.pathname);
+    const delId = location.pathname.split("/" + location.pathname.split("/").reverse()[0])[0];
+    console.log("location", location.pathname);
+
     setPage(
-      AdminNaviData.filter((el) => el.path === `${location.pathname}`)[0].id
+      AdminNaviData.filter((el) => el.path === `${location.pathname === el.path ? location.pathname : delId}`)[0].id
     );
   }, [location]);
   return (
@@ -53,7 +55,7 @@ const Nav = styled.div<{ focus: boolean }>`
   background-color: ${({ focus }) => (focus ? "#f1f1f1" : "white")};
   position: relative;
   cursor: pointer;
-
+  
   &:not(:last-child)::after {
     content: "";
     position: absolute;
