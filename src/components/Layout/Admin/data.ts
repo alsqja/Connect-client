@@ -27,8 +27,8 @@ export const AdminNaviData: INaviData[] = [
   },
   {
     id: 5,
-    path: "/admin/e",
-    label: "매출 통계",
+    path: "/admin/coupon",
+    label: "쿠폰 생성",
   },
   {
     id: 6,

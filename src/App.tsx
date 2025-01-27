@@ -14,6 +14,8 @@ import { UserSchedule } from "./pages/UserSchedule";
 import { UserLayout } from "./components/Layout/User";
 import { AdminLayout } from "./components/Layout/Admin";
 import { NotFound } from "./pages/NotFound";
+import { AdminCoupon } from "./pages/AdminCoupon";
+import { AdminCouponDetail } from "./pages/AdminCoupon/AdminCouponDetail";
 import { UserFeed } from "./pages/UserFeed";
 
 function App() {
@@ -33,6 +35,11 @@ function App() {
           <Route path="/admin/user" element={<AdminUser />} />
           <Route path="/admin/category" element={<AdminCategory />} />
           <Route path="/admin/payment" element={<AdminPaymentManage />} />
+          <Route path="/admin/coupon">
+            <Route index element={<AdminCoupon />} />
+            <Route path=":id" element={<AdminCouponDetail />} />
+            <Route path="new" element={<AdminCouponDetail />} />
+          </Route>
         </Route>
         <Route path="/*" element={<NotFound />} />
       </Routes>
