@@ -8,6 +8,7 @@ import { useUpdateMatching } from "../../hooks/matchingApi";
 import { MatchingModal } from "./MatchingModal";
 import { ScheduleModal } from "./ScheduleModal";
 import { ReportModal } from "./ReportModal";
+import { useNavigate } from "react-router-dom";
 
 interface IProps {
   id: number;
@@ -33,6 +34,7 @@ export const ScheduleMatching = ({
   const [reportModal, setReportModal] = useState(false);
   const [reportUserId, setReportUserId] = useState(0);
   const [reportMatchingId, setReportMatchingId] = useState(0);
+  const navigate = useNavigate();
 
   useEffect(() => {
     getReq(id);
@@ -88,6 +90,13 @@ export const ScheduleMatching = ({
     }
   }, [postMatchingRes]);
 
+  const handleNavigate = useCallback(
+    (id: number) => {
+      navigate(`/user/${id}/feed`);
+    },
+    [navigate]
+  );
+
   return (
     <Container>
       <Section>
@@ -102,7 +111,15 @@ export const ScheduleMatching = ({
             successData.map((item) => (
               <Item key={item.id}>
                 <Info>
-                  <Name>
+                  <Name
+                    onClick={() =>
+                      handleNavigate(
+                        user?.id === item.fromUserId
+                          ? item.toUserId
+                          : item.fromUserId
+                      )
+                    }
+                  >
                     {user?.id === item.fromUserId
                       ? item.toUserName
                       : item.fromUserName}
@@ -143,8 +160,10 @@ export const ScheduleMatching = ({
             receivedData.map((item) => (
               <Item key={item.id}>
                 <Info>
-                  <Name>{item.fromUserName}</Name>님과의 유사도{" "}
-                  {(item.similarity * 100).toFixed(2)}% 입니다.
+                  <Name onClick={() => handleNavigate(item.fromUserId)}>
+                    {item.fromUserName}
+                  </Name>
+                  님과의 유사도 {(item.similarity * 100).toFixed(2)}% 입니다.
                 </Info>
                 <ProgressWrapper>
                   <ProgressBar value={Math.floor(item.similarity * 100)} />
@@ -174,8 +193,10 @@ export const ScheduleMatching = ({
             sentData.map((item) => (
               <Item key={item.id}>
                 <Info>
-                  <Name>{item.toUserName}</Name>님과의 유사도{" "}
-                  {(item.similarity * 100).toFixed(2)}% 입니다.
+                  <Name onClick={() => handleNavigate(item.toUserId)}>
+                    {item.toUserName}
+                  </Name>
+                  님과의 유사도 {(item.similarity * 100).toFixed(2)}% 입니다.
                 </Info>
                 <ProgressWrapper>
                   <ProgressBar value={Math.floor(item.similarity * 100)} />
@@ -291,6 +312,7 @@ const Info = styled.div`
 const Name = styled.span`
   font-weight: bold;
   color: #4b3fcb;
+  cursor: pointer;
 `;
 
 const ProgressWrapper = styled.div`

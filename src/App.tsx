@@ -14,6 +14,7 @@ import { UserSchedule } from "./pages/UserSchedule";
 import { UserLayout } from "./components/Layout/User";
 import { AdminLayout } from "./components/Layout/Admin";
 import { NotFound } from "./pages/NotFound";
+import { UserFeed } from "./pages/UserFeed";
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
           <Route path="/point" element={<UserPointCharge />} />
           <Route path="/user/my/:type" element={<UserMy />} />
           <Route path="/schedule/:id" element={<UserSchedule />} />
+          <Route path="user/:id/feed" element={<UserFeed />} />
         </Route>
         <Route element={<AdminLayout />}>
           <Route path="/admin/user" element={<AdminUser />} />

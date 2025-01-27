@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { ProfileData, UpdateUserData } from "./data";
 import { useGetProfile, useUpdateProfile } from "../../hooks/userApi";
 import { uploadFile } from "../../hooks/fileApi";
+import { useNavigate } from "react-router-dom";
 
 export const Profile = () => {
   const [profile, setProfile] = useState<ProfileData | null>(null);
@@ -17,6 +18,7 @@ export const Profile = () => {
   const [updateReq, updateRes] = useUpdateProfile();
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     getReq();
@@ -99,6 +101,14 @@ export const Profile = () => {
     }
   }, [imageFile, updateReq, updateValues]);
 
+  const handleNavigate = useCallback(
+    (e: React.MouseEvent) => {
+      e.stopPropagation();
+      navigate(`/user/${profile?.id}/feed`);
+    },
+    [navigate, profile?.id]
+  );
+
   if (!profile) return <div>로딩 중...</div>;
 
   return (
@@ -122,9 +132,7 @@ export const Profile = () => {
           onChange={handleImageUpload}
         />
         <FeedButtonWrapper>
-          <FeedButton onClick={() => (window.location.href = "/feed")}>
-            피드보기
-          </FeedButton>
+          <FeedButton onClick={(e) => handleNavigate(e)}>피드보기</FeedButton>
         </FeedButtonWrapper>
       </ImageWrapper>
       <InfoWrapper>

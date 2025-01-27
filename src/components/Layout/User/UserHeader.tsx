@@ -22,6 +22,7 @@ export const UserHeader = () => {
 
   const handleLogout = () => {
     logoutReq();
+    handleDropdownToggle();
   };
 
   useEffect(() => {
@@ -34,6 +35,7 @@ export const UserHeader = () => {
 
   const handleMyPage = () => {
     navigate("/user/my/profile");
+    handleDropdownToggle();
   };
 
   return (
@@ -41,9 +43,11 @@ export const UserHeader = () => {
       <Container>
         <Logo src={logo} alt="logo" onClick={() => navigate("/")} />
         <RightHeader>
-          {pathname !== "/point" &&
-              <MainColorButton onClick={() => navigate("/point")}>포인트 충전</MainColorButton>
-          }
+          {pathname !== "/point" && (
+            <MainColorButton onClick={() => navigate("/point")}>
+              포인트 충전
+            </MainColorButton>
+          )}
           {user ? (
             <UserProfile onClick={handleDropdownToggle}>
               <ProfileImage src={user?.profileUrl || ""} alt="user profile" />
@@ -98,12 +102,12 @@ const Logo = styled.img`
 const RightHeader = styled.div`
   display: flex;
   flex-direction: row;
-  
+
   button {
     margin-right: 30px;
     width: 100px;
   }
-`
+`;
 
 const UserProfile = styled.div`
   display: flex;
@@ -145,7 +149,7 @@ const DropdownItem = styled.div`
   color: #333;
   cursor: pointer;
   transition: background-color 0.2s;
-  
+
   &:hover {
     background-color: #f5f5f5;
   }
