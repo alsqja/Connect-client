@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { useCallback, useEffect, useState } from "react";
 import { AdminCouponRes } from "./data";
-import { TableBody, TableWrapper } from "../../components/StyledTable/tableStyle";
+import { OverflowTd, TableBody, TableWrapper } from "../../components/StyledTable/tableStyle";
 import { StyledTable, TableHeader } from "../AdminUser/UserTable";
 import MainColorButton from "../../components/Button/MainColorButton";
 import { PaginationContainer } from "../../components/Pagination/PaginationContainer";
@@ -72,8 +72,8 @@ export const AdminCoupon = () => {
                     <tr key={index}>
                       <td>{index + 1 + (10 * (page - 1))}</td>
                       <td>{statusString(data.isDeleted, data.openDate)}</td>
-                      <td>{data.name}</td>
-                      <td>{data.description}</td>
+                      <OverflowTd>{data.name}</OverflowTd>
+                      <OverflowTd>{data.description}</OverflowTd>
                       <td>{data.openDate.replace("T", " ")}</td>
                       <td>{data.expiredDate}</td>
                       <td>{data.createdAt.replace("T", " ").split(".")[0]}</td>
@@ -116,12 +116,6 @@ const Wrapper = styled.div`
   border: 1px solid black;
   border-radius: 10px;
   justify-content: space-between;
-  
-  td {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
 `;
 
 const Title = styled.div`
