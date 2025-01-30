@@ -24,10 +24,11 @@ export const useCreateMatching = () => {
   const [request, response] = useAxios();
 
   const run = useCallback(
-    (id: number) => {
+    (id: number, data: any) => {
       return request({
         url: `schedules/${id}/matchings`,
         method: "POST",
+        data,
       });
     },
     [request]

@@ -14,9 +14,12 @@ export const UserSchedule = () => {
   const [getReq, getRes] = useGetSchedule();
   const [postMatchingReq, postMatchingRes] = useCreateMatching();
 
-  const handleSubmit = useCallback(() => {
-    postMatchingReq(id);
-  }, [postMatchingReq, id]);
+  const handleSubmit = useCallback(
+    (data: any) => {
+      postMatchingReq(id, data);
+    },
+    [postMatchingReq, id]
+  );
 
   useEffect(() => {
     if (!id) {
@@ -24,6 +27,7 @@ export const UserSchedule = () => {
       return;
     }
     getReq(id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   useEffect(() => {
