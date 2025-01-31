@@ -27,6 +27,10 @@ export const UserSidebarData: IOption[] = [
   },
   {
     id: 7,
+    label: "채팅 내역",
+  },
+  {
+    id: 8,
     label: "알림",
   },
 ];
@@ -89,7 +93,16 @@ export interface GetPointData {
   updatedAt: string;
 }
 
-export const pathNum = ["profile", "payment", "schedule", "point", "coupon", "report", "notfound", "notice"];
+export const pathNum = [
+  "profile",
+  "payment",
+  "schedule",
+  "point",
+  "coupon",
+  "report",
+  "chatHistory",
+  "notice",
+];
 
 export interface GetCouponData {
   id: number;
