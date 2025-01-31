@@ -52,6 +52,21 @@ export const useFetchChatrooms = () => {
   return [run, response] as [typeof run, typeof response];
 };
 
+// 채팅방 삭제
+export const useDeleteChatroom = () => {
+  const [request, response] = useAxios();
+  const run = useCallback(
+    (roomId: string) => {
+      return request({
+        method: "DELETE",
+        url: `/chatrooms/${roomId}`,
+      });
+    },
+    [request]
+  );
+  return [run, response] as [typeof run, typeof response];
+};
+
 // 채팅 내역 조회
 export const useFetchChatHistory = () => {
   const [request, response] = useAxios();
