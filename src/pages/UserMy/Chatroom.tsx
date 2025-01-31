@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { useFetchChatrooms } from "../../hooks/chattingApi";
 import { userState } from "../../stores/session";
 
 import {
@@ -8,6 +7,7 @@ import {
   TableHeader,
   TableWrapper,
 } from "../../components/StyledTable/tableStyle";
+import { useDeleteChatroom, useFetchChatrooms } from "../../hooks/chattingApi";
 import styled from "styled-components";
 import { IChatroom } from "../Chatting/data";
 import { useNavigate } from "react-router-dom";
@@ -15,6 +15,7 @@ import { useRecoilValue } from "recoil";
 
 export const Chatroom = () => {
   const [getReq, getRes] = useFetchChatrooms();
+  const [deleteReq, deleteRes] = useDeleteChatroom();
   const [chatrooms, setChatrooms] = useState<IChatroom[]>();
   const user = useRecoilValue(userState);
   const navigator = useNavigate();
@@ -36,6 +37,7 @@ export const Chatroom = () => {
   const handleDelete = (chatroomId: number) => {
     console.log(`Deleting chatroom with id: ${chatroomId}`);
     // Add delete logic here
+    deleteReq(chatroomId.toString());
   };
 
   return (
