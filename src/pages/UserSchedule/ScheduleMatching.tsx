@@ -9,10 +9,12 @@ import { MatchingModal } from "./MatchingModal";
 import { ScheduleModal } from "./ScheduleModal";
 import { ReportModal } from "./ReportModal";
 import { useNavigate } from "react-router-dom";
+import { FaFilter } from "react-icons/fa";
+import { FilterModal } from "./FilterModal";
 
 interface IProps {
   id: number;
-  handleSubmit: () => void;
+  handleSubmit: (data: any) => void;
   postMatchingRes: any;
   schedule: ISchedule;
 }
@@ -35,9 +37,18 @@ export const ScheduleMatching = ({
   const [reportUserId, setReportUserId] = useState(0);
   const [reportMatchingId, setReportMatchingId] = useState(0);
   const navigate = useNavigate();
+  const isMember = user?.memberType !== null;
+
+  const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
+
+  const [gender, setGender] = useState<string>("랜덤");
+  const [distance, setDistance] = useState<number>(5);
+  const [minAge, setMinAge] = useState<number>(-5);
+  const [maxAge, setMaxAge] = useState<number>(10);
 
   useEffect(() => {
     getReq(id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   useEffect(() => {
@@ -60,7 +71,7 @@ export const ScheduleMatching = ({
         )
       );
     }
-  }, [getRes]);
+  }, [getRes, user?.id]);
 
   const handleUpdate = useCallback(
     (id: number, status: string) => {
@@ -78,7 +89,7 @@ export const ScheduleMatching = ({
   useEffect(() => {
     if (postMatchingRes.called && postMatchingRes.error) {
       if (postMatchingRes.error.includes("없는 데이터"))
-        alert("반경 10KM 내 일정이 없습니다.");
+        alert("반경 " + distance + "KM 내 일정이 없습니다.");
       if (postMatchingRes.error.includes("포인트"))
         alert("포인트가 부족합니다.");
       return;
@@ -88,6 +99,7 @@ export const ScheduleMatching = ({
       setModal(true);
       setMatching(postMatchingRes.data.data);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [postMatchingRes]);
 
   const handleNavigate = useCallback(
@@ -96,6 +108,21 @@ export const ScheduleMatching = ({
     },
     [navigate]
   );
+
+  const handleCreateMatching = useCallback(() => {
+    let dataGender = null;
+    if (gender === "남") {
+      dataGender = "MAN";
+    } else if (gender === "여") {
+      dataGender = "WOMAN";
+    }
+    handleSubmit({
+      gender: dataGender,
+      minusAge: -minAge,
+      plusAge: maxAge,
+      distance: distance,
+    });
+  }, [distance, gender, handleSubmit, maxAge, minAge]);
 
   return (
     <Container>
@@ -215,9 +242,30 @@ export const ScheduleMatching = ({
           )}
         </ScrollableContainer>
       </Section>
-      <Button onClick={handleSubmit}>{`매칭 찾기 ${
-        5 - schedule.count > 0 ? `무료 ${5 - schedule.count}회` : "(50P)"
-      }`}</Button>
+      <ButtonContainer>
+        <MatchButton onClick={handleCreateMatching}>
+          {`매칭 찾기 ${
+            5 - schedule.count > 0 ? `무료 ${5 - schedule.count}회` : "(50P)"
+          }`}
+        </MatchButton>
+        <FilterButton onClick={() => setIsFilterModalOpen(true)}>
+          <FaFilter size={18} />
+        </FilterButton>
+      </ButtonContainer>
+      {isFilterModalOpen && (
+        <FilterModal
+          onClose={() => setIsFilterModalOpen(false)}
+          gender={gender}
+          setGender={setGender}
+          distance={distance}
+          setDistance={setDistance}
+          minAge={minAge}
+          setMinAge={setMinAge}
+          maxAge={maxAge}
+          setMaxAge={setMaxAge}
+          isMember={isMember}
+        />
+      )}
       {modal && (
         <MatchingModal
           onClose={() => {
@@ -357,8 +405,15 @@ const Action = styled.div`
   }
 `;
 
-const Button = styled.button`
-  width: 100%;
+const ButtonContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+`;
+
+const MatchButton = styled.button`
+  /* width: 150px; */
+  flex: 1;
   padding: 12px 0;
   font-size: 16px;
   font-weight: bold;
@@ -367,8 +422,23 @@ const Button = styled.button`
   border: none;
   border-radius: 6px;
   cursor: pointer;
+  text-align: center;
 
   &:hover {
     background-color: #0056b3;
+  }
+`;
+
+const FilterButton = styled.button`
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #007bff;
+  padding: 8px;
+  border-radius: 50%;
+  transition: 0.3s ease;
+
+  &:hover {
+    background-color: rgba(0, 123, 255, 0.1);
   }
 `;

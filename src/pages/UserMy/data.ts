@@ -103,3 +103,18 @@ export const pathNum = [
   "chatHistory",
   "notice",
 ];
+
+export interface GetCouponData {
+  id: number;
+  userId: number;
+  couponId: number;
+  couponName: string;
+  couponDescription: string;
+  expiredDate: string;
+  status: CouponStatus;
+  amount: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type CouponStatus = "USED" | "UNUSED" | "ALL";

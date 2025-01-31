@@ -103,3 +103,20 @@ export const useGetScheduleMatching = () => {
 
   return [run, response] as [typeof run, typeof response];
 };
+
+export const useUpdateSchedule = () => {
+  const [request, response] = useAxios();
+
+  const run = useCallback(
+    (id: number, data: IPostScheduleData) => {
+      return request({
+        url: `schedules/${id}`,
+        method: "PATCH",
+        data,
+      });
+    },
+    [request]
+  );
+
+  return [run, response] as [typeof run, typeof response];
+};
