@@ -40,3 +40,9 @@ input,
 textarea {
   user-select: text; /* 드래그 활성화 */
 }
+
+.notice {
+  font-size: 12px;
+  color: #828282;
+  font-weight: bold;
+}
