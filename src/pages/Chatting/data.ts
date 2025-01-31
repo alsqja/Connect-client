@@ -14,6 +14,6 @@ export interface IChatroom {
   title: string;
   detail: string;
   address: string;
-  fromSchedueUserName: String;
-  toSchedueUserName: string;
+  toScheduleUserName: String;
+  fromScheduleUserName: string;
 }

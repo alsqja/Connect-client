@@ -35,7 +35,7 @@ export const Chatroom = () => {
 
   const handleDelete = (chatroomId: number) => {
     console.log(`Deleting chatroom with id: ${chatroomId}`);
-    // Add your delete logic here
+    // Add delete logic here
   };
 
   return (
@@ -70,9 +70,9 @@ export const Chatroom = () => {
                     <td>{chatroom.detail}</td>
                     <td>{chatroom.address}</td>
                     <td>
-                      {chatroom.fromSchedueUserName === user?.name
-                        ? chatroom.toSchedueUserName
-                        : chatroom.fromSchedueUserName}
+                      {chatroom.fromScheduleUserName === user?.name
+                        ? chatroom.toScheduleUserName
+                        : chatroom.fromScheduleUserName}
                     </td>
                     <td>
                       <DeleteButton
