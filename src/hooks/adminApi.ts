@@ -152,3 +152,15 @@ export const useDeleteSub = () => {
 
   return [run, response] as [typeof run, typeof response];
 };
+
+export const useGetTopCategories = () => {
+  const [request, response] = useAxios();
+
+  const run = useCallback(() => {
+    return request({
+      url: "/sub-categories/ranking",
+    });
+  }, [request]);
+
+  return [run, response] as [typeof run, typeof response];
+};
