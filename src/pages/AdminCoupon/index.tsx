@@ -16,7 +16,7 @@ export const AdminCoupon = () => {
   const navigate = useNavigate();
 
   const getCouponData = useCallback((page: number, size: number) => {
-    getCoupon(page, size);
+    getCoupon(page, size, "ALL");
   }, [getCoupon])
 
   useEffect(() => {

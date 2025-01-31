@@ -1,6 +1,6 @@
 import { useAxios } from "./axios";
 import { useCallback } from "react";
-import { AdminCouponReq, AdminCouponUpdateReq } from "../pages/AdminCoupon/data";
+import { AdminCouponReq, AdminCouponUpdateReq, couponFilter } from "../pages/AdminCoupon/data";
 
 
 export const usePostCoupon = () => {
@@ -20,10 +20,10 @@ export const usePostCoupon = () => {
 export const useGetCoupons = () => {
   const [request, response] = useAxios();
 
-  const run = useCallback((page: number, size: number) => {
+  const run = useCallback((page: number, size: number, filter: couponFilter) => {
     return request({
       method: 'GET',
-      url: `/coupons?page=${page}&size=${size}`,
+      url: `/coupons?page=${page}&size=${size}&filter=${filter}`,
     })
   }, [response]);
 
@@ -51,6 +51,19 @@ export const useUpdateCoupon = () => {
       method: 'PATCH',
       url: `/admin/coupons/${id}`,
       data,
+    })
+  }, [response]);
+
+  return [run, response] as [typeof run, typeof response];
+}
+
+export const useIssueCoupon = () => {
+  const [request, response] = useAxios();
+
+  const run = useCallback((id: number) => {
+    return request({
+      method: 'POST',
+      url: `/coupons/${id}`,
     })
   }, [response]);
 
