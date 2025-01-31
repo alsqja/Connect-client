@@ -3,6 +3,7 @@ import axios from "axios";
 import { IChat } from "../pages/Chatting/data";
 import { useAxios } from "./axios";
 import { useCallback } from "react";
+import exp from "constants";
 
 const baseURL = "http://localhost:8080";
 const socketUrl = "ws://localhost:8080/ws";
@@ -61,6 +62,23 @@ export const useFetchChatHistory = () => {
       return request({
         method: "GET",
         url: `/chatrooms/history/${roomId}`,
+      });
+    },
+    [request]
+  );
+
+  return [run, response] as [typeof run, typeof response];
+};
+
+// 채팅방 삭제
+export const useDeleteChatroom = () => {
+  const [request, response] = useAxios();
+
+  const run = useCallback(
+    (roomId: string) => {
+      return request({
+        method: "DELETE",
+        url: `/chatrooms/${roomId}`,
       });
     },
     [request]
