@@ -83,3 +83,16 @@ export const useVerifyEmailCode = () => {
 
   return [run, response] as [typeof run, typeof response];
 };
+
+export const useDeleteUser = () => {
+  const [request, response] = useAxios();
+
+  const run = useCallback(() => {
+    return request({
+      url: "users/my",
+      method: "DELETE",
+    });
+  }, [request]);
+
+  return [run, response] as [typeof run, typeof response];
+};
