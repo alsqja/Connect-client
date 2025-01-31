@@ -89,7 +89,7 @@ export const ScheduleMatching = ({
   useEffect(() => {
     if (postMatchingRes.called && postMatchingRes.error) {
       if (postMatchingRes.error.includes("없는 데이터"))
-        alert("반경 10KM 내 일정이 없습니다.");
+        alert("반경 " + distance + "KM 내 일정이 없습니다.");
       if (postMatchingRes.error.includes("포인트"))
         alert("포인트가 부족합니다.");
       return;
@@ -99,6 +99,7 @@ export const ScheduleMatching = ({
       setModal(true);
       setMatching(postMatchingRes.data.data);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [postMatchingRes]);
 
   const handleNavigate = useCallback(

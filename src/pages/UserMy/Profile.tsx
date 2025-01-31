@@ -4,6 +4,8 @@ import { ProfileData, UpdateUserData } from "./data";
 import { useGetProfile, useUpdateProfile } from "../../hooks/userApi";
 import { uploadFile } from "../../hooks/fileApi";
 import { useNavigate } from "react-router-dom";
+import { useRecoilState } from "recoil";
+import { userState } from "../../stores/session";
 
 export const Profile = () => {
   const [profile, setProfile] = useState<ProfileData | null>(null);
@@ -19,17 +21,21 @@ export const Profile = () => {
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const navigate = useNavigate();
+  const [user, setUser] = useRecoilState(userState);
 
   useEffect(() => {
     getReq();
-  }, []);
+  }, [getReq]);
 
   useEffect(() => {
     if (updateRes.data && updateRes.called) {
       alert("수정이 완료되었습니다.");
+      setUser((p) => {
+        return { ...p, ...updateRes.data.data };
+      });
       window.location.reload();
     }
-  }, [updateRes]);
+  }, [setUser, updateRes]);
 
   useEffect(() => {
     if (getRes.data && getRes.called) {
