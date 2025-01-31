@@ -29,3 +29,5 @@ export interface AdminCouponUpdateReq {
   openDate: string,
   isDeleted: boolean,
 }
+
+export type couponFilter = "ALL" | "ISSUED_COUPON" | "WAITING_COUPON";

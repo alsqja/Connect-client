@@ -18,6 +18,7 @@ import { AdminCoupon } from "./pages/AdminCoupon";
 import { AdminCouponDetail } from "./pages/AdminCoupon/AdminCouponDetail";
 import { UserFeed } from "./pages/UserFeed";
 import { Chatting } from "./pages/Chatting";
+import { IssueCoupon } from "./pages/IssueCoupon";
 import { ScheduleCreationPage } from "./pages/CreateSchedule";
 import { ScheduleEditPage } from "./pages/UpdateSchedule";
 
@@ -34,6 +35,7 @@ function App() {
           <Route path="/schedule/:id" element={<UserSchedule />} />
           <Route path="user/:id/feed" element={<UserFeed />} />
           <Route path="/chat/rooms/:id" element={<Chatting />} />
+          <Route path="/issue/coupon" element={<IssueCoupon />} />
           <Route path="/create-schedule" element={<ScheduleCreationPage />} />
           <Route
             path="/update-schedule/:scheduleId"
