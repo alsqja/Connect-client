@@ -9,15 +9,14 @@ import {
   formatDateTimeWithRegex,
 } from "../../hooks/chattingApi";
 import { Client } from "@stomp/stompjs";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { IChat } from "./data";
 
 export const Chatting = () => {
-  // TODO: useParams로 못가져올 시 사용
-  // const roomId =
-  //   +window.location.pathname.split("/")[
-  //     window.location.pathname.split("/").length - 1
-  //   ];
+  // TODO: 403 에러 - redirect 처리 필요
+  const roomId = (+window.location.pathname.split("/")[
+    window.location.pathname.split("/").length - 1
+  ]).toString();
 
   const navigate = useNavigate();
   const [chatList, setChatList] = useState<IChat[]>([]);
@@ -26,9 +25,6 @@ export const Chatting = () => {
   const user = useRecoilValue(userState);
   const accessToken = user?.accessToken;
   const scrollRef = useRef<HTMLDivElement | null>(null);
-
-  // const { roomId } = useParams<{ roomId: string }>();
-  const roomId = "2";
 
   useEffect(() => {
     if (scrollRef.current) {
