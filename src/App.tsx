@@ -18,6 +18,9 @@ import { AdminCoupon } from "./pages/AdminCoupon";
 import { AdminCouponDetail } from "./pages/AdminCoupon/AdminCouponDetail";
 import { UserFeed } from "./pages/UserFeed";
 import { Chatting } from "./pages/Chatting";
+import { IssueCoupon } from "./pages/IssueCoupon";
+import { ScheduleCreationPage } from "./pages/CreateSchedule";
+import { ScheduleEditPage } from "./pages/UpdateSchedule";
 
 function App() {
   return (
