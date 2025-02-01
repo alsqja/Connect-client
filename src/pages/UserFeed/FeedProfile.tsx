@@ -1,9 +1,10 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import styled from "styled-components";
 import { IFeedProfile } from "./data";
 import { getAge } from "../../utils/functions";
 import { useRecoilValue } from "recoil";
 import { userState } from "../../stores/session";
+import { FaStar, FaStarHalfAlt, FaRegStar } from "react-icons/fa";
 
 interface ProfileProps {
   profile: IFeedProfile | undefined;
@@ -20,6 +21,8 @@ export const FeedProfile = ({ profile }: ProfileProps) => {
     return <div>로딩중</div>;
   }
 
+  const roundedRate = Math.round(profile.rateAvg * 10) / 10;
+
   return (
     <ProfileContainer>
       <ProfileImageWrapper>
@@ -32,6 +35,33 @@ export const FeedProfile = ({ profile }: ProfileProps) => {
         <Username>{profile.name}</Username>
         <Bio>{"나이: " + getAge(profile.birth) + " 살"}</Bio>
         <Bio>{`성별: ${profile.gender === "MAN" ? "남" : "여"}`}</Bio>
+        <RatingContainer>
+          {Array.from({ length: 5 }, (_, index) => {
+            if (index < Math.floor(roundedRate)) {
+              return (
+                <StarIcon key={index}>
+                  <FaStar />
+                </StarIcon>
+              );
+            } else if (
+              index === Math.floor(roundedRate) &&
+              roundedRate % 1 >= 0.5
+            ) {
+              return (
+                <StarIcon key={index}>
+                  <FaStarHalfAlt />
+                </StarIcon>
+              );
+            } else {
+              return (
+                <StarIcon key={index}>
+                  <FaRegStar />
+                </StarIcon>
+              );
+            }
+          })}
+          <RatingText>{roundedRate.toFixed(1)}</RatingText>
+        </RatingContainer>
       </DescriptionContainer>
     </ProfileContainer>
   );
@@ -91,4 +121,22 @@ const DescriptionContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+`;
+
+const RatingContainer = styled.div`
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+`;
+
+const StarIcon = styled.div`
+  font-size: 20px;
+  color: #ffd700;
+  margin-right: 2px;
+`;
+
+const RatingText = styled.span`
+  margin-left: 8px;
+  font-size: 14px;
+  color: #666;
 `;

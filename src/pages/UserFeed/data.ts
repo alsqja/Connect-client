@@ -11,6 +11,7 @@ export interface IFeedProfile {
   birth: string;
   gender: string;
   profileUrl: string;
+  rateAvg: number;
 }
 
 export interface IFeedDetail {
