@@ -29,6 +29,7 @@ export const UserHeader = () => {
 
   const handleDropdownToggle = () => {
     setDropdownOpen((prev) => !prev);
+    setNotificationOpen(false);
   };
 
   const handleLogout = () => {
@@ -90,6 +91,7 @@ export const UserHeader = () => {
 
   const handleNotificationClick = () => {
     setNotificationOpen((prev) => !prev);
+    setDropdownOpen(false);
     if (notificationOpen) {
       readAllNotiReq(user?.id as number);
     }
@@ -116,34 +118,16 @@ export const UserHeader = () => {
         <Logo src={logo} alt="logo" onClick={() => navigate("/")} />
 
         <RightHeader>
-          {(user?.role !== "ADMIN") && pathname !== "/issue/coupon" &&
-              <MainColorButton onClick={() => navigate("/issue/coupon")}>
-                쿠폰 발급
-              </MainColorButton>
-          }
-          {(user?.role !== "ADMIN") && pathname !== "/point" &&
-              <MainColorButton onClick={() => navigate("/point")}>
-                포인트 충전
-              </MainColorButton>
-          }
-          {user ? (
-            <UserProfile onClick={handleDropdownToggle}>
-              <ProfileImage src={user?.profileUrl || ""} alt="user profile" />
-              <UserName>{user?.name}</UserName>
-            </UserProfile>
-          ) : (
-            <>로그인</>
+          {user?.role !== "ADMIN" && pathname !== "/issue/coupon" && (
+            <MainColorButton onClick={() => navigate("/issue/coupon")}>
+              쿠폰 발급
+            </MainColorButton>
           )}
-
-          {dropdownOpen && (
-            <Dropdown>
-              {user?.role === "USER" && (
-                <DropdownItem onClick={handleMyPage}>마이페이지</DropdownItem>
-              )}
-              <DropdownItem onClick={handleLogout}>로그아웃</DropdownItem>
-            </Dropdown>
+          {user?.role !== "ADMIN" && pathname !== "/point" && (
+            <MainColorButton onClick={() => navigate("/point")}>
+              포인트 충전
+            </MainColorButton>
           )}
-
           {user && (
             <NotificationIconWrapper onClick={handleNotificationClick}>
               <BellIcon hasNew={hasNewNotification} />
@@ -165,6 +149,22 @@ export const UserHeader = () => {
                 </NotificationDropdown>
               )}
             </NotificationIconWrapper>
+          )}
+          {user ? (
+            <UserProfile onClick={handleDropdownToggle}>
+              <ProfileImage src={user?.profileUrl || ""} alt="user profile" />
+              <UserName>{user?.name}</UserName>
+            </UserProfile>
+          ) : (
+            <>로그인</>
+          )}
+          {dropdownOpen && (
+            <Dropdown>
+              {user?.role === "USER" && (
+                <DropdownItem onClick={handleMyPage}>마이페이지</DropdownItem>
+              )}
+              <DropdownItem onClick={handleLogout}>로그아웃</DropdownItem>
+            </Dropdown>
           )}
         </RightHeader>
       </Container>
@@ -260,6 +260,7 @@ const BellIcon = styled(({ hasNew, ...props }: any) => <FaBell {...props} />)`
   position: relative;
   top: 6px;
   font-size: 24px;
+  margin-right: 20px;
   color: ${({ hasNew }) => (hasNew ? "red" : "#555")};
 `;
 
