@@ -9,7 +9,7 @@ import {
   formatDateTimeWithRegex,
 } from "../../hooks/chattingApi";
 import { Client } from "@stomp/stompjs";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { IChat } from "./data";
 
 export const Chatting = () => {
@@ -28,7 +28,7 @@ export const Chatting = () => {
   const scrollRef = useRef<HTMLDivElement | null>(null);
 
   // const { roomId } = useParams<{ roomId: string }>();
-  const roomId = "2";
+  const { roomId } = useParams();
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -68,7 +68,7 @@ export const Chatting = () => {
     return () => {
       client
         ?.deactivate()
-        .catch((err) => console.error("Error during deactivation", err));
+        .catch((err: any) => console.error("Error during deactivation", err));
     };
   }, [accessToken, roomId]);
 

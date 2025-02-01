@@ -34,7 +34,7 @@ function App() {
           <Route path="/user/my/:type" element={<UserMy />} />
           <Route path="/schedule/:id" element={<UserSchedule />} />
           <Route path="user/:id/feed" element={<UserFeed />} />
-          <Route path="/chat/rooms/:id" element={<Chatting />} />
+          <Route path="/chat/rooms/:roomId" element={<Chatting />} />
           <Route path="/issue/coupon" element={<IssueCoupon />} />
           <Route path="/create-schedule" element={<ScheduleCreationPage />} />
           <Route
