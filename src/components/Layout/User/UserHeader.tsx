@@ -1,14 +1,15 @@
 import styled from "styled-components";
 import logo from "../../../assets/images/logo.png";
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import { useRecoilState } from "recoil";
 import { IUserWithToken } from "../../../hooks";
 import { userState } from "../../../stores/session";
 import { useLogout } from "../../../hooks/session";
 import { useLocation, useNavigate } from "react-router-dom";
 import MainColorButton from "../../Button/MainColorButton";
-import { FaBell } from "react-icons/fa";
+import { FaBell, FaStar } from "react-icons/fa";
 import { useReadAllNotify } from "../../../hooks/notifyApi";
+import { useCreateReview } from "../../../hooks/matchingApi";
 
 export const UserHeader = () => {
   const [user, setUser] = useRecoilState<IUserWithToken | null>(userState);
@@ -26,6 +27,12 @@ export const UserHeader = () => {
   const [hasNewNotification, setHasNewNotification] = useState(false);
   const [readAllNotiReq, readAllNotiRes] = useReadAllNotify();
   const eventSourceRef = useRef<EventSource | null>(null);
+  const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+  const [reviewRating, setReviewRating] = useState(0);
+  const [hoverRating, setHoverRating] = useState(0);
+  const [reviewUrl, setReviewUrl] = useState("");
+  const [postReviewReq, postReviewRes] = useCreateReview();
+  const [reviewMessage, setReviewMessage] = useState("");
 
   const handleDropdownToggle = () => {
     setDropdownOpen((prev) => !prev);
@@ -65,15 +72,15 @@ export const UserHeader = () => {
     eventSource.addEventListener("notify", (e: any) => {
       try {
         const data = JSON.parse(e.data);
-        const newNoti = { ...data, read: false };
-        setNotifications((prev) => {
-          const isDuplicate = prev.some((noti) => noti.id === newNoti.id);
-          if (isDuplicate) return prev;
-          const updated = [newNoti, ...prev].slice(0, 20);
-          localStorage.setItem("notifications", JSON.stringify(updated));
-          return updated;
-        });
-        setHasNewNotification(true);
+        if (data.type === "REVIEW") {
+          setIsReviewModalOpen(true);
+          setReviewUrl(data.url);
+          setReviewMessage(data.content);
+        } else {
+          const newNoti = { ...data, read: false };
+          setNotifications((prev) => [newNoti, ...prev]);
+          setHasNewNotification(true);
+        }
       } catch (err) {
         console.error("알림 JSON 파싱 에러", err);
       }
@@ -112,6 +119,35 @@ export const UserHeader = () => {
     }
   }, [readAllNotiRes]);
 
+  const handleNotiClick = useCallback(
+    (url: string, type: string) => {
+      if (type === "REVIEW") {
+        setIsReviewModalOpen(true);
+      } else {
+        navigate(url);
+      }
+    },
+    [navigate]
+  );
+
+  const handleStarClick = (rating: number) => {
+    setReviewRating(rating);
+  };
+
+  const handlePostReview = useCallback(() => {
+    const userId = reviewUrl.split("/")[3];
+    const matchingId = reviewUrl.split("/")[1];
+    postReviewReq(+userId, +matchingId, reviewRating);
+  }, [postReviewReq, reviewRating, reviewUrl]);
+
+  useEffect(() => {
+    if (postReviewRes.called && postReviewRes.data) {
+      alert("리뷰 작성이 완료되었습니다.");
+      readAllNotiReq(user?.id as number);
+      window.location.replace("/");
+    }
+  }, [postReviewRes, readAllNotiReq, user?.id]);
+
   return (
     <Wrapper>
       <Container>
@@ -139,7 +175,7 @@ export const UserHeader = () => {
                     notifications.map((noti, idx) => (
                       <NotificationItem
                         key={idx}
-                        onClick={() => navigate(noti.url)}
+                        onClick={() => handleNotiClick(noti.url, noti.type)}
                         read={noti.read}
                       >
                         <div>{noti.content}</div>
@@ -167,6 +203,31 @@ export const UserHeader = () => {
             </Dropdown>
           )}
         </RightHeader>
+
+        {isReviewModalOpen && (
+          <ReviewModal onClick={() => setIsReviewModalOpen(false)}>
+            <ModalContent onClick={(e) => e.stopPropagation()}>
+              <h3>리뷰 작성</h3>
+              <div>{reviewMessage}</div>
+              <Stars>
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <Star
+                    key={star}
+                    selected={star <= (hoverRating || reviewRating)}
+                    onClick={() => handleStarClick(star)}
+                    onMouseEnter={() => setHoverRating(star)}
+                    onMouseLeave={() => setHoverRating(0)}
+                  >
+                    <FaStar />
+                  </Star>
+                ))}
+              </Stars>
+              <MainColorButton onClick={handlePostReview}>
+                제출하기
+              </MainColorButton>
+            </ModalContent>
+          </ReviewModal>
+        )}
       </Container>
     </Wrapper>
   );
@@ -293,5 +354,45 @@ const NotificationItem = styled.div<{ read: boolean }>`
   transition: background-color 0.2s;
   &:hover {
     background-color: #f5f5f5;
+  }
+`;
+
+const ReviewModal = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+`;
+
+const ModalContent = styled.div`
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  text-align: center;
+`;
+
+const Stars = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 20px 0;
+`;
+
+const Star = styled.div<{ selected: boolean }>`
+  font-size: 30px;
+  color: ${({ selected }) => (selected ? "#FFD700" : "#ddd")};
+  cursor: pointer;
+  transition: color 0.2s;
+
+  &:hover,
+  &:hover ~ & {
+    color: #ffd700;
   }
 `;
