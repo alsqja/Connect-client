@@ -26,7 +26,7 @@ export const useCreateRoom = () => {
   const [request, response] = useAxios();
 
   const run = useCallback(
-    (matchingId: string) => {
+    (matchingId: number) => {
       return request({
         method: "POST",
         url: `/chatrooms/${matchingId}`,

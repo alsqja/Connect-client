@@ -85,16 +85,21 @@ export const ScheduleMatching = ({
 
   useEffect(() => {
     if (updateRes.data && updateRes.called) {
-      if (updateRes.data.status === "REJECTED") {
-        alert("취소된 매칭입니다.");
-        navigate("/");
-      } else if (updateRes.data.status === "ACCEPTED") {
-        createRoomReq(updateRes.data.id.toString());
-        const roomId = createRoomRes.data.roomId;
-        navigate(`/chat/rooms/${roomId}`);
+      if (updateRes.data.data.status === "ACCEPTED") {
+        createRoomReq(updateRes.data.data.id);
+      } else {
+        window.location.reload();
       }
     }
   }, [updateRes]);
+
+  useEffect(() => {
+    if (createRoomRes.called && createRoomRes.data) {
+      const roomId = createRoomRes.data.data.chatroomId;
+
+      window.location.replace(`/chat/rooms/${roomId}`);
+    }
+  }, [createRoomRes]);
 
   useEffect(() => {
     if (postMatchingRes.called && postMatchingRes.error) {
