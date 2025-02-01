@@ -57,3 +57,23 @@ export const useCreateReport = () => {
 
   return [run, response] as [typeof run, typeof response];
 };
+
+export const useCreateReview = () => {
+  const [request, response] = useAxios();
+
+  const run = useCallback(
+    (toId: number, matchingId: number, rate: number) => {
+      return request({
+        url: `matchings/${matchingId}/reviews`,
+        method: "POST",
+        data: {
+          toId,
+          rate,
+        },
+      });
+    },
+    [request]
+  );
+
+  return [run, response] as [typeof run, typeof response];
+};
