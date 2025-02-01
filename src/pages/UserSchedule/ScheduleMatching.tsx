@@ -11,6 +11,7 @@ import { ReportModal } from "./ReportModal";
 import { useNavigate } from "react-router-dom";
 import { FaFilter } from "react-icons/fa";
 import { FilterModal } from "./FilterModal";
+import { useCreateRoom } from "../../hooks/chattingApi";
 
 interface IProps {
   id: number;
@@ -30,6 +31,8 @@ export const ScheduleMatching = ({
   const user = useRecoilValue(userState);
   const [getReq, getRes] = useGetScheduleMatching();
   const [updateReq, updateRes] = useUpdateMatching();
+  const [createRoomReq, createRoomRes] = useCreateRoom();
+
   const [modal, setModal] = useState(false);
   const [matching, setMatching] = useState<ICreatedMatching>();
   const [detailModal, setDetailModal] = useState(false);
@@ -82,7 +85,14 @@ export const ScheduleMatching = ({
 
   useEffect(() => {
     if (updateRes.data && updateRes.called) {
-      window.location.reload();
+      if (updateRes.data.status === "REJECTED") {
+        alert("취소된 매칭입니다.");
+        navigate("/");
+      } else if (updateRes.data.status === "ACCEPTED") {
+        createRoomReq(updateRes.data.id.toString());
+        const roomId = createRoomRes.data.roomId;
+        navigate(`/chat/rooms/${roomId}`);
+      }
     }
   }, [updateRes]);
 

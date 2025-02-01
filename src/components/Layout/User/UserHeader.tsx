@@ -116,12 +116,16 @@ export const UserHeader = () => {
         <Logo src={logo} alt="logo" onClick={() => navigate("/")} />
 
         <RightHeader>
-          {pathname !== "/point" && (
-            <MainColorButton onClick={() => navigate("/point")}>
-              포인트 충전
-            </MainColorButton>
-          )}
-
+          {(user?.role !== "ADMIN") && pathname !== "/issue/coupon" &&
+              <MainColorButton onClick={() => navigate("/issue/coupon")}>
+                쿠폰 발급
+              </MainColorButton>
+          }
+          {(user?.role !== "ADMIN") && pathname !== "/point" &&
+              <MainColorButton onClick={() => navigate("/point")}>
+                포인트 충전
+              </MainColorButton>
+          }
           {user ? (
             <UserProfile onClick={handleDropdownToggle}>
               <ProfileImage src={user?.profileUrl || ""} alt="user profile" />
@@ -285,6 +289,7 @@ const NotificationItem = styled.div<{ read: boolean }>`
   background-color: ${({ read }) => (read ? "#f9f9f9" : "#fff")};
   border-bottom: 1px solid #f2f2f2;
   cursor: pointer;
+  transition: background-color 0.2s;
   &:hover {
     background-color: #f5f5f5;
   }

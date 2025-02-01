@@ -17,8 +17,7 @@ import { NotFound } from "./pages/NotFound";
 import { AdminCoupon } from "./pages/AdminCoupon";
 import { AdminCouponDetail } from "./pages/AdminCoupon/AdminCouponDetail";
 import { UserFeed } from "./pages/UserFeed";
-import { ScheduleCreationPage } from "./pages/CreateSchedule";
-import { ScheduleEditPage } from "./pages/UpdateSchedule";
+import { Chatting } from "./pages/Chatting";
 
 function App() {
   return (
@@ -32,6 +31,8 @@ function App() {
           <Route path="/user/my/:type" element={<UserMy />} />
           <Route path="/schedule/:id" element={<UserSchedule />} />
           <Route path="user/:id/feed" element={<UserFeed />} />
+          <Route path="/chat/rooms/:id" element={<Chatting />} />
+          <Route path="/issue/coupon" element={<IssueCoupon />} />
           <Route path="/create-schedule" element={<ScheduleCreationPage />} />
           <Route
             path="/update-schedule/:scheduleId"
