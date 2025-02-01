@@ -119,16 +119,13 @@ export const UserHeader = () => {
     }
   }, [readAllNotiRes]);
 
-  const handleNotiClick = useCallback(
-    (url: string, type: string) => {
-      if (type === "REVIEW") {
-        setIsReviewModalOpen(true);
-      } else {
-        navigate(url);
-      }
-    },
-    [navigate]
-  );
+  const handleNotiClick = useCallback((url: string, type: string) => {
+    if (type === "REVIEW") {
+      setIsReviewModalOpen(true);
+    } else {
+      window.location.replace(url);
+    }
+  }, []);
 
   const handleStarClick = (rating: number) => {
     setReviewRating(rating);
