@@ -26,7 +26,7 @@ export const FeedDetailModal = ({
 
   useEffect(() => {
     getReq(feedUserId, postId);
-  }, []);
+  }, [feedUserId, getReq, postId]);
 
   useEffect(() => {
     if (getRes.data && getRes.called) {
