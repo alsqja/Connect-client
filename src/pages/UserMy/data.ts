@@ -29,10 +29,6 @@ export const UserSidebarData: IOption[] = [
     id: 7,
     label: "채팅 내역",
   },
-  {
-    id: 8,
-    label: "알림",
-  },
 ];
 
 export interface ProfileData {

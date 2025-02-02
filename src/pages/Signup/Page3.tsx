@@ -8,6 +8,7 @@ interface IProps {
   gender: "MAN" | "WOMAN";
   email: string;
   image: string | null;
+  handlePage: (page: number, isFullInput: boolean) => void;
   password: string;
   handleSubmit: () => void;
 }
@@ -19,6 +20,7 @@ export const Page3 = ({
   email,
   image,
   password,
+  handlePage,
   handleSubmit,
 }: IProps) => {
   const [isShowPassword, setIsShowPassword] = useState(false);
@@ -45,6 +47,12 @@ export const Page3 = ({
         </TextDataContainer>
       </DataContainer>
       <SignupBtn onClick={handleSubmit}>회원가입</SignupBtn>
+      <SignupBtn
+        style={{ marginTop: "10px" }}
+        onClick={() => handlePage(1, true)}
+      >
+        이전
+      </SignupBtn>
     </Wrapper>
   );
 };
@@ -81,15 +89,24 @@ const ImageView = styled.img`
   border-radius: 50%;
 `;
 
-const SignupBtn = styled.div`
+const SignupBtn = styled.button`
   width: 320px;
   height: 45px;
-  cursor: pointer;
   display: flex;
   justify-content: center;
   align-items: center;
   border-radius: 5px;
-  border: 1px solid black;
   margin-top: 30px;
   margin-bottom: 20px;
+  background-color: #007bff;
+  color: white;
+  font-size: 16px;
+  border: none;
+  font-weight: bold;
+
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #0056b3;
+  }
 `;
