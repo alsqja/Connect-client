@@ -35,9 +35,10 @@ export const Chatroom = () => {
   };
 
   const handleDelete = (chatroomId: number) => {
-    console.log(`Deleting chatroom with id: ${chatroomId}`);
-    // Add delete logic here
-    deleteReq(chatroomId.toString());
+    if (window.confirm("정말로 삭제하시겠습니까?")) {
+      deleteReq(chatroomId.toString());
+      window.location.reload();
+    }
   };
 
   return (
