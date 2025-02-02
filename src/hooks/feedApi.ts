@@ -1,6 +1,5 @@
 import { useCallback } from "react";
 import { useAxios } from "./axios";
-import { uploadFile } from "./fileApi";
 
 export const useGetAllFeed = () => {
   const [request, response] = useAxios();
