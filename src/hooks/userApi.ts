@@ -100,12 +100,15 @@ export const useDeleteUser = () => {
 export const useGetUserCoupons = () => {
   const [request, response] = useAxios();
 
-  const run = useCallback((page: number, size: number, status: CouponStatus) => {
-    return request({
-      method: 'GET',
-      url: `/users/my/coupons?page=${page}&size=${size}&status=${status}`,
-    })
-  }, [response]);
+  const run = useCallback(
+    (page: number, size: number, status: CouponStatus) => {
+      return request({
+        method: "GET",
+        url: `/users/my/coupons?page=${page}&size=${size}&status=${status}`,
+      });
+    },
+    [request]
+  );
 
   return [run, response] as [typeof run, typeof response];
-}
+};

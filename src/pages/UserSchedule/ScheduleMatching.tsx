@@ -12,6 +12,7 @@ import { useNavigate } from "react-router-dom";
 import { FaFilter } from "react-icons/fa";
 import { FilterModal } from "./FilterModal";
 import { useCreateRoom } from "../../hooks/chattingApi";
+import { CouponModal } from "./CouponModal";
 
 interface IProps {
   id: number;
@@ -41,6 +42,7 @@ export const ScheduleMatching = ({
   const [reportMatchingId, setReportMatchingId] = useState(0);
   const navigate = useNavigate();
   const isMember = user?.memberType !== null;
+  const [chargeModal, setChargeModal] = useState(false);
 
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
 
@@ -102,11 +104,14 @@ export const ScheduleMatching = ({
   }, [createRoomRes]);
 
   useEffect(() => {
-    if (postMatchingRes.called && postMatchingRes.error) {
+    if (
+      postMatchingRes.called &&
+      postMatchingRes.error &&
+      typeof postMatchingRes.error === "string"
+    ) {
       if (postMatchingRes.error.includes("없는 데이터"))
         alert("반경 " + distance + "KM 내 일정이 없습니다.");
-      if (postMatchingRes.error.includes("포인트"))
-        alert("포인트가 부족합니다.");
+      if (postMatchingRes.error.includes("포인트")) setChargeModal(true);
       return;
     }
 
@@ -307,6 +312,12 @@ export const ScheduleMatching = ({
           onClose={() => setReportModal(false)}
           matchingId={reportMatchingId}
           toId={reportUserId}
+        />
+      )}
+      {chargeModal && (
+        <CouponModal
+          onClose={() => setChargeModal(false)}
+          scheduleId={schedule.id}
         />
       )}
     </Container>
