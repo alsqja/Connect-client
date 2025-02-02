@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import styled from "styled-components";
 import { FeedProfile } from "./FeedProfile";
 import { Feed } from "./Feed";
@@ -15,9 +15,12 @@ export const UserFeed = () => {
   const [posts, setPosts] = useState<Post[]>([]);
   const [getReq, getRes] = useGetAllFeed();
   const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
   const [getProfileReq, getProfileRes] = useGetProfile();
   const [profile, setProfile] = useState<IFeedProfile>();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const loader = useRef<HTMLDivElement | null>(null);
+  const [firstLoad, setFirstLoad] = useState(false);
 
   useEffect(() => {
     if (!userId) return;
@@ -27,7 +30,17 @@ export const UserFeed = () => {
 
   useEffect(() => {
     if (getRes.called && getRes.data) {
-      setPosts([...getRes.data.data.data]);
+      setFirstLoad(true);
+      setPosts((p) => {
+        const newPosts = getRes.data.data.data.filter(
+          (newPost: Post) => !p.some((prev) => prev.id === newPost.id)
+        );
+        return [...p, ...newPosts];
+      });
+
+      if (getRes.data.data.data.length < 12) {
+        setHasMore(false);
+      }
     }
   }, [getRes]);
 
@@ -36,6 +49,28 @@ export const UserFeed = () => {
       setProfile(getProfileRes.data.data);
     }
   }, [getProfileRes]);
+
+  useEffect(() => {
+    const currentLoader = loader.current;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasMore && firstLoad) {
+          setPage((prevPage) => prevPage + 1);
+        }
+      },
+      { threshold: 1.0 }
+    );
+
+    if (currentLoader) {
+      observer.observe(currentLoader);
+    }
+
+    return () => {
+      if (currentLoader) {
+        observer.unobserve(currentLoader);
+      }
+    };
+  }, [firstLoad, hasMore]);
 
   return (
     <Container>
@@ -55,6 +90,7 @@ export const UserFeed = () => {
       ) : (
         <NoPosts>피드가 없습니다.</NoPosts>
       )}
+      {hasMore && <Loader ref={loader} />}
     </Container>
   );
 };
@@ -92,4 +128,9 @@ const NoPosts = styled.div`
   text-align: center;
   color: #777;
   font-size: 18px;
+`;
+
+const Loader = styled.div`
+  height: 20px;
+  background: transparent;
 `;
