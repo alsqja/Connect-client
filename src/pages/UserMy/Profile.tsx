@@ -1,15 +1,12 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 import { ProfileData, UpdateUserData } from "./data";
-import {
-  useDeleteUser,
-  useGetProfile,
-  useUpdateProfile,
-} from "../../hooks/userApi";
+import { useDeleteUser, useGetProfile, useUpdateProfile, } from "../../hooks/userApi";
 import { uploadFile } from "../../hooks/fileApi";
 import { useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import { userState } from "../../stores/session";
+import Button from "react-bootstrap/Button";
 
 export const Profile = () => {
   const [profile, setProfile] = useState<ProfileData | null>(null);
@@ -185,15 +182,18 @@ export const Profile = () => {
         <InfoWrapper>
           <SubscriptionInfo>
             <div>
-              <strong>구독 상태</strong>
+              <strong>멤버십 상태</strong>
               {profile.expiredDate ? (
                 <SubscriptionText>
-                  현재 구독은{" "}
+                  현재 멤버십은{" "}
                   <SubscriptionDate>{profile.expiredDate}</SubscriptionDate>일
                   만료됩니다.
                 </SubscriptionText>
               ) : (
-                <SubscriptionText>구독 정보가 없습니다.</SubscriptionText>
+                <>
+                  <SubscriptionText>멤버십 정보가 없습니다.</SubscriptionText>
+                  <Button onClick={() => navigate("/user/membership")}>멤버십 등록</Button>
+                </>
               )}
             </div>
             <div>
