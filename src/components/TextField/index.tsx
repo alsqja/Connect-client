@@ -7,7 +7,7 @@ interface IProps {
   type?: string;
   error?: string;
   width?: number;
-  onChange: Dispatch<SetStateAction<string>>;
+  onChange: any;
   handleEnter?: () => void;
 }
 

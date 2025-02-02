@@ -19,7 +19,7 @@ export const UserHeader = () => {
   const { pathname } = useLocation();
 
   const [notifications, setNotifications] = useState<any[]>(() => {
-    const savedNotis = localStorage.getItem("notifications");
+    const savedNotis = localStorage.getItem("notifications/" + user?.id);
     return savedNotis ? JSON.parse(savedNotis) : [];
   });
 
@@ -113,19 +113,33 @@ export const UserHeader = () => {
       setHasNewNotification(false);
       setNotifications((prev) => {
         const updated = prev.map((noti) => ({ ...noti, read: true }));
-        localStorage.setItem("notifications", JSON.stringify(updated));
+        localStorage.setItem(
+          "notifications/" + user?.id,
+          JSON.stringify(updated)
+        );
         return updated;
       });
     }
-  }, [readAllNotiRes]);
+  }, [readAllNotiRes, user?.id]);
 
-  const handleNotiClick = useCallback((url: string, type: string) => {
-    if (type === "REVIEW") {
-      setIsReviewModalOpen(true);
-    } else {
-      window.location.replace(url);
-    }
-  }, []);
+  const handleNotiClick = useCallback(
+    (url: string, type: string) => {
+      if (type === "REVIEW") {
+        setIsReviewModalOpen(true);
+      } else {
+        setNotifications((prev) => {
+          const updated = prev.map((noti) => ({ ...noti, read: true }));
+          localStorage.setItem(
+            "notifications/" + user?.id,
+            JSON.stringify(updated)
+          );
+          return updated;
+        });
+        window.location.replace(url);
+      }
+    },
+    [user?.id]
+  );
 
   const handleStarClick = (rating: number) => {
     setReviewRating(rating);
@@ -141,7 +155,7 @@ export const UserHeader = () => {
     if (postReviewRes.called && postReviewRes.data) {
       alert("리뷰 작성이 완료되었습니다.");
       readAllNotiReq(user?.id as number);
-      window.location.replace("/");
+      window.location.reload();
     }
   }, [postReviewRes, readAllNotiReq, user?.id]);
 

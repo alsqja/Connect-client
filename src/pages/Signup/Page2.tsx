@@ -29,7 +29,7 @@ export const Page2 = ({
   handlePage,
 }: IProps) => {
   const isFullInput = useMemo(
-    () => image != null && birth.length === 8 && name.length > 0,
+    () => image !== null && /^\d{8}$/.test(birth) && name.length > 0,
     [image, birth, name]
   );
 
@@ -41,33 +41,47 @@ export const Page2 = ({
         setImage={setImage}
       />
       <TextField value={name} onChange={setName} title="이름" />
-      {/** TODO : date-picker  */}
-      <TextField value={birth} onChange={setBirth} title="생년월일" />
+      <TextField
+        value={birth}
+        onChange={setBirth}
+        title="생년월일"
+        type="text"
+        error={
+          !!birth && !/^\d{8}$/.test(birth)
+            ? "YYYYMMDD 형식으로 입력해주세요."
+            : ""
+        }
+      />
       <RadioContainer>
         <Label>
           <input
             type="radio"
             name="gender"
-            value={"남자"}
+            value="남자"
             checked={gender === "MAN"}
             onChange={() => setGender("MAN")}
           />
-          <span style={{ marginLeft: "10px" }}>남자</span>
+          <span>남자</span>
         </Label>
         <Label>
           <input
             type="radio"
             name="gender"
-            value={"여자"}
+            value="여자"
             checked={gender === "WOMAN"}
             onChange={() => setGender("WOMAN")}
           />
-          <span style={{ marginLeft: "10px" }}>여자</span>
+          <span>여자</span>
         </Label>
       </RadioContainer>
       <BtnContainer>
-        <Btn onClick={() => handlePage(0, true)}>이전</Btn>
-        <Btn onClick={() => handlePage(2, isFullInput)}>다음</Btn>
+        <NavBtn onClick={() => handlePage(0, true)}>이전</NavBtn>
+        <NavBtn
+          onClick={() => handlePage(2, isFullInput)}
+          disabled={!isFullInput}
+        >
+          다음
+        </NavBtn>
       </BtnContainer>
     </Wrapper>
   );
@@ -83,12 +97,12 @@ const Wrapper = styled.div`
 
 const BtnContainer = styled.div`
   width: 320px;
-  height: 45px;
   display: flex;
   justify-content: space-between;
+  margin-top: 20px;
 `;
 
-const Btn = styled.div`
+const NavBtn = styled.button`
   width: 150px;
   height: 45px;
   cursor: pointer;
@@ -96,19 +110,33 @@ const Btn = styled.div`
   justify-content: center;
   align-items: center;
   border-radius: 5px;
-  border: 1px solid black;
-  margin-top: 30px;
-  margin-bottom: 20px;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #0056b3;
+  }
+
+  &:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
 `;
 
 const RadioContainer = styled.div`
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  justify-content: space-around;
   width: 320px;
+  margin-top: 10px;
 `;
 
-const Label = styled.div`
+const Label = styled.label`
   font-size: 18px;
-  width: 50%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 `;

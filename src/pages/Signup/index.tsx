@@ -105,6 +105,7 @@ export const Signup = () => {
             email={email}
             image={image}
             password={password}
+            handlePage={handlePage}
             handleSubmit={handleSubmit}
           />
         )}

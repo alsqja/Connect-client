@@ -36,19 +36,35 @@ export const Page1 = ({
   const [sendEmailReq, sendEmailRes] = useSendEmail();
   const [verifyReq, verifyRes] = useVerifyEmailCode();
   const [isVerified, setIsVerified] = useState(false);
+
+  const isPasswordValid = useMemo(
+    () =>
+      /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*()_+{}|:<>?]).{8,}$/.test(password),
+    [password]
+  );
+
+  const isPasswordMatch = useMemo(
+    () => password === checkPass,
+    [password, checkPass]
+  );
+
   const isFullInput = useMemo(
     () =>
       email.length > 0 &&
       password.length > 0 &&
       isVerified &&
       checkPass.length > 0 &&
-      verificationCode.length === 8,
+      verificationCode.length === 8 &&
+      isPasswordValid &&
+      isPasswordMatch,
     [
       email.length,
       password.length,
       isVerified,
       checkPass.length,
       verificationCode.length,
+      isPasswordValid,
+      isPasswordMatch,
     ]
   );
 
@@ -100,11 +116,15 @@ export const Page1 = ({
     return () => clearInterval(timer);
   }, [timeLeft, isCounting]);
 
+  const handleUpperCaseInput = useCallback((value: string) => {
+    setVerificationCode(value.toUpperCase());
+  }, []);
+
   return (
     <Wrapper>
       <InputContainer>
         <TextField value={email} onChange={setEmail} title="이메일" />
-        <SmallButton onClick={handleSendCode} disabled={isSent}>
+        <SmallButton onClick={handleSendCode} disabled={!email && !isSent}>
           인증
         </SmallButton>
       </InputContainer>
@@ -114,7 +134,7 @@ export const Page1 = ({
           <InputContainer>
             <TextField
               value={verificationCode}
-              onChange={setVerificationCode}
+              onChange={handleUpperCaseInput}
               title="인증 코드"
             />
             {verificationCode ? (
@@ -138,6 +158,11 @@ export const Page1 = ({
           width={400}
           title="비밀번호"
           type="password"
+          error={
+            !isPasswordValid && password.length > 0
+              ? "8자 이상, 영문, 숫자, 특수문자 포함해야 합니다."
+              : ""
+          }
         />
       </InputContainer>
       <InputContainer>
@@ -147,9 +172,19 @@ export const Page1 = ({
           width={400}
           title="비밀번호 확인"
           type="password"
+          error={
+            !isPasswordMatch && checkPass.length > 0
+              ? "비밀번호가 일치하지 않습니다."
+              : ""
+          }
         />
       </InputContainer>
-      <NextBtn onClick={() => handlePage(1, isFullInput)}>다음</NextBtn>
+      <NextBtn
+        onClick={() => handlePage(1, isFullInput)}
+        disabled={!isFullInput}
+      >
+        다음
+      </NextBtn>
     </Wrapper>
   );
 };
@@ -186,6 +221,11 @@ const SmallButton = styled.button`
     background-color: #ccc;
     cursor: not-allowed;
   }
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #0056b3;
+  }
 `;
 
 const Timer = styled.div`
@@ -194,15 +234,29 @@ const Timer = styled.div`
   color: red;
 `;
 
-const NextBtn = styled.div`
+const NextBtn = styled.button`
   width: 320px;
   height: 45px;
-  cursor: pointer;
   display: flex;
   justify-content: center;
   align-items: center;
   border-radius: 5px;
-  border: 1px solid black;
   margin-top: 30px;
   margin-bottom: 20px;
+  background-color: #007bff;
+  color: white;
+  font-size: 16px;
+  border: none;
+  font-weight: bold;
+
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #0056b3;
+  }
+
+  &:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
 `;

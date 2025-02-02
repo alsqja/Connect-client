@@ -16,18 +16,21 @@ export const UserMy = () => {
   const [selected, setSelected] = useState(1);
   const navigate = useNavigate();
 
-  const handleSelected = useCallback((id: number) => {
-    setSelected(id);
-    navigate(`/user/my/${pathNum[id - 1]}`);
-  }, []);
+  const handleSelected = useCallback(
+    (id: number) => {
+      setSelected(id);
+      navigate(`/user/my/${pathNum[id - 1]}`);
+    },
+    [navigate]
+  );
 
   useEffect(() => {
-    pathNum.map((data, index) => {
+    pathNum.forEach((data, index) => {
       if (data === type) {
         handleSelected(index + 1);
       }
     });
-  }, []);
+  }, [handleSelected, type]);
 
   return (
     <>
