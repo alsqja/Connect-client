@@ -1,24 +1,18 @@
 import { useAxios } from "./axios";
 import { useCallback } from "react";
-import {
-  PaymentCancelRequest,
-  PaymentRequestType,
-  PaymentType,
-} from "../pages/AdminPaymentManage/data";
+import { PaymentCancelRequest, PaymentRequestType, PaymentType, } from "../pages/AdminPaymentManage/data";
+import { EncryptData } from "../pages/Membership/data";
 
 export const usePostPayments = () => {
   const [request, response] = useAxios();
 
-  const run = useCallback(
-    (data: PaymentRequestType) => {
-      return request({
-        method: "POST",
-        url: "/payments",
-        data,
-      });
-    },
-    [request]
-  );
+  const run = useCallback((data: PaymentRequestType) => {
+    return request({
+      method: 'POST',
+      url: '/payments/points',
+      data
+    });
+  }, [request]);
 
   return [run, response] as [typeof run, typeof response];
 };
@@ -54,6 +48,21 @@ export const useCancelPayment = () => {
     },
     [request]
   );
+
+  return [run, response] as [typeof run, typeof response];
+};
+
+export const useMembershipPayment = () => {
+  const [request, response] = useAxios();
+
+
+  const run = useCallback((data: EncryptData) => {
+    return request({
+      method: 'POST',
+      url: '/payments/memberships',
+      data
+    })
+  }, [request]);
 
   return [run, response] as [typeof run, typeof response];
 };

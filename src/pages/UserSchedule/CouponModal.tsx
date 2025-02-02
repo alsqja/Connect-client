@@ -92,7 +92,7 @@ export const CouponModal = ({ onClose, scheduleId }: CouponModalProps) => {
           <CloseButton onClick={onClose}>&times;</CloseButton>
         </ModalHeader>
         <Button onClick={() => navigate("/point")}>포인트 충전하기</Button>
-        <Button onClick={() => navigate("/")}>멤버십 가입하기</Button>
+        <Button onClick={() => navigate("/user/membership")}>멤버십 가입하기</Button>
         <CouponList>
           <div
             style={{ width: "100%", textAlign: "center", marginTop: "20px" }}

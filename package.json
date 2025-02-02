@@ -17,6 +17,7 @@
     "@types/react-router-dom": "^5.3.3",
     "axios": "^1.6.8",
     "bootstrap": "^5.3.3",
+    "crypto-js": "^4.2.0",
     "date-fns": "^4.1.0",
     "react": "^18.2.0",
     "react-bootstrap": "^2.10.7",
@@ -60,6 +61,7 @@
     ]
   },
   "devDependencies": {
+    "@types/crypto-js": "^4.2.2",
     "@types/styled-components": "^5.1.34"
   }
 }

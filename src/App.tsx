@@ -21,6 +21,7 @@ import { Chatting } from "./pages/Chatting";
 import { IssueCoupon } from "./pages/IssueCoupon";
 import { ScheduleCreationPage } from "./pages/CreateSchedule";
 import { ScheduleEditPage } from "./pages/UpdateSchedule";
+import { Membership } from "./pages/Membership";
 
 function App() {
   return (
@@ -41,6 +42,7 @@ function App() {
             path="/update-schedule/:scheduleId"
             element={<ScheduleEditPage />}
           />
+          <Route path="/user/membership" element={<Membership />} />
         </Route>
         <Route element={<AdminLayout />}>
           <Route path="/admin/user" element={<AdminUser />} />
