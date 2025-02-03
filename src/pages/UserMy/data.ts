@@ -42,6 +42,7 @@ export interface ProfileData {
   membershipType: string;
   expiredDate: string;
   point: number;
+  isActiveMembership: boolean;
   createdAt: string;
   updatedAt: string;
 }
