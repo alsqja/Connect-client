@@ -1,6 +1,6 @@
 import { Client, StompSubscription } from "@stomp/stompjs";
 import axios from "axios";
-import { IChat } from "../pages/Chatting/data";
+import { IChatReq, IChatRes } from "../pages/Chatting/data";
 import { useAxios } from "./axios";
 import { useCallback } from "react";
 
@@ -87,7 +87,7 @@ export const useFetchChatHistory = () => {
 // 소캣 연결
 export const connectStompClient = (
   roomId: string,
-  onMessageReceived: (message: IChat) => void
+  onMessageReceived: (message: IChatRes) => void
 ): Client => {
   const client = new Client({
     brokerURL: socketUrl,
@@ -132,7 +132,11 @@ export const connectStompClient = (
 };
 
 // 메세지 발급(송신)
-export const sendMessage = (client: Client, roomId: string, message: IChat) => {
+export const sendMessage = (
+  client: Client,
+  roomId: string,
+  message: IChatReq
+) => {
   client.publish({
     destination: `/pub/chats/room/${roomId}`,
     body: JSON.stringify(message),

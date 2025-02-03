@@ -1,4 +1,12 @@
-export interface IChat {
+export interface IChatReq {
+  senderId: number;
+  name: string;
+  email: string;
+  profileUrl: string;
+  message: string;
+}
+
+export interface IChatRes {
   senderId: number;
   name: string;
   email: string;
