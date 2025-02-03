@@ -60,7 +60,11 @@ export const FeedProfile = ({ profile }: ProfileProps) => {
               );
             }
           })}
-          <RatingText>{roundedRate.toFixed(1)}</RatingText>
+          <RatingText>
+            {roundedRate.toFixed(1) === "NaN"
+              ? "리뷰가 없습니다."
+              : roundedRate.toFixed(1)}
+          </RatingText>
         </RatingContainer>
       </DescriptionContainer>
     </ProfileContainer>
