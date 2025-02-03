@@ -55,4 +55,11 @@ const TableWrapper = styled.div`
   overflow-y: scroll;
 `;
 
-export { StyledTable, TableHeader, TableBody, TableWrapper };
+const OverflowTd = styled.td`
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`
+
+
+export { StyledTable, TableHeader, TableBody, TableWrapper, OverflowTd };

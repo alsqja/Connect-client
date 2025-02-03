@@ -58,8 +58,7 @@ export const AdminCategory = () => {
     const result = await uploadFile(categoryFile);
 
     if (result) {
-      const imageUrl =
-        "https://connect-images1.s3.ap-northeast-2.amazonaws.com/" + result;
+      const imageUrl = process.env.REACT_APP_IMAGE_URL + result;
 
       postCateReq(categoryName, imageUrl);
     }
@@ -81,8 +80,7 @@ export const AdminCategory = () => {
     const result = await uploadFile(subFile);
 
     if (result) {
-      const imageUrl =
-        "https://connect-images1.s3.ap-northeast-2.amazonaws.com/" + result;
+      const imageUrl = process.env.REACT_APP_IMAGE_URL + result;
 
       postSubReq(subName, imageUrl, activeOption?.id);
     }
@@ -193,8 +191,7 @@ export const AdminCategory = () => {
       const result = await uploadFile(categoryFile);
 
       if (result) {
-        const imageUrl =
-          "https://connect-images1.s3.ap-northeast-2.amazonaws.com/" + result;
+        const imageUrl = process.env.REACT_APP_IMAGE_URL + result;
 
         updateCateReq(activeCateId, categoryName, imageUrl);
       }
@@ -231,8 +228,7 @@ export const AdminCategory = () => {
       const result = await uploadFile(subFile);
 
       if (result) {
-        const imageUrl =
-          "https://connect-images1.s3.ap-northeast-2.amazonaws.com/" + result;
+        const imageUrl = process.env.REACT_APP_IMAGE_URL + result;
 
         updateSubReq(
           activeSubId,

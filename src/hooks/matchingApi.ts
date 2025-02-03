@@ -24,10 +24,11 @@ export const useCreateMatching = () => {
   const [request, response] = useAxios();
 
   const run = useCallback(
-    (id: number) => {
+    (id: number, data: any) => {
       return request({
         url: `schedules/${id}/matchings`,
         method: "POST",
+        data,
       });
     },
     [request]
@@ -48,6 +49,26 @@ export const useCreateReport = () => {
           toId,
           matchingId,
           content,
+        },
+      });
+    },
+    [request]
+  );
+
+  return [run, response] as [typeof run, typeof response];
+};
+
+export const useCreateReview = () => {
+  const [request, response] = useAxios();
+
+  const run = useCallback(
+    (toId: number, matchingId: number, rate: number) => {
+      return request({
+        url: `matchings/${matchingId}/reviews`,
+        method: "POST",
+        data: {
+          toId,
+          rate,
         },
       });
     },

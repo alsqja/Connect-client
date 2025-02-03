@@ -4,7 +4,7 @@ import styled from "styled-components";
 
 const NaverLogin = () => {
   const clientId = process.env.REACT_APP_NAVER_CLIENT_ID;
-  const redirectUri = "http://localhost:3000/login";
+  const redirectUri = `${process.env.REACT_APP_CLIENT_URL}/login`;
   const naverLoginUrl = `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${clientId}&redirect_uri=${encodeURIComponent(
     redirectUri
   )}&state=STATE`;

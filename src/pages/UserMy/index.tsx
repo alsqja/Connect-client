@@ -8,24 +8,29 @@ import { ReportTable } from "./ReportTable";
 import { PointTable } from "./PointTable";
 import { useNavigate, useParams } from "react-router-dom";
 import { pathNum } from "./data";
+import { Chatroom } from "./Chatroom";
+import { CouponTable } from "./CouponTable";
 
 export const UserMy = () => {
   const { type } = useParams<{ type: string }>();
   const [selected, setSelected] = useState(1);
   const navigate = useNavigate();
 
-  const handleSelected = useCallback((id: number) => {
-    setSelected(id);
-    navigate(`/user/my/${pathNum[id - 1]}`)
-  }, []);
+  const handleSelected = useCallback(
+    (id: number) => {
+      setSelected(id);
+      navigate(`/user/my/${pathNum[id - 1]}`);
+    },
+    [navigate]
+  );
 
   useEffect(() => {
-    pathNum.map((data, index) => {
+    pathNum.forEach((data, index) => {
       if (data === type) {
         handleSelected(index + 1);
       }
-    })
-  }, []);
+    });
+  }, [handleSelected, type]);
 
   return (
     <>
@@ -38,7 +43,9 @@ export const UserMy = () => {
           {selected === 2 && <PaymentTable />}
           {selected === 3 && <ScheduleTable />}
           {selected === 4 && <PointTable />}
+          {selected === 5 && <CouponTable />}
           {selected === 6 && <ReportTable />}
+          {selected === 7 && <Chatroom />}
         </MainContent>
       </Container>
     </>

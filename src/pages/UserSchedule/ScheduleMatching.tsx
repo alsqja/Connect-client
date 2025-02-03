@@ -8,10 +8,15 @@ import { useUpdateMatching } from "../../hooks/matchingApi";
 import { MatchingModal } from "./MatchingModal";
 import { ScheduleModal } from "./ScheduleModal";
 import { ReportModal } from "./ReportModal";
+import { useNavigate } from "react-router-dom";
+import { FaFilter } from "react-icons/fa";
+import { FilterModal } from "./FilterModal";
+import { useCreateRoom } from "../../hooks/chattingApi";
+import { CouponModal } from "./CouponModal";
 
 interface IProps {
   id: number;
-  handleSubmit: () => void;
+  handleSubmit: (data: any) => void;
   postMatchingRes: any;
   schedule: ISchedule;
 }
@@ -27,15 +32,28 @@ export const ScheduleMatching = ({
   const user = useRecoilValue(userState);
   const [getReq, getRes] = useGetScheduleMatching();
   const [updateReq, updateRes] = useUpdateMatching();
+  const [createRoomReq, createRoomRes] = useCreateRoom();
+
   const [modal, setModal] = useState(false);
   const [matching, setMatching] = useState<ICreatedMatching>();
   const [detailModal, setDetailModal] = useState(false);
   const [reportModal, setReportModal] = useState(false);
   const [reportUserId, setReportUserId] = useState(0);
   const [reportMatchingId, setReportMatchingId] = useState(0);
+  const navigate = useNavigate();
+  const isMember = user?.memberType !== null;
+  const [chargeModal, setChargeModal] = useState(false);
+
+  const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
+
+  const [gender, setGender] = useState<string>("랜덤");
+  const [distance, setDistance] = useState<number>(5);
+  const [minAge, setMinAge] = useState<number>(-5);
+  const [maxAge, setMaxAge] = useState<number>(10);
 
   useEffect(() => {
     getReq(id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   useEffect(() => {
@@ -58,7 +76,7 @@ export const ScheduleMatching = ({
         )
       );
     }
-  }, [getRes]);
+  }, [getRes, user?.id]);
 
   const handleUpdate = useCallback(
     (id: number, status: string) => {
@@ -69,13 +87,31 @@ export const ScheduleMatching = ({
 
   useEffect(() => {
     if (updateRes.data && updateRes.called) {
-      window.location.reload();
+      if (updateRes.data.data.status === "ACCEPTED") {
+        createRoomReq(updateRes.data.data.id);
+      } else {
+        window.location.reload();
+      }
     }
   }, [updateRes]);
 
   useEffect(() => {
-    if (postMatchingRes.called && postMatchingRes.error) {
-      alert("반경 10KM 내 일정이 없습니다.");
+    if (createRoomRes.called && createRoomRes.data) {
+      const roomId = createRoomRes.data.data.chatroomId;
+
+      window.location.replace(`/chat/rooms/${roomId}`);
+    }
+  }, [createRoomRes]);
+
+  useEffect(() => {
+    if (
+      postMatchingRes.called &&
+      postMatchingRes.error &&
+      typeof postMatchingRes.error === "string"
+    ) {
+      if (postMatchingRes.error.includes("없는 데이터"))
+        alert("반경 " + distance + "KM 내 일정이 없습니다.");
+      if (postMatchingRes.error.includes("포인트")) setChargeModal(true);
       return;
     }
 
@@ -83,7 +119,30 @@ export const ScheduleMatching = ({
       setModal(true);
       setMatching(postMatchingRes.data.data);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [postMatchingRes]);
+
+  const handleNavigate = useCallback(
+    (id: number) => {
+      navigate(`/user/${id}/feed`);
+    },
+    [navigate]
+  );
+
+  const handleCreateMatching = useCallback(() => {
+    let dataGender = null;
+    if (gender === "남") {
+      dataGender = "MAN";
+    } else if (gender === "여") {
+      dataGender = "WOMAN";
+    }
+    handleSubmit({
+      gender: dataGender,
+      minusAge: -minAge,
+      plusAge: maxAge,
+      distance: distance,
+    });
+  }, [distance, gender, handleSubmit, maxAge, minAge]);
 
   return (
     <Container>
@@ -99,7 +158,15 @@ export const ScheduleMatching = ({
             successData.map((item) => (
               <Item key={item.id}>
                 <Info>
-                  <Name>
+                  <Name
+                    onClick={() =>
+                      handleNavigate(
+                        user?.id === item.fromUserId
+                          ? item.toUserId
+                          : item.fromUserId
+                      )
+                    }
+                  >
                     {user?.id === item.fromUserId
                       ? item.toUserName
                       : item.fromUserName}
@@ -140,8 +207,10 @@ export const ScheduleMatching = ({
             receivedData.map((item) => (
               <Item key={item.id}>
                 <Info>
-                  <Name>{item.fromUserName}</Name>님과의 유사도{" "}
-                  {(item.similarity * 100).toFixed(2)}% 입니다.
+                  <Name onClick={() => handleNavigate(item.fromUserId)}>
+                    {item.fromUserName}
+                  </Name>
+                  님과의 유사도 {(item.similarity * 100).toFixed(2)}% 입니다.
                 </Info>
                 <ProgressWrapper>
                   <ProgressBar value={Math.floor(item.similarity * 100)} />
@@ -171,8 +240,10 @@ export const ScheduleMatching = ({
             sentData.map((item) => (
               <Item key={item.id}>
                 <Info>
-                  <Name>{item.toUserName}</Name>님과의 유사도{" "}
-                  {(item.similarity * 100).toFixed(2)}% 입니다.
+                  <Name onClick={() => handleNavigate(item.toUserId)}>
+                    {item.toUserName}
+                  </Name>
+                  님과의 유사도 {(item.similarity * 100).toFixed(2)}% 입니다.
                 </Info>
                 <ProgressWrapper>
                   <ProgressBar value={Math.floor(item.similarity * 100)} />
@@ -191,7 +262,30 @@ export const ScheduleMatching = ({
           )}
         </ScrollableContainer>
       </Section>
-      <Button onClick={handleSubmit}>매칭 찾기</Button>
+      <ButtonContainer>
+        <MatchButton onClick={handleCreateMatching}>
+          {`매칭 찾기 ${
+            5 - schedule.count > 0 ? `무료 ${5 - schedule.count}회` : "(50P)"
+          }`}
+        </MatchButton>
+        <FilterButton onClick={() => setIsFilterModalOpen(true)}>
+          <FaFilter size={18} />
+        </FilterButton>
+      </ButtonContainer>
+      {isFilterModalOpen && (
+        <FilterModal
+          onClose={() => setIsFilterModalOpen(false)}
+          gender={gender}
+          setGender={setGender}
+          distance={distance}
+          setDistance={setDistance}
+          minAge={minAge}
+          setMinAge={setMinAge}
+          maxAge={maxAge}
+          setMaxAge={setMaxAge}
+          isMember={isMember}
+        />
+      )}
       {modal && (
         <MatchingModal
           onClose={() => {
@@ -209,7 +303,7 @@ export const ScheduleMatching = ({
       {detailModal && (
         <ScheduleModal
           onClose={() => setDetailModal(false)}
-          id={id}
+          id={matching?.toScheduleId}
           handleSubmit={() => matching && handleUpdate(matching?.id, "PENDING")}
         />
       )}
@@ -218,6 +312,12 @@ export const ScheduleMatching = ({
           onClose={() => setReportModal(false)}
           matchingId={reportMatchingId}
           toId={reportUserId}
+        />
+      )}
+      {chargeModal && (
+        <CouponModal
+          onClose={() => setChargeModal(false)}
+          scheduleId={schedule.id}
         />
       )}
     </Container>
@@ -286,6 +386,7 @@ const Info = styled.div`
 const Name = styled.span`
   font-weight: bold;
   color: #4b3fcb;
+  cursor: pointer;
 `;
 
 const ProgressWrapper = styled.div`
@@ -330,8 +431,15 @@ const Action = styled.div`
   }
 `;
 
-const Button = styled.button`
-  width: 100%;
+const ButtonContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+`;
+
+const MatchButton = styled.button`
+  /* width: 150px; */
+  flex: 1;
   padding: 12px 0;
   font-size: 16px;
   font-weight: bold;
@@ -340,8 +448,23 @@ const Button = styled.button`
   border: none;
   border-radius: 6px;
   cursor: pointer;
+  text-align: center;
 
   &:hover {
     background-color: #0056b3;
+  }
+`;
+
+const FilterButton = styled.button`
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #007bff;
+  padding: 8px;
+  border-radius: 50%;
+  transition: 0.3s ease;
+
+  &:hover {
+    background-color: rgba(0, 123, 255, 0.1);
   }
 `;

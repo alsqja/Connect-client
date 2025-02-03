@@ -27,7 +27,7 @@ export const UserSidebarData: IOption[] = [
   },
   {
     id: 7,
-    label: "알림",
+    label: "채팅 내역",
   },
 ];
 
@@ -42,6 +42,7 @@ export interface ProfileData {
   membershipType: string;
   expiredDate: string;
   point: number;
+  isActiveMembership: boolean;
   createdAt: string;
   updatedAt: string;
 }
@@ -89,4 +90,28 @@ export interface GetPointData {
   updatedAt: string;
 }
 
-export const pathNum = ["profile", "payment", "schedule", "point", "coupon", "report", "notfound", "notice"];
+export const pathNum = [
+  "profile",
+  "payment",
+  "schedule",
+  "point",
+  "coupon",
+  "report",
+  "chatHistory",
+  "notice",
+];
+
+export interface GetCouponData {
+  id: number;
+  userId: number;
+  couponId: number;
+  couponName: string;
+  couponDescription: string;
+  expiredDate: string;
+  status: CouponStatus;
+  amount: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type CouponStatus = "USED" | "UNUSED" | "ALL";

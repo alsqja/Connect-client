@@ -35,8 +35,7 @@ export const Signup = () => {
     const result = await uploadFile(imageFile);
 
     if (result) {
-      const profileUrl =
-        "https://connect-images1.s3.ap-northeast-2.amazonaws.com/" + result;
+      const profileUrl = process.env.REACT_APP_IMAGE_URL + result;
 
       signupReq({
         name,
@@ -106,6 +105,7 @@ export const Signup = () => {
             email={email}
             image={image}
             password={password}
+            handlePage={handlePage}
             handleSubmit={handleSubmit}
           />
         )}

@@ -46,7 +46,7 @@ export const Login = () => {
       isRequestSent.current = true;
 
       axios
-        .get("http://localhost:8080/api/auth/login/naver/code", {
+        .get(`${process.env.REACT_APP_SERVER_URL}/api/auth/login/naver/code`, {
           params: { code, state },
         })
         .then((response) => {
@@ -71,7 +71,9 @@ export const Login = () => {
           value={password}
           onChange={setPassword}
         />
-        <LoginBtn onClick={handleLogin}>로그인</LoginBtn>
+        <LoginBtn onClick={handleLogin} disabled={!email || !password}>
+          로그인
+        </LoginBtn>
         <div>
           아이디가 없으신가요?
           <span
@@ -81,7 +83,7 @@ export const Login = () => {
             회원가입
           </span>
         </div>
-        {/* <NaverLogin /> */}
+        <NaverLogin />
       </Container>
     </Wrapper>
   );
@@ -112,15 +114,29 @@ const Title = styled.span`
   font-size: 30px;
 `;
 
-const LoginBtn = styled.div`
+const LoginBtn = styled.button`
   width: 320px;
   height: 45px;
-  cursor: pointer;
   display: flex;
   justify-content: center;
   align-items: center;
   border-radius: 5px;
-  border: 1px solid black;
   margin-top: 30px;
   margin-bottom: 20px;
+  background-color: #007bff;
+  color: white;
+  font-size: 16px;
+  border: none;
+  font-weight: bold;
+
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #0056b3;
+  }
+
+  &:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
 `;

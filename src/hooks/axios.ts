@@ -17,8 +17,7 @@ export type UseAxiosType = [
 ];
 
 const axios = Axios.create({
-  baseURL:
-    "http://ec2-52-79-121-235.ap-northeast-2.compute.amazonaws.com:8080/api",
+  baseURL: process.env.REACT_APP_SERVER_URL + "/api",
 });
 
 let isRefreshing = false;

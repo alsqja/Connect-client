@@ -14,6 +14,14 @@ import { UserSchedule } from "./pages/UserSchedule";
 import { UserLayout } from "./components/Layout/User";
 import { AdminLayout } from "./components/Layout/Admin";
 import { NotFound } from "./pages/NotFound";
+import { AdminCoupon } from "./pages/AdminCoupon";
+import { AdminCouponDetail } from "./pages/AdminCoupon/AdminCouponDetail";
+import { UserFeed } from "./pages/UserFeed";
+import { Chatting } from "./pages/Chatting";
+import { IssueCoupon } from "./pages/IssueCoupon";
+import { ScheduleCreationPage } from "./pages/CreateSchedule";
+import { ScheduleEditPage } from "./pages/UpdateSchedule";
+import { Membership } from "./pages/Membership";
 
 function App() {
   return (
@@ -26,11 +34,25 @@ function App() {
           <Route path="/point" element={<UserPointCharge />} />
           <Route path="/user/my/:type" element={<UserMy />} />
           <Route path="/schedule/:id" element={<UserSchedule />} />
+          <Route path="user/:id/feed" element={<UserFeed />} />
+          <Route path="/chat/rooms/:roomId" element={<Chatting />} />
+          <Route path="/issue/coupon" element={<IssueCoupon />} />
+          <Route path="/create-schedule" element={<ScheduleCreationPage />} />
+          <Route
+            path="/update-schedule/:scheduleId"
+            element={<ScheduleEditPage />}
+          />
+          <Route path="/user/membership" element={<Membership />} />
         </Route>
         <Route element={<AdminLayout />}>
           <Route path="/admin/user" element={<AdminUser />} />
           <Route path="/admin/category" element={<AdminCategory />} />
           <Route path="/admin/payment" element={<AdminPaymentManage />} />
+          <Route path="/admin/coupon">
+            <Route index element={<AdminCoupon />} />
+            <Route path=":id" element={<AdminCouponDetail />} />
+            <Route path="new" element={<AdminCouponDetail />} />
+          </Route>
         </Route>
         <Route path="/*" element={<NotFound />} />
       </Routes>

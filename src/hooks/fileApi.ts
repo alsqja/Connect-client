@@ -8,7 +8,7 @@ export const uploadFile = async (file: File | null) => {
     }
 
     const response = await axios.post(
-      `http://ec2-52-79-121-235.ap-northeast-2.compute.amazonaws.com:8080/api/file-url`,
+      `${process.env.REACT_APP_SERVER_URL}/api/file-url`,
       {
         fileName: file.name,
       }
