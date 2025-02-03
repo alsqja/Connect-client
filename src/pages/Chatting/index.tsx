@@ -10,7 +10,7 @@ import {
 } from "../../hooks/chattingApi";
 import { Client } from "@stomp/stompjs";
 import { useNavigate, useParams } from "react-router-dom";
-import { IChat } from "./data";
+import { IChatRes } from "./data";
 
 export const Chatting = () => {
   // TODO: useParams로 못가져올 시 사용
@@ -20,7 +20,7 @@ export const Chatting = () => {
   //   ];
 
   const navigate = useNavigate();
-  const [chatList, setChatList] = useState<IChat[]>([]);
+  const [chatList, setChatList] = useState<IChatRes[]>([]);
   const [client, setClient] = useState<Client | null>(null);
   const [getReq, getRes] = useFetchChatHistory();
   const user = useRecoilValue(userState);
@@ -79,17 +79,15 @@ export const Chatting = () => {
       user &&
       user.id !== null &&
       user.name !== null &&
-      user.email !== null &&
-      user.profileUrl !== null
+      user.email !== null
     ) {
       console.log(chatList);
       sendMessage(client, roomId, {
         senderId: user.id,
         name: user.name,
         email: user.email,
-        profileUrl: user.profileUrl,
+        profileUrl: user.profileUrl || "",
         message,
-        createdAt: new Date().toISOString(),
       });
     } else {
       console.error(
