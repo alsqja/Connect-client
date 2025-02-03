@@ -7,10 +7,13 @@ import { useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import { userState } from "../../stores/session";
 import Button from "react-bootstrap/Button";
+import { useMembershipDelete } from "../../hooks/membershipApi";
+import { Modal } from "react-bootstrap";
 
 export const Profile = () => {
   const [profile, setProfile] = useState<ProfileData | null>(null);
   const [getReq, getRes] = useGetProfile();
+  const [delMembership] = useMembershipDelete();
   const [updateValues, setUpdateValues] = useState<UpdateUserData | null>({
     name: profile?.name || null,
     oldPassword: null,
@@ -29,6 +32,15 @@ export const Profile = () => {
   const [showWithdrawModal, setShowWithdrawModal] = useState(false);
   // 모달 내부 비밀번호 상태
   const [withdrawPassword, setWithdrawPassword] = useState("");
+
+  const [openModal, setOpenModal] = useState(false);
+
+  const deleteMembership = useCallback(() => {
+    delMembership().then(() => {
+      alert("멤버십이 취소되었습니다.");
+      window.location.reload();
+    });
+  }, [delMembership])
 
   useEffect(() => {
     getReq();
@@ -184,11 +196,26 @@ export const Profile = () => {
             <div>
               <strong>멤버십 상태</strong>
               {profile.expiredDate ? (
-                <SubscriptionText>
-                  현재 멤버십은{" "}
-                  <SubscriptionDate>{profile.expiredDate}</SubscriptionDate>일
-                  만료됩니다.
-                </SubscriptionText>
+                <>
+                  {profile.isActiveMembership ? (
+                    <>
+                      <SubscriptionText>
+                        현재 멤버십은{" "}
+                        <SubscriptionDate>{profile.expiredDate}</SubscriptionDate>일
+                        만료됩니다.
+                      </SubscriptionText>
+                      <Button onClick={() => setOpenModal(true)} variant="danger">멤버십 취소하기</Button>
+                    </>
+                  ) : (
+                    <>
+                      <SubscriptionText>
+                        현재 멤버십은{" "}
+                        <SubscriptionDate>{profile.expiredDate}</SubscriptionDate>일
+                        만료됩니다. <br />멤버십 취소가 예약되어있습니다.
+                      </SubscriptionText>
+                    </>
+                  )}
+                </>
               ) : (
                 <>
                   <SubscriptionText>멤버십 정보가 없습니다.</SubscriptionText>
@@ -286,6 +313,21 @@ export const Profile = () => {
           </ProfileForm>
         </InfoWrapper>
       </Container>
+
+      <Modal show={openModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>멤버십 취소</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div>정말 멤버십을 취소하시겠습니까?</div>
+          <div>[ 확인 ] 버튼을 누르시면 멤버십이 취소 됩니다.</div>
+          <div className="notice">* 멤버십 기간 만료 후 기능을 더이상 사용할 수 없게됩니다.</div>
+        </Modal.Body>
+        <Modal.Footer style={{ justifyContent: "center" }}>
+          <Button onClick={deleteMembership} variant="danger">확인</Button>
+          <Button onClick={() => setOpenModal(false)}>취소</Button>
+        </Modal.Footer>
+      </Modal>
 
       {/* 회원탈퇴 모달 */}
       {showWithdrawModal && (

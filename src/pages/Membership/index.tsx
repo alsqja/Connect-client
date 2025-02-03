@@ -10,6 +10,8 @@ import { useMembershipPayment } from "../../hooks/paymentApi";
 import { EncryptData, MembershipRequest } from "./data";
 import { encryptAES } from "../../utils/CryptoUtil";
 import { useNavigate } from "react-router-dom";
+import { useRecoilValue } from "recoil";
+import { userState } from "../../stores/session";
 
 export const Membership = () => {
   const [postMembership] = useMembershipPayment();
@@ -21,11 +23,17 @@ export const Membership = () => {
   const [expiredMonth, setExpiredMonth] = useState("");
   const [cardPassword, setCardPassword] = useState("");
   const navigate = useNavigate();
+  const [memberType, setMemberType] = useState("");
+  const user = useRecoilValue(userState);
 
   const MembershipModalHandler = (amount: number) => {
     setOpen(true);
     setAmount(amount);
   }
+
+  useEffect(() => {
+    setMemberType(user?.memberType ?? "");
+  }, []);
 
   const postMembershipData = useCallback((data: EncryptData) => {
     postMembership(data).then((response) => {
@@ -67,7 +75,6 @@ export const Membership = () => {
     }
   }
 
-
   const formatCardNumber = (input: string) => {
     const numericValue = input.replace(/\D/g, "");
     const limitedValue = numericValue.slice(0, 16);
@@ -78,6 +85,14 @@ export const Membership = () => {
   useEffect(() => {
     setCardNum((prev) => formatCardNumber(prev));
   }, [cardNum]);
+
+  useEffect(() => {
+    setCardNum("");
+    setExpiredYear("");
+    setExpiredMonth("");
+    setCardPassword("");
+    setBirth("");
+  }, [open]);
 
   return (
     <>
@@ -101,7 +116,6 @@ export const Membership = () => {
               <div><img src={xmark} /> 매칭 상대 프로필 보기</div>
             </MembershipDescription>
             <Divider />
-            <Button variant="secondary" disabled>신청</Button>
           </MembershipCard>
           <MembershipCard>
             <MembershipTitle>NORMAL</MembershipTitle>
@@ -116,7 +130,10 @@ export const Membership = () => {
               <div><img src={xmark} /> 매칭 상대 프로필 보기</div>
             </MembershipDescription>
             <Divider />
-            <Button onClick={() => MembershipModalHandler(4900)}>신청</Button>
+            <Button
+              disabled={memberType === "NORMAL"}
+              variant={memberType === "NORMAL" ? "secondary" : "primary"}
+              onClick={() => MembershipModalHandler(4900)}>신청</Button>
           </MembershipCard>
           <MembershipCard>
             <MembershipTitle>PREMIUM</MembershipTitle>
@@ -131,7 +148,10 @@ export const Membership = () => {
               <div><img src={okmark} /> 매칭 상대 프로필 보기</div>
             </MembershipDescription>
             <Divider />
-            <Button onClick={() => MembershipModalHandler(9900)}>신청</Button>
+            <Button
+              disabled={memberType === "PREMIUM"}
+              variant={memberType === "PREMIUM" ? "secondary" : "primary"}
+              onClick={() => MembershipModalHandler(9900)}>신청</Button>
           </MembershipCard>
         </MembershipContainer>
         <ModalContainer show={open} onHide={() => setOpen(false)}>
