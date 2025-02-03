@@ -12,9 +12,11 @@ import { encryptAES } from "../../utils/CryptoUtil";
 import { useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { userState } from "../../stores/session";
+import { useMembershipUpdate } from "../../hooks/membershipApi";
 
 export const Membership = () => {
   const [postMembership] = useMembershipPayment();
+  const [updateMembership] = useMembershipUpdate();
   const [amount, setAmount] = useState<number>(0);
   const [open, setOpen] = useState(false);
   const [cardNum, setCardNum] = useState("");
@@ -40,8 +42,14 @@ export const Membership = () => {
       alert("멤버십 결제가 성공했습니다.\n이전 페이지로 돌아갑니다.");
       navigate(-1);
     }).catch(() => alert("결제에 실패했습니다.\n다시 시도해 주세요."));
-  }, [postMembership])
+  }, [postMembership]);
 
+  const updateMembershipData = useCallback((data: EncryptData) => {
+    updateMembership(data).then(() => {
+      alert("멤버십 변경이 성공했습니다.\n이전 페이지로 돌아갑니다.");
+      navigate(-1);
+    }).catch(() => alert("결제에 실패했습니다.\n다시 시도해 주세요."));
+  }, [updateMembership]);
 
   const PaymentButtonHandler = async () => {
     const paymentUid = "pay-" + crypto.randomUUID().toString().substring(0, 16);
@@ -71,7 +79,11 @@ export const Membership = () => {
         encryptData: encryptAES(JSON.stringify(membershipRequestData)).toString(),
       }
 
-      postMembershipData(encryptData);
+      if (user?.memberType) {
+        updateMembershipData(encryptData);
+      } else {
+        postMembershipData(encryptData);
+      }
     }
   }
 
@@ -161,6 +173,10 @@ export const Membership = () => {
           <Modal.Body>
             <div>
               <div className="notice">* 멤버쉽 결제는 멤버쉽이 종료되는 일자에 자동 결제 됩니다.</div>
+              <div className="notice">* Normal 등급에서 Premium 등급으로 변경 시 사용 일만큼 감산 후 바로 결제 됩니다.</div>
+              <div className="notice">* Premium 등급에서 Normal 등급으로 변경 시 다음 결제일에 4900원이 결제 됩니다.
+                <br />&ensp; (이전까지 Premium 등급은 유지됩니다.)
+              </div>
               <TextField width={500} title="카드 번호" value={cardNum} onChange={setCardNum} />
               <TextField width={500} title="생년월일 6자리(또는 사업자 등록번호 10자리)" value={birth} onChange={setBirth} />
               <div className="expired">
