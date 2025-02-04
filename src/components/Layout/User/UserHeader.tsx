@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import logo from "../../../assets/images/logo.png";
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
 import { useRecoilState } from "recoil";
 import { IUserWithToken } from "../../../hooks";
 import { userState } from "../../../stores/session";
@@ -10,7 +10,6 @@ import MainColorButton from "../../Button/MainColorButton";
 import { FaBell, FaStar } from "react-icons/fa";
 import { useReadAllNotify } from "../../../hooks/notifyApi";
 import { useCreateReview } from "../../../hooks/matchingApi";
-import { useSSE } from "../../../hooks/sse";
 
 export const UserHeader = () => {
   const [user, setUser] = useRecoilState<IUserWithToken | null>(userState);
@@ -33,6 +32,7 @@ export const UserHeader = () => {
   const [reviewUrl, setReviewUrl] = useState("");
   const [postReviewReq, postReviewRes] = useCreateReview();
   const [reviewMessage, setReviewMessage] = useState("");
+  const eventSourceRef = useRef<EventSource | null>(null);
 
   const handleDropdownToggle = () => {
     setDropdownOpen((prev) => !prev);
@@ -57,9 +57,24 @@ export const UserHeader = () => {
     handleDropdownToggle();
   };
 
-  useSSE(
-    `${process.env.REACT_APP_SERVER_URL}/api/sse/subscribe/${user?.id}`,
-    (e: any) => {
+  const maxRetries = 5;
+  const reconnectDelay = 3000;
+  const retryCount = useRef(0);
+
+  const connectToSSE = useCallback(() => {
+    if (!user) return;
+
+    const eventSource = new EventSource(
+      `${process.env.REACT_APP_SERVER_URL}/api/sse/subscribe/${user.id}`
+    );
+    eventSourceRef.current = eventSource;
+
+    eventSource.onopen = () => {
+      console.log("SSE 연결 성공");
+      retryCount.current = 0;
+    };
+
+    eventSource.addEventListener("notify", (e: any) => {
       try {
         const data = JSON.parse(e.data);
         if (data.type === "REVIEW") {
@@ -74,8 +89,29 @@ export const UserHeader = () => {
       } catch (err) {
         console.error("알림 JSON 파싱 에러", err);
       }
-    }
-  );
+    });
+
+    eventSource.onerror = (err) => {
+      console.error("SSE 에러 -> 재연결 시도", err);
+      eventSource.close();
+      if (retryCount.current < maxRetries) {
+        setTimeout(() => {
+          retryCount.current += 1;
+          console.log(`재연결 시도 #${retryCount.current}`);
+          connectToSSE();
+        }, reconnectDelay);
+      } else {
+        console.error("최대 재연결 시도 횟수 초과");
+      }
+    };
+  }, [user]);
+
+  useEffect(() => {
+    connectToSSE();
+    return () => {
+      eventSourceRef.current?.close();
+    };
+  }, [connectToSSE, user]);
 
   const handleNotificationClick = () => {
     setNotificationOpen((prev) => !prev);
