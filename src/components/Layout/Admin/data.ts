@@ -7,7 +7,7 @@ export interface INaviData {
 export const AdminNaviData: INaviData[] = [
   {
     id: 1,
-    path: "/admin/a",
+    path: "/admin/chart",
     label: "매출 통계",
   },
   {
@@ -19,11 +19,6 @@ export const AdminNaviData: INaviData[] = [
     id: 3,
     path: "/admin/category",
     label: "카테고리 관리",
-  },
-  {
-    id: 4,
-    path: "/admin/d",
-    label: "매출 통계",
   },
   {
     id: 5,

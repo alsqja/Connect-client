@@ -22,6 +22,7 @@ import { IssueCoupon } from "./pages/IssueCoupon";
 import { ScheduleCreationPage } from "./pages/CreateSchedule";
 import { ScheduleEditPage } from "./pages/UpdateSchedule";
 import { Membership } from "./pages/Membership";
+import { AdminChart } from "./pages/AdminChart";
 
 function App() {
   return (
@@ -48,6 +49,7 @@ function App() {
           <Route path="/admin/user" element={<AdminUser />} />
           <Route path="/admin/category" element={<AdminCategory />} />
           <Route path="/admin/payment" element={<AdminPaymentManage />} />
+          <Route path="/admin/chart" element={<AdminChart />} />
           <Route path="/admin/coupon">
             <Route index element={<AdminCoupon />} />
             <Route path=":id" element={<AdminCouponDetail />} />

@@ -7,23 +7,30 @@ import styled from "styled-components";
 interface DateInputProps {
   initialDate: string | null; // 초기 날짜 "yyyymmdd" 형식
   onDateChange: (date: string) => void; // 날짜 변경 핸들러
-  type?: "date" | "dateTime";
+  type?: "date" | "dateTime" | "month";
   timeCaption?: string;
 }
 
 export const DateSelector = ({ initialDate, onDateChange, type = "date", timeCaption = "시작시간" }: DateInputProps) => {
   const [selectedDate, setSelectedDate] = useState<Date | null>(
-    initialDate ? parse(initialDate, type === "date" ? "yyyy-MM-dd" : "yyyy-MM-dd HH:mm:ss", new Date()) : new Date()
+    initialDate ? parse(initialDate, type === "month" ? "yyyy-MM" : type === "dateTime" ? "yyyy-MM-dd HH:mm:ss" : "yyyy-MM-dd", new Date()) : new Date()
   );
 
   useEffect(() => {
-    setSelectedDate(initialDate ? parse(initialDate, type === "date" ? "yyyy-MM-dd" : "yyyy-MM-dd HH:mm:ss", new Date()) : new Date())
+    setSelectedDate(initialDate ? parse(initialDate, type === "month" ? "yyyy-MM" : type === "dateTime" ? "yyyy-MM-dd HH:mm:ss" : "yyyy-MM-dd", new Date()) : new Date())
   }, [initialDate]);
 
   const handleDateChange = (date: Date | null) => {
     setSelectedDate(date);
     if (date) {
-      const formattedDate = format(date, type === "date" ? "yyyy-MM-dd" : "yyyy-MM-dd HH:mm:ss");
+      let formattedDate = "";
+      if (type === "month") {
+        formattedDate = format(date, "yyyy-MM");
+      } else if (type === "dateTime") {
+        formattedDate = format(date, "yyyy-MM-dd HH:mm:ss");
+      } else {
+        formattedDate = format(date, "yyyy-MM-dd");
+      }
       onDateChange(formattedDate);
     }
   };
@@ -33,8 +40,9 @@ export const DateSelector = ({ initialDate, onDateChange, type = "date", timeCap
       <StyledDatePicker
         selected={selectedDate}
         onChange={handleDateChange}
-        dateFormat={type === "date" ? "yyyy-MM-dd" : "yyyy-MM-dd HH:mm:ss"}
+        dateFormat={type === "month" ? "yyyy-MM" : type === "dateTime" ? "yyyy-MM-dd HH:mm:ss" : "yyyy-MM-dd"}
         placeholderText="날짜를 선택하세요"
+        showMonthYearPicker={type === "month"}
         showPopperArrow={false}
         portalId="root-datepicker-portal"
         showTimeSelect={type === "dateTime"}

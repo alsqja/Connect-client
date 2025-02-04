@@ -202,7 +202,7 @@ export const Profile = () => {
                       <SubscriptionText>
                         현재 멤버십은{" "}
                         <SubscriptionDate>{profile.expiredDate}</SubscriptionDate>일
-                        만료됩니다.
+                        만료됩니다. <br /> 현재 고객님은 {profile.membershipType} 등급입니다.
                       </SubscriptionText>
                       <Button onClick={() => setOpenModal(true)} variant="danger">멤버십 취소하기</Button>
                     </>
@@ -211,7 +211,7 @@ export const Profile = () => {
                       <SubscriptionText>
                         현재 멤버십은{" "}
                         <SubscriptionDate>{profile.expiredDate}</SubscriptionDate>일
-                        만료됩니다. <br />멤버십 취소가 예약되어있습니다.
+                        만료됩니다. <br />{profile.membershipType} 멤버십 취소가 예약되어있습니다.
                       </SubscriptionText>
                     </>
                   )}
