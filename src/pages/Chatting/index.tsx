@@ -13,12 +13,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import { IChatRes } from "./data";
 
 export const Chatting = () => {
-  // TODO: useParams로 못가져올 시 사용
-  // const roomId =
-  //   +window.location.pathname.split("/")[
-  //     window.location.pathname.split("/").length - 1
-  //   ];
-
   const navigate = useNavigate();
   const [chatList, setChatList] = useState<IChatRes[]>([]);
   const [client, setClient] = useState<Client | null>(null);
@@ -27,7 +21,6 @@ export const Chatting = () => {
   const accessToken = user?.accessToken;
   const scrollRef = useRef<HTMLDivElement | null>(null);
 
-  // const { roomId } = useParams<{ roomId: string }>();
   const { roomId } = useParams();
 
   useEffect(() => {
@@ -81,7 +74,6 @@ export const Chatting = () => {
       user.name !== null &&
       user.email !== null
     ) {
-      console.log(chatList);
       sendMessage(client, roomId, {
         senderId: user.id,
         name: user.name,
