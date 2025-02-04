@@ -10,7 +10,6 @@ import MainColorButton from "../../Button/MainColorButton";
 import { FaBell, FaStar } from "react-icons/fa";
 import { useReadAllNotify } from "../../../hooks/notifyApi";
 import { useCreateReview } from "../../../hooks/matchingApi";
-import { useSSE } from "../../../hooks/sse";
 
 export const UserHeader = () => {
   const [user, setUser] = useRecoilState<IUserWithToken | null>(userState);
@@ -58,22 +57,69 @@ export const UserHeader = () => {
     handleDropdownToggle();
   };
 
-  useSSE(`http://localhost:8080/api/sse/subscribe/${user?.id}`, (e: any) => {
-    try {
-      const data = JSON.parse(e.data);
-      if (data.type === "REVIEW") {
-        setIsReviewModalOpen(true);
-        setReviewUrl(data.url);
-        setReviewMessage(data.content);
-      } else {
-        const newNoti = { ...data, read: false };
-        setNotifications((prev) => [newNoti, ...prev]);
-        setHasNewNotification(true);
+  useEffect(() => {
+    if (!user) return;
+
+    const eventSource = new EventSource(
+      `http://localhost:8080/api/sse/subscribe/${user.id}`
+    );
+    eventSourceRef.current = eventSource;
+
+    eventSource.onopen = () => {
+      console.log("SSE 연결 성공");
+    };
+
+    eventSource.addEventListener("notify", (e: any) => {
+      try {
+        const data = JSON.parse(e.data);
+        if (data.type === "REVIEW") {
+          setIsReviewModalOpen(true);
+          setReviewUrl(data.url);
+          setReviewMessage(data.content);
+        } else {
+          const newNoti = { ...data, read: false };
+          setNotifications((prev) => [newNoti, ...prev]);
+          setHasNewNotification(true);
+        }
+      } catch (err) {
+        console.error("알림 JSON 파싱 에러", err);
       }
-    } catch (err) {
-      console.error("알림 JSON 파싱 에러", err);
-    }
-  });
+    });
+
+    eventSource.onerror = (err) => {
+      console.error("SSE 에러 -> 재연결", err);
+      const eventSource = new EventSource(
+        `http://localhost:8080/api/sse/subscribe/${user.id}`
+      );
+      eventSourceRef.current = eventSource;
+
+      eventSource.onopen = () => {
+        console.log("SSE 연결 성공");
+      };
+
+      eventSource.addEventListener("notify", (e: any) => {
+        try {
+          const data = JSON.parse(e.data);
+          if (data.type === "REVIEW") {
+            setIsReviewModalOpen(true);
+            setReviewUrl(data.url);
+            setReviewMessage(data.content);
+          } else {
+            const newNoti = { ...data, read: false };
+            setNotifications((prev) => [newNoti, ...prev]);
+            setHasNewNotification(true);
+          }
+        } catch (err) {
+          console.error("알림 JSON 파싱 에러", err);
+        }
+      });
+      eventSource.close();
+    };
+
+    return () => {
+      eventSource.close();
+    };
+  }, [user]);
 
   const handleNotificationClick = () => {
     setNotificationOpen((prev) => !prev);
