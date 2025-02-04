@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import logo from "../../../assets/images/logo.png";
-import React, { useEffect, useState, useRef, useCallback } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useRecoilState } from "recoil";
 import { IUserWithToken } from "../../../hooks";
 import { userState } from "../../../stores/session";
@@ -10,6 +10,7 @@ import MainColorButton from "../../Button/MainColorButton";
 import { FaBell, FaStar } from "react-icons/fa";
 import { useReadAllNotify } from "../../../hooks/notifyApi";
 import { useCreateReview } from "../../../hooks/matchingApi";
+import { useSSE } from "../../../hooks/sse";
 
 export const UserHeader = () => {
   const [user, setUser] = useRecoilState<IUserWithToken | null>(userState);
@@ -26,7 +27,6 @@ export const UserHeader = () => {
   const [notificationOpen, setNotificationOpen] = useState(false);
   const [hasNewNotification, setHasNewNotification] = useState(false);
   const [readAllNotiReq, readAllNotiRes] = useReadAllNotify();
-  const eventSourceRef = useRef<EventSource | null>(null);
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
   const [reviewRating, setReviewRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
@@ -57,19 +57,9 @@ export const UserHeader = () => {
     handleDropdownToggle();
   };
 
-  useEffect(() => {
-    if (!user) return;
-
-    const eventSource = new EventSource(
-      `${process.env.REACT_APP_SERVER_URL}/api/sse/subscribe/${user.id}`
-    );
-    eventSourceRef.current = eventSource;
-
-    eventSource.onopen = () => {
-      console.log("SSE 연결 성공");
-    };
-
-    eventSource.addEventListener("notify", (e: any) => {
+  useSSE(
+    `${process.env.REACT_APP_SERVER_URL}/api/sse/subscribe/${user?.id}`,
+    (e: any) => {
       try {
         const data = JSON.parse(e.data);
         if (data.type === "REVIEW") {
@@ -84,17 +74,8 @@ export const UserHeader = () => {
       } catch (err) {
         console.error("알림 JSON 파싱 에러", err);
       }
-    });
-
-    eventSource.onerror = (err) => {
-      console.error("SSE 에러:", err);
-      eventSource.close();
-    };
-
-    return () => {
-      eventSource.close();
-    };
-  }, [user]);
+    }
+  );
 
   const handleNotificationClick = () => {
     setNotificationOpen((prev) => !prev);
