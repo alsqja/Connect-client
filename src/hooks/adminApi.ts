@@ -164,3 +164,18 @@ export const useGetTopCategories = () => {
 
   return [run, response] as [typeof run, typeof response];
 };
+
+export const useGetDailyPaymentChart = () => {
+  const [request, response] = useAxios();
+
+  const run = useCallback((startDate: string, endDate: string) => {
+    return request({
+      url: `/admin/payments/daily-chart?startDate=${startDate}&endDate=${endDate}`,
+      method: "GET",
+    });
+  }, [request]);
+
+  return [run, response] as [typeof run, typeof response];
+};
+
+
