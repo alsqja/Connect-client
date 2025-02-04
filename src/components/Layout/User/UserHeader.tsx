@@ -57,7 +57,11 @@ export const UserHeader = () => {
     handleDropdownToggle();
   };
 
-  useEffect(() => {
+  const maxRetries = 5;
+  const reconnectDelay = 3000;
+  const retryCount = useRef(0);
+
+  const connectToSSE = useCallback(() => {
     if (!user) return;
 
     const eventSource = new EventSource(
@@ -67,6 +71,7 @@ export const UserHeader = () => {
 
     eventSource.onopen = () => {
       console.log("SSE 연결 성공");
+      retryCount.current = 0;
     };
 
     eventSource.addEventListener("notify", (e: any) => {
@@ -87,39 +92,26 @@ export const UserHeader = () => {
     });
 
     eventSource.onerror = (err) => {
-      console.error("SSE 에러 -> 재연결", err);
-      const eventSource = new EventSource(
-        `http://localhost:8080/api/sse/subscribe/${user.id}`
-      );
-      eventSourceRef.current = eventSource;
-
-      eventSource.onopen = () => {
-        console.log("SSE 연결 성공");
-      };
-
-      eventSource.addEventListener("notify", (e: any) => {
-        try {
-          const data = JSON.parse(e.data);
-          if (data.type === "REVIEW") {
-            setIsReviewModalOpen(true);
-            setReviewUrl(data.url);
-            setReviewMessage(data.content);
-          } else {
-            const newNoti = { ...data, read: false };
-            setNotifications((prev) => [newNoti, ...prev]);
-            setHasNewNotification(true);
-          }
-        } catch (err) {
-          console.error("알림 JSON 파싱 에러", err);
-        }
-      });
+      console.error("SSE 에러 -> 재연결 시도", err);
       eventSource.close();
-    };
-
-    return () => {
-      eventSource.close();
+      if (retryCount.current < maxRetries) {
+        setTimeout(() => {
+          retryCount.current += 1;
+          console.log(`재연결 시도 #${retryCount.current}`);
+          connectToSSE();
+        }, reconnectDelay);
+      } else {
+        console.error("최대 재연결 시도 횟수 초과");
+      }
     };
   }, [user]);
+
+  useEffect(() => {
+    connectToSSE();
+    return () => {
+      eventSourceRef.current?.close();
+    };
+  }, [connectToSSE, user]);
 
   const handleNotificationClick = () => {
     setNotificationOpen((prev) => !prev);
