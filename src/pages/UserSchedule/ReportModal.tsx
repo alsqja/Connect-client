@@ -44,12 +44,13 @@ export const ReportModal = ({ onClose, matchingId }: ReportModalProps) => {
   };
 
   useEffect(() => {
-    console.log(postRes.data);
     if (postRes.data && postRes.called) {
       alert("신고 완료 되었습니다.");
       window.location.replace("/user/my/report");
+    } else if (postRes.error) {
+      alert(postRes.error);
     }
-  }, [postRes.called, postRes.data]);
+  }, [postRes.called, postRes.data, postRes.error]);
 
   return (
     <Overlay onClick={onClose}>
