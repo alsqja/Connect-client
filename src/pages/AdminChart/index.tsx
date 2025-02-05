@@ -73,7 +73,7 @@ export const AdminChart = () => {
       const oldEntry = oldDataMap.get(i) || { sales: 0, cumulativeSales: 0 };
 
       mergedMap.push({
-        date: `${i}일`, // 1일, 2일 ...
+        date: `${i} 일`,
         newData: activeChart === "sales" ? newEntry.sales : newEntry.cumulativeSales,
         oldData: activeChart === "sales" ? oldEntry.sales : oldEntry.cumulativeSales,
         newLabel: `${newMonth.date(i).format("YYYY-MM-DD")}`,
@@ -142,11 +142,12 @@ export const AdminChart = () => {
         <ResponsiveContainer width="95%" height="80%">
           <LineChart data={chartData} margin={{ top: 5, right: 20, bottom: 5, left: 30 }}>
             <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
-            <XAxis name="date" />
+            <XAxis dataKey="date" />
             <YAxis tickFormatter={formatY} />
             <Tooltip formatter={formatY} content={<CustomTooltip />} />
-            <Line type="monotone" dataKey="newData" fill="#8884d8" stroke="#8884d8" />
-            <Line type="monotone" dataKey="oldData" stroke="#aaaaaa" />
+            <Line type={activeChart === "sales" ? "monotone" : "linear"} dataKey="newData" fill="#8884d8"
+                  stroke="#8884d8" />
+            <Line type={activeChart === "sales" ? "monotone" : "linear"} dataKey="oldData" stroke="#aaaaaa" />
             <Legend formatter={formatLegend} />
           </LineChart>
         </ResponsiveContainer>

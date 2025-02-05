@@ -14,6 +14,8 @@ interface IProps {
   email: string;
   password: string;
   checkPass: string;
+  isVerified: boolean;
+  setIsVerified: Dispatch<SetStateAction<boolean>>;
   setEmail: Dispatch<SetStateAction<string>>;
   setPassword: Dispatch<SetStateAction<string>>;
   setCheckPass: Dispatch<SetStateAction<string>>;
@@ -24,6 +26,8 @@ export const Page1 = ({
   email,
   password,
   checkPass,
+  isVerified,
+  setIsVerified,
   setCheckPass,
   setEmail,
   setPassword,
@@ -35,11 +39,12 @@ export const Page1 = ({
   const [isCounting, setIsCounting] = useState(false);
   const [sendEmailReq, sendEmailRes] = useSendEmail();
   const [verifyReq, verifyRes] = useVerifyEmailCode();
-  const [isVerified, setIsVerified] = useState(false);
 
   const isPasswordValid = useMemo(
     () =>
-      /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*()_+{}|:<>?]).{8,}$/.test(password),
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/.test(
+        password
+      ),
     [password]
   );
 
@@ -54,7 +59,6 @@ export const Page1 = ({
       password.length > 0 &&
       isVerified &&
       checkPass.length > 0 &&
-      verificationCode.length === 8 &&
       isPasswordValid &&
       isPasswordMatch,
     [
@@ -62,15 +66,18 @@ export const Page1 = ({
       password.length,
       isVerified,
       checkPass.length,
-      verificationCode.length,
       isPasswordValid,
       isPasswordMatch,
     ]
   );
 
   const handleSendCode = useCallback(() => {
+    if (sendEmailRes.loading) {
+      alert("전송중입니다. 잠시 기다려 주세요");
+      return;
+    }
     sendEmailReq(email);
-  }, [email, sendEmailReq]);
+  }, [email, sendEmailReq, sendEmailRes.loading]);
 
   const handleVerify = useCallback(() => {
     verifyReq(email, verificationCode);
@@ -91,6 +98,7 @@ export const Page1 = ({
 
   useEffect(() => {
     if (sendEmailRes.called && !sendEmailRes.loading && !sendEmailRes.error) {
+      alert("이메일 전송이 완료되었습니다.");
       setIsSent(true);
       setIsCounting(true);
       setTimeLeft(180);

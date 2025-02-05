@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { TextField } from "../../components/TextField";
-import { Dispatch, SetStateAction, useMemo } from "react";
+import { Dispatch, SetStateAction, useCallback, useMemo } from "react";
 import { ImageField } from "../../components/ImageField";
 
 interface IProps {
@@ -8,6 +8,7 @@ interface IProps {
   birth: string;
   gender: "MAN" | "WOMAN";
   image: string | null;
+  setSendBirth: Dispatch<SetStateAction<string>>;
   setName: Dispatch<SetStateAction<string>>;
   setBirth: Dispatch<SetStateAction<string>>;
   setGender: Dispatch<SetStateAction<"MAN" | "WOMAN">>;
@@ -23,14 +24,23 @@ export const Page2 = ({
   image,
   setImage,
   setName,
+  setSendBirth,
   setBirth,
   setGender,
   setImageFile,
   handlePage,
 }: IProps) => {
   const isFullInput = useMemo(
-    () => image !== null && /^\d{8}$/.test(birth) && name.length > 0,
+    () => image !== null && birth.length > 0 && name.length > 0,
     [image, birth, name]
+  );
+
+  const handleDate = useCallback(
+    (date: string) => {
+      setSendBirth(date.split("-").join(""));
+      setBirth(date);
+    },
+    [setBirth, setSendBirth]
   );
 
   return (
@@ -41,16 +51,11 @@ export const Page2 = ({
         setImage={setImage}
       />
       <TextField value={name} onChange={setName} title="이름" />
-      <TextField
+      <DateSelector
+        type="date"
         value={birth}
-        onChange={setBirth}
+        onChange={(e) => handleDate(e.target.value)}
         title="생년월일"
-        type="text"
-        error={
-          !!birth && !/^\d{8}$/.test(birth)
-            ? "YYYYMMDD 형식으로 입력해주세요."
-            : ""
-        }
       />
       <RadioContainer>
         <Label>
@@ -139,4 +144,14 @@ const Label = styled.label`
   display: flex;
   align-items: center;
   gap: 10px;
+`;
+
+const DateSelector = styled.input`
+  width: 320px;
+  height: 40px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  margin-top: 10px;
 `;

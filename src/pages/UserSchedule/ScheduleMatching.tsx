@@ -4,10 +4,12 @@ import { ICreatedMatching, ISchedule, IScheduleMatching } from "./data";
 import { useRecoilValue } from "recoil";
 import { userState } from "../../stores/session";
 import { useGetScheduleMatching } from "../../hooks/scheduleApi";
-import { useUpdateMatching } from "../../hooks/matchingApi";
+import {
+  useGetMatchingChatroom,
+  useUpdateMatching,
+} from "../../hooks/matchingApi";
 import { MatchingModal } from "./MatchingModal";
 import { ScheduleModal } from "./ScheduleModal";
-import { ReportModal } from "./ReportModal";
 import { useNavigate } from "react-router-dom";
 import { FaFilter } from "react-icons/fa";
 import { FilterModal } from "./FilterModal";
@@ -33,13 +35,11 @@ export const ScheduleMatching = ({
   const [getReq, getRes] = useGetScheduleMatching();
   const [updateReq, updateRes] = useUpdateMatching();
   const [createRoomReq, createRoomRes] = useCreateRoom();
+  const [getChatroomReq, getChartoomRes] = useGetMatchingChatroom();
 
   const [modal, setModal] = useState(false);
   const [matching, setMatching] = useState<ICreatedMatching>();
   const [detailModal, setDetailModal] = useState(false);
-  const [reportModal, setReportModal] = useState(false);
-  const [reportUserId, setReportUserId] = useState(0);
-  const [reportMatchingId, setReportMatchingId] = useState(0);
   const navigate = useNavigate();
   const isMember = user?.memberType !== null;
   const [chargeModal, setChargeModal] = useState(false);
@@ -58,11 +58,16 @@ export const ScheduleMatching = ({
 
   useEffect(() => {
     if (getRes.data && getRes.called) {
-      setSuccessData(
-        getRes.data.data.filter(
-          (el: IScheduleMatching) => el.matchStatus === "ACCEPTED"
-        )
+      const success = getRes.data.data.filter(
+        (el: IScheduleMatching) => el.matchStatus === "ACCEPTED"
       );
+
+      setSuccessData(success);
+
+      if (success.length > 0) {
+        success.forEach((el: any) => getChatroomReq(el.id));
+      }
+
       setSentData(
         getRes.data.data.filter(
           (el: IScheduleMatching) =>
@@ -76,7 +81,33 @@ export const ScheduleMatching = ({
         )
       );
     }
-  }, [getRes, user?.id]);
+  }, [getChatroomReq, getRes, user?.id]);
+
+  useEffect(() => {
+    if (getChartoomRes.data && getChartoomRes.called) {
+      setSuccessData((p) =>
+        p.map((el) => {
+          if (el.id === getChartoomRes.data.data.matchingId) {
+            return { ...el, chatroomId: getChartoomRes.data.data.chatroomId };
+          }
+          return el;
+        })
+      );
+    }
+  }, [getChartoomRes.called, getChartoomRes.data]);
+
+  const handleChatroomNavi = useCallback(
+    (id?: number, matchingId?: number) => {
+      if (id) {
+        navigate(`/chat/rooms/${id}`, {
+          state: {
+            matchingId,
+          },
+        });
+      }
+    },
+    [navigate]
+  );
 
   const handleUpdate = useCallback(
     (id: number, status: string) => {
@@ -93,15 +124,19 @@ export const ScheduleMatching = ({
         window.location.reload();
       }
     }
-  }, [updateRes]);
+  }, [createRoomReq, updateRes]);
 
   useEffect(() => {
     if (createRoomRes.called && createRoomRes.data) {
       const roomId = createRoomRes.data.data.chatroomId;
 
-      window.location.replace(`/chat/rooms/${roomId}`);
+      navigate(`/chat/rooms/${roomId}`, {
+        state: {
+          matchingId: matching?.id,
+        },
+      });
     }
-  }, [createRoomRes]);
+  }, [createRoomRes, matching?.id, navigate]);
 
   useEffect(() => {
     if (
@@ -181,17 +216,9 @@ export const ScheduleMatching = ({
                   </Range>
                 </ProgressWrapper>
                 <Action
-                  onClick={() => {
-                    setReportModal(true);
-                    setReportUserId(
-                      user?.id === item.fromUserId
-                        ? item.toUserId
-                        : item.fromUserId
-                    );
-                    setReportMatchingId(item.id);
-                  }}
+                  onClick={() => handleChatroomNavi(item.chatroomId, item.id)}
                 >
-                  신고
+                  채팅
                 </Action>
               </Item>
             ))
@@ -307,13 +334,13 @@ export const ScheduleMatching = ({
           handleSubmit={() => matching && handleUpdate(matching?.id, "PENDING")}
         />
       )}
-      {reportModal && (
+      {/* {reportModal && (
         <ReportModal
           onClose={() => setReportModal(false)}
           matchingId={reportMatchingId}
           toId={reportUserId}
         />
-      )}
+      )} */}
       {chargeModal && (
         <CouponModal
           onClose={() => setChargeModal(false)}

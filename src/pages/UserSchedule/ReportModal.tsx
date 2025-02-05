@@ -2,25 +2,37 @@ import React, { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
 import styled from "styled-components";
 import { userState } from "../../stores/session";
-import { useCreateReport } from "../../hooks/matchingApi";
+import {
+  useCreateReport,
+  useGetMatchingPartner,
+} from "../../hooks/matchingApi";
 
 interface ReportModalProps {
   onClose: () => void;
   matchingId: number;
-  toId: number;
 }
 
-export const ReportModal = ({
-  onClose,
-  matchingId,
-  toId,
-}: ReportModalProps) => {
+export const ReportModal = ({ onClose, matchingId }: ReportModalProps) => {
   const [reportContent, setReportContent] = useState("");
   const user = useRecoilValue(userState);
   const [postReq, postRes] = useCreateReport();
+  const [getReq, getRes] = useGetMatchingPartner();
+  const [toId, setToId] = useState();
+
+  useEffect(() => {
+    getReq(matchingId);
+  }, [getReq, matchingId]);
+
+  useEffect(() => {
+    if (getRes.called && getRes.data) {
+      setToId(getRes.data.data.partnerId);
+    } else if (getRes.error) {
+      alert("오류가 발생했습니다.");
+    }
+  }, [getRes]);
 
   const handleSubmit = () => {
-    if (!user) {
+    if (!user || !toId) {
       return;
     }
     if (!reportContent.trim()) {
@@ -29,15 +41,16 @@ export const ReportModal = ({
     }
     postReq(toId, matchingId, reportContent);
     setReportContent("");
-    onClose();
   };
 
   useEffect(() => {
     if (postRes.data && postRes.called) {
       alert("신고 완료 되었습니다.");
-      window.location.reload();
+      window.location.replace("/user/my/report");
+    } else if (postRes.error) {
+      alert(postRes.error);
     }
-  }, [postRes]);
+  }, [postRes.called, postRes.data, postRes.error]);
 
   return (
     <Overlay onClick={onClose}>
