@@ -176,10 +176,22 @@ export const UserHeader = () => {
     }
   }, [postReviewRes, readAllNotiReq, user?.id]);
 
+  const handleLogoNavi = useCallback(() => {
+    if (!user) {
+      navigate("/login");
+      return;
+    }
+    if (user.role === "ADMIN") {
+      navigate("/admin/user");
+    } else {
+      navigate("/");
+    }
+  }, [navigate, user]);
+
   return (
     <Wrapper>
       <Container>
-        <Logo src={logo} alt="logo" onClick={() => navigate("/")} />
+        <Logo src={logo} alt="logo" onClick={handleLogoNavi} />
 
         <RightHeader>
           {user?.role !== "ADMIN" && pathname !== "/issue/coupon" && (

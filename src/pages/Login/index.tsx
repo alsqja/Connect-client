@@ -23,10 +23,12 @@ export const Login = () => {
   useEffect(() => {
     if (loginRes.called && loginRes.data) {
       setTokens(loginRes.data.data);
+      console.log(loginRes.data.data.role);
 
       if (loginRes.data.data.role === "ADMIN") {
         navigate("/admin/user");
       } else {
+        console.log(loginRes.data.data.role);
         navigate("/");
       }
     } else if (loginRes.error) {
