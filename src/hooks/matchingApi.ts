@@ -93,3 +93,19 @@ export const useGetMatchingChatroom = () => {
 
   return [run, response] as [typeof run, typeof response];
 };
+
+export const useGetMatchingPartner = () => {
+  const [request, response] = useAxios();
+
+  const run = useCallback(
+    (id: number) => {
+      return request({
+        url: `matchings/${id}/partners`,
+        method: "GET",
+      });
+    },
+    [request]
+  );
+
+  return [run, response] as [typeof run, typeof response];
+};

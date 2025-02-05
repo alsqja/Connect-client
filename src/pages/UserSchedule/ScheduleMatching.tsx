@@ -97,8 +97,14 @@ export const ScheduleMatching = ({
   }, [getChartoomRes.called, getChartoomRes.data]);
 
   const handleChatroomNavi = useCallback(
-    (id?: number) => {
-      if (id) navigate(`/chat/rooms/${id}`);
+    (id?: number, matchingId?: number) => {
+      if (id) {
+        navigate(`/chat/rooms/${id}`, {
+          state: {
+            matchingId,
+          },
+        });
+      }
     },
     [navigate]
   );
@@ -124,9 +130,13 @@ export const ScheduleMatching = ({
     if (createRoomRes.called && createRoomRes.data) {
       const roomId = createRoomRes.data.data.chatroomId;
 
-      window.location.replace(`/chat/rooms/${roomId}`);
+      navigate(`/chat/rooms/${roomId}`, {
+        state: {
+          matchingId: matching?.id,
+        },
+      });
     }
-  }, [createRoomRes]);
+  }, [createRoomRes, matching?.id, navigate]);
 
   useEffect(() => {
     if (
@@ -205,7 +215,9 @@ export const ScheduleMatching = ({
                     <span>100</span>
                   </Range>
                 </ProgressWrapper>
-                <Action onClick={() => handleChatroomNavi(item.chatroomId)}>
+                <Action
+                  onClick={() => handleChatroomNavi(item.chatroomId, item.id)}
+                >
                   채팅
                 </Action>
               </Item>

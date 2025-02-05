@@ -57,6 +57,11 @@ export const UserHeader = () => {
     handleDropdownToggle();
   };
 
+  const handleChatroom = () => {
+    navigate("/user/my/chatHistory");
+    handleDropdownToggle();
+  };
+
   const maxRetries = 5;
   const reconnectDelay = 3000;
   const retryCount = useRef(0);
@@ -241,6 +246,11 @@ export const UserHeader = () => {
             <Dropdown>
               {user?.role === "USER" && (
                 <DropdownItem onClick={handleMyPage}>마이페이지</DropdownItem>
+              )}
+              {user?.role === "USER" && (
+                <DropdownItem onClick={handleChatroom}>
+                  채팅방 목록
+                </DropdownItem>
               )}
               <DropdownItem onClick={handleLogout}>로그아웃</DropdownItem>
             </Dropdown>

@@ -31,15 +31,28 @@ export const Chatroom = () => {
   }, [getRes]);
 
   const getChatHistory = (chatroomId: number) => {
-    navigator("/chat/rooms/" + chatroomId);
+    navigator("/chat/rooms/" + chatroomId, {
+      state: {
+        matchingId: chatrooms?.filter((el) => el.chatroomId === chatroomId)[0]
+          .matchingId,
+      },
+    });
   };
 
   const handleDelete = (chatroomId: number) => {
     if (window.confirm("정말로 삭제하시겠습니까?")) {
       deleteReq(chatroomId.toString());
-      window.location.reload();
     }
   };
+
+  useEffect(() => {
+    if (deleteRes.called && !deleteRes.error && !deleteRes.loading) {
+      alert("삭제되었습니다.");
+      window.location.reload();
+    } else if (deleteRes.error) {
+      alert(deleteRes.error);
+    }
+  }, [deleteRes.called, deleteRes.error, deleteRes.loading]);
 
   return (
     <>
