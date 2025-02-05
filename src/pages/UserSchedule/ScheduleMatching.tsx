@@ -128,13 +128,7 @@ export const ScheduleMatching = ({
 
   useEffect(() => {
     if (createRoomRes.called && createRoomRes.data) {
-      const roomId = createRoomRes.data.data.chatroomId;
-
-      navigate(`/chat/rooms/${roomId}`, {
-        state: {
-          matchingId: matching?.id,
-        },
-      });
+      window.location.reload();
     }
   }, [createRoomRes, matching?.id, navigate]);
 
