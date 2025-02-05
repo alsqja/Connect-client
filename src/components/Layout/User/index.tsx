@@ -1,10 +1,6 @@
 import styled from "styled-components";
 import { UserHeader } from "./UserHeader";
-import { Outlet } from "react-router-dom"
-
-interface IProps {
-  children: React.ReactNode;
-}
+import { Outlet } from "react-router-dom";
 
 export const UserLayout = () => {
   return (
