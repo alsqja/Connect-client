@@ -15,6 +15,7 @@ import { FaFilter } from "react-icons/fa";
 import { FilterModal } from "./FilterModal";
 import { useCreateRoom } from "../../hooks/chattingApi";
 import { CouponModal } from "./CouponModal";
+import { isBefore } from "../../utils/functions";
 
 interface IProps {
   id: number;
@@ -284,8 +285,11 @@ export const ScheduleMatching = ({
         </ScrollableContainer>
       </Section>
       <ButtonContainer>
-        <MatchButton onClick={handleCreateMatching}>
-          {`매칭 찾기 ${
+        <MatchButton
+          onClick={handleCreateMatching}
+          disabled={isBefore(schedule.date)}
+        >
+          {isBefore(schedule.date) ? "지난 날짜의 매칭을 찾을 수 없습니다." : `매칭 찾기 ${
             5 - schedule.count > 0 ? `무료 ${5 - schedule.count}회` : "(50P)"
           }`}
         </MatchButton>
@@ -312,7 +316,7 @@ export const ScheduleMatching = ({
           onClose={() => {
             if (
               window.confirm(
-                "창을 닫으면 매칭을 신청 할 수 없습니다. 그래도 닫으시겠습니까?"
+                "창을 닫으면 매칭이 거절되고 횟수가 차감됩니다. 그래도 닫으시겠습니까?"
               )
             )
               matching && handleUpdate(matching?.id, "REJECTED");
@@ -328,13 +332,6 @@ export const ScheduleMatching = ({
           handleSubmit={() => matching && handleUpdate(matching?.id, "PENDING")}
         />
       )}
-      {/* {reportModal && (
-        <ReportModal
-          onClose={() => setReportModal(false)}
-          matchingId={reportMatchingId}
-          toId={reportUserId}
-        />
-      )} */}
       {chargeModal && (
         <CouponModal
           onClose={() => setChargeModal(false)}
@@ -473,6 +470,11 @@ const MatchButton = styled.button`
 
   &:hover {
     background-color: #0056b3;
+  }
+
+  &:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
   }
 `;
 
