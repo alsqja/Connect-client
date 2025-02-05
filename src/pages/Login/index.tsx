@@ -23,14 +23,6 @@ export const Login = () => {
   useEffect(() => {
     if (loginRes.called && loginRes.data) {
       setTokens(loginRes.data.data);
-      console.log(loginRes.data.data.role);
-
-      if (loginRes.data.data.role === "ADMIN") {
-        navigate("/admin/user");
-      } else {
-        console.log(loginRes.data.data.role);
-        navigate("/");
-      }
     } else if (loginRes.error) {
       alert(loginRes.error);
     }
@@ -64,9 +56,10 @@ export const Login = () => {
 
   useEffect(() => {
     if (!!tokens) {
-      navigate("/");
+      if (tokens.role === "USER") navigate("/");
+      else navigate("/admin/user");
     }
-  });
+  }, [navigate, tokens]);
 
   return (
     <Wrapper>
