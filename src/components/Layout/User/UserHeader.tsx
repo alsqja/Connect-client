@@ -57,6 +57,11 @@ export const UserHeader = () => {
     handleDropdownToggle();
   };
 
+  const handleChatroom = () => {
+    navigate("/user/my/chatHistory");
+    handleDropdownToggle();
+  };
+
   const maxRetries = 5;
   const reconnectDelay = 3000;
   const retryCount = useRef(0);
@@ -176,10 +181,25 @@ export const UserHeader = () => {
     }
   }, [postReviewRes, readAllNotiReq, user?.id]);
 
+  const handleLogoNavi = useCallback(() => {
+    if (user?.role === "ADMIN") {
+      navigate("/admin/user");
+    } else {
+      navigate("/");
+    }
+  }, [navigate, user]);
+
+  useEffect(() => {
+    if (!user) {
+      navigate("/login");
+      return;
+    }
+  }, [navigate, user]);
+
   return (
     <Wrapper>
       <Container>
-        <Logo src={logo} alt="logo" onClick={() => navigate("/")} />
+        <Logo src={logo} alt="logo" onClick={handleLogoNavi} />
 
         <RightHeader>
           {user?.role !== "ADMIN" && pathname !== "/issue/coupon" && (
@@ -192,7 +212,7 @@ export const UserHeader = () => {
               포인트 충전
             </MainColorButton>
           )}
-          {user && (
+          {user?.role === "USER" && (
             <NotificationIconWrapper onClick={handleNotificationClick}>
               <BellIcon hasNew={hasNewNotification} />
               {notificationOpen && (
@@ -226,6 +246,11 @@ export const UserHeader = () => {
             <Dropdown>
               {user?.role === "USER" && (
                 <DropdownItem onClick={handleMyPage}>마이페이지</DropdownItem>
+              )}
+              {user?.role === "USER" && (
+                <DropdownItem onClick={handleChatroom}>
+                  채팅방 목록
+                </DropdownItem>
               )}
               <DropdownItem onClick={handleLogout}>로그아웃</DropdownItem>
             </Dropdown>

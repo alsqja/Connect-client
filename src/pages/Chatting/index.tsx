@@ -9,15 +9,14 @@ import {
   formatDateTimeWithRegex,
 } from "../../hooks/chattingApi";
 import { Client } from "@stomp/stompjs";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { IChatRes } from "./data";
+import { ReportModal } from "../UserSchedule/ReportModal";
+import { NotFound } from "../NotFound";
 
 export const Chatting = () => {
-  // TODO: useParams로 못가져올 시 사용
-  // const roomId =
-  //   +window.location.pathname.split("/")[
-  //     window.location.pathname.split("/").length - 1
-  //   ];
+  const location = useLocation();
+  const { matchingId } = location.state;
 
   const navigate = useNavigate();
   const [chatList, setChatList] = useState<IChatRes[]>([]);
@@ -26,8 +25,8 @@ export const Chatting = () => {
   const user = useRecoilValue(userState);
   const accessToken = user?.accessToken;
   const scrollRef = useRef<HTMLDivElement | null>(null);
+  const [reportModal, setReportModal] = useState(false);
 
-  // const { roomId } = useParams<{ roomId: string }>();
   const { roomId } = useParams();
 
   useEffect(() => {
@@ -81,7 +80,6 @@ export const Chatting = () => {
       user.name !== null &&
       user.email !== null
     ) {
-      console.log(chatList);
       sendMessage(client, roomId, {
         senderId: user.id,
         name: user.name,
@@ -95,6 +93,10 @@ export const Chatting = () => {
       );
     }
   };
+
+  if (!matchingId) {
+    return <NotFound />;
+  }
 
   return (
     <MsgerWrapper>
@@ -132,6 +134,7 @@ export const Chatting = () => {
           }
         }}
       >
+        <ReportButton onClick={() => setReportModal(true)}>신고</ReportButton>
         <input
           className="msger-input"
           type="text"
@@ -141,6 +144,12 @@ export const Chatting = () => {
           전송
         </button>
       </MsgerInputarea>
+      {reportModal && (
+        <ReportModal
+          onClose={() => setReportModal(false)}
+          matchingId={matchingId}
+        />
+      )}
     </MsgerWrapper>
   );
 };
@@ -274,5 +283,18 @@ const MsgerInputarea = styled.form`
 
   .msger-send-btn:hover {
     background: rgb(36, 116, 219);
+  }
+`;
+
+const ReportButton = styled.div`
+  background: transparent;
+  border: none;
+  color: #ff4d4f;
+  cursor: pointer;
+  margin-right: 10px;
+  font-size: 1.2em;
+
+  &:hover {
+    color: #d9363e;
   }
 `;

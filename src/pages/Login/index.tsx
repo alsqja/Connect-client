@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { TextField } from "../../components/TextField";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useLogin } from "../../hooks/session";
-import { useSetRecoilState } from "recoil";
+import { useRecoilState } from "recoil";
 import { userState } from "../../stores/session";
 import { useNavigate } from "react-router-dom";
 import NaverLogin from "../../components/NaverLogin";
@@ -12,7 +12,7 @@ export const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loginReq, loginRes] = useLogin();
-  const setTokens = useSetRecoilState(userState);
+  const [tokens, setTokens] = useRecoilState(userState);
   const navigate = useNavigate();
   const isRequestSent = useRef(false);
 
@@ -23,12 +23,8 @@ export const Login = () => {
   useEffect(() => {
     if (loginRes.called && loginRes.data) {
       setTokens(loginRes.data.data);
-
-      if (loginRes.data.data.role === "ADMIN") {
-        navigate("/admin/user");
-      } else {
-        navigate("/");
-      }
+    } else if (loginRes.error) {
+      alert(loginRes.error);
     }
   }, [loginRes, navigate, setTokens]);
 
@@ -37,7 +33,6 @@ export const Login = () => {
   }, [navigate]);
 
   useEffect(() => {
-    // 현재 URL에서 code와 state 추출
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get("code");
     const state = urlParams.get("state");
@@ -54,11 +49,17 @@ export const Login = () => {
           navigate("/");
         })
         .catch((error) => {
-          console.error("로그인 실패", error);
           alert("로그인에 실패했습니다.");
         });
     }
   }, [navigate, setTokens]);
+
+  useEffect(() => {
+    if (!!tokens) {
+      if (tokens.role === "USER") navigate("/");
+      else navigate("/admin/user");
+    }
+  }, [navigate, tokens]);
 
   return (
     <Wrapper>

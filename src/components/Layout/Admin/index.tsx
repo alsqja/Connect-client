@@ -6,16 +6,11 @@ import { userState } from "../../../stores/session";
 import { UserHeader } from "../User/UserHeader";
 import { Outlet } from "react-router-dom";
 
-interface IProps {
-  children: React.ReactNode;
-}
-
 export const AdminLayout = () => {
   const user = useRecoilValue(userState);
 
   useEffect(() => {
     if (user?.role === "USER") {
-      // alert("관리자만 접근 가능합니다.");
       window.location.replace("/login");
       return;
     }

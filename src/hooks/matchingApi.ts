@@ -77,3 +77,35 @@ export const useCreateReview = () => {
 
   return [run, response] as [typeof run, typeof response];
 };
+
+export const useGetMatchingChatroom = () => {
+  const [request, response] = useAxios();
+
+  const run = useCallback(
+    (id: number) => {
+      return request({
+        url: `matchings/${id}/chatrooms`,
+        method: "GET",
+      });
+    },
+    [request]
+  );
+
+  return [run, response] as [typeof run, typeof response];
+};
+
+export const useGetMatchingPartner = () => {
+  const [request, response] = useAxios();
+
+  const run = useCallback(
+    (id: number) => {
+      return request({
+        url: `matchings/${id}/partners`,
+        method: "GET",
+      });
+    },
+    [request]
+  );
+
+  return [run, response] as [typeof run, typeof response];
+};

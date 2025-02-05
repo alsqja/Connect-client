@@ -19,6 +19,8 @@ export const Signup = () => {
   const [image, setImage] = useState<string | null>(null);
   const [signupReq, signupRes] = useSignup();
   const navigate = useNavigate();
+  const [isVerified, setIsVerified] = useState(false);
+  const [sendBirth, setSendBirth] = useState("");
 
   const handlePage = useCallback(
     (page: number, isFullInput: boolean) => {
@@ -41,19 +43,21 @@ export const Signup = () => {
         name,
         email,
         password,
-        birth,
+        birth: sendBirth,
         gender,
         profileUrl,
         role: "USER",
         isActiveMatching: true,
       });
     }
-  }, [birth, email, gender, imageFile, name, password, signupReq]);
+  }, [sendBirth, email, gender, imageFile, name, password, signupReq]);
 
   useEffect(() => {
     if (signupRes.called && signupRes.data) {
       alert("회원가입이 완료되었습니다.");
       navigate("/login");
+    } else if (signupRes.error) {
+      alert(signupRes.error);
     }
   }, [signupRes, navigate]);
 
@@ -77,6 +81,8 @@ export const Signup = () => {
             email={email}
             password={password}
             checkPass={checkPass}
+            isVerified={isVerified}
+            setIsVerified={setIsVerified}
             setEmail={setEmail}
             setCheckPass={setCheckPass}
             setPassword={setPassword}
@@ -93,6 +99,7 @@ export const Signup = () => {
             setGender={setGender}
             handlePage={handlePage}
             setImageFile={setImageFile}
+            setSendBirth={setSendBirth}
             image={image}
             setImage={setImage}
           />

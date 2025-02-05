@@ -30,6 +30,7 @@ export interface IScheduleMatching {
   matchStatus: "ACCEPTED" | "PENDING";
   createdAt: string;
   updatedAt: string;
+  chatroomId?: number;
 }
 
 export interface ICreatedMatching {
