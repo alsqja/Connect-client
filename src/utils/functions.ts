@@ -6,3 +6,12 @@ export const getAge = (birth: string) => {
 
   return currentYear - birthYear + 1;
 };
+
+export const isBefore = (date: string) => {
+  const inputDate = new Date(date);
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  return inputDate < today;
+};
