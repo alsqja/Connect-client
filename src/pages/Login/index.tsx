@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { TextField } from "../../components/TextField";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useLogin } from "../../hooks/session";
-import { useRecoilState, useSetRecoilState } from "recoil";
+import { useRecoilState } from "recoil";
 import { userState } from "../../stores/session";
 import { useNavigate } from "react-router-dom";
 import NaverLogin from "../../components/NaverLogin";

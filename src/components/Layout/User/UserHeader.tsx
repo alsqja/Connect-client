@@ -177,14 +177,17 @@ export const UserHeader = () => {
   }, [postReviewRes, readAllNotiReq, user?.id]);
 
   const handleLogoNavi = useCallback(() => {
-    if (!user) {
-      navigate("/login");
-      return;
-    }
-    if (user.role === "ADMIN") {
+    if (user?.role === "ADMIN") {
       navigate("/admin/user");
     } else {
       navigate("/");
+    }
+  }, [navigate, user]);
+
+  useEffect(() => {
+    if (!user) {
+      navigate("/login");
+      return;
     }
   }, [navigate, user]);
 
@@ -204,7 +207,7 @@ export const UserHeader = () => {
               포인트 충전
             </MainColorButton>
           )}
-          {user && (
+          {user?.role === "USER" && (
             <NotificationIconWrapper onClick={handleNotificationClick}>
               <BellIcon hasNew={hasNewNotification} />
               {notificationOpen && (
