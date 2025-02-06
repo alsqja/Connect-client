@@ -105,6 +105,8 @@ export const ScheduleMatching = ({
             matchingId,
           },
         });
+      } else {
+        alert("삭제된 채팅방 입니다.");
       }
     },
     [navigate]
@@ -289,9 +291,13 @@ export const ScheduleMatching = ({
           onClick={handleCreateMatching}
           disabled={isBefore(schedule.date)}
         >
-          {isBefore(schedule.date) ? "지난 날짜의 매칭을 찾을 수 없습니다." : `매칭 찾기 ${
-            5 - schedule.count > 0 ? `무료 ${5 - schedule.count}회` : "(50P)"
-          }`}
+          {isBefore(schedule.date)
+            ? "지난 날짜의 매칭을 찾을 수 없습니다."
+            : `매칭 찾기 ${
+                5 - schedule.count > 0
+                  ? `무료 ${5 - schedule.count}회`
+                  : "(50P)"
+              }`}
         </MatchButton>
         <FilterButton onClick={() => setIsFilterModalOpen(true)}>
           <FaFilter size={18} />

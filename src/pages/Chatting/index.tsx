@@ -44,8 +44,15 @@ export const Chatting = () => {
   useEffect(() => {
     if (getRes.data && getRes.called) {
       setChatList(getRes.data.data.reverse());
+    } else if (getRes.error) {
+      if (getRes.error === "권한이 없습니다.") {
+        alert("삭제된 채팅방 입니다.");
+        navigate(-1);
+      } else {
+        alert(getRes.error);
+      }
     }
-  }, [getRes]);
+  }, [getRes, navigate]);
 
   useEffect(() => {
     if (!accessToken) {
