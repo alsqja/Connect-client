@@ -112,3 +112,23 @@ export const useGetUserCoupons = () => {
 
   return [run, response] as [typeof run, typeof response];
 };
+
+export const useNaverLogin = () => {
+  const [request, response] = useAxios();
+
+  const run = useCallback(
+    (code: string, state: string) => {
+      return request({
+        method: "GET",
+        url: "/auth/login/naver/code",
+        params: {
+          code,
+          state,
+        },
+      });
+    },
+    [request]
+  );
+
+  return [run, response] as [typeof run, typeof response];
+};

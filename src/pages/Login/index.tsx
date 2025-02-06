@@ -6,7 +6,7 @@ import { useRecoilState } from "recoil";
 import { userState } from "../../stores/session";
 import { useNavigate } from "react-router-dom";
 import NaverLogin from "../../components/NaverLogin";
-import axios from "axios";
+import { useNaverLogin } from "../../hooks/userApi";
 
 export const Login = () => {
   const [email, setEmail] = useState("");
@@ -15,6 +15,7 @@ export const Login = () => {
   const [tokens, setTokens] = useRecoilState(userState);
   const navigate = useNavigate();
   const isRequestSent = useRef(false);
+  const [naverReq, naverRes] = useNaverLogin();
 
   const handleLogin = useCallback(() => {
     loginReq(email, password);
@@ -40,19 +41,18 @@ export const Login = () => {
     if (code && state && !isRequestSent.current) {
       isRequestSent.current = true;
 
-      axios
-        .get(`${process.env.REACT_APP_SERVER_URL}/api/auth/login/naver/code`, {
-          params: { code, state },
-        })
-        .then((response) => {
-          setTokens(response.data.data);
-          navigate("/main");
-        })
-        .catch((error) => {
-          alert("로그인에 실패했습니다.");
-        });
+      naverReq(code, state);
     }
-  }, [navigate, setTokens]);
+  }, [naverReq, navigate, setTokens]);
+
+  useEffect(() => {
+    if (naverRes.data && naverRes.called) {
+      setTokens(naverRes.data.data);
+      navigate("/main");
+    } else if (naverRes.error) {
+      alert(naverRes.error);
+    }
+  }, [naverRes.called, naverRes.data, naverRes.error, navigate, setTokens]);
 
   useEffect(() => {
     if (!!tokens) {
