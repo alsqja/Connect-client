@@ -4,8 +4,8 @@ import { IChatReq, IChatRes } from "../pages/Chatting/data";
 import { useAxios } from "./axios";
 import { useCallback } from "react";
 
-const baseURL = "http://localhost:8080";
-const socketUrl = "ws://localhost:8080/ws";
+const baseURL = process.env.REACT_APP_SERVER_URL;
+const socketUrl = process.env.REACT_APP_CHAT_URL;
 let subscription: StompSubscription | null = null;
 
 // TODO: useAxios 코드 보고 수정 필요

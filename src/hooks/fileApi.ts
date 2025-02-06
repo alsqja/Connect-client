@@ -7,9 +7,12 @@ export const uploadFile = async (file: File | null) => {
       return;
     }
 
-    const response = await axios.post(`http://localhost:8080/api/file-url`, {
-      fileName: file.name,
-    });
+    const response = await axios.post(
+      `${process.env.REACT_APP_SERVER_URL}/api/file-url`,
+      {
+        fileName: file.name,
+      }
+    );
     const presignedUrl = response.data.data.url;
 
     const result = await axios.put(presignedUrl, file, {

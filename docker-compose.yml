@@ -13,3 +13,8 @@ services:
       - NODE_ENV=development
     stdin_open: true # React 앱의 인터랙티브 모드를 지원
     tty: true
+# docker-compose down -v
+# docker-compose build --no-cache
+# docker-compose up -d
+# docker-compose run --rm react-app npm run build
+

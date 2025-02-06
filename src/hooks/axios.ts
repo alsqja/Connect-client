@@ -17,7 +17,7 @@ export type UseAxiosType = [
 ];
 
 const axios = Axios.create({
-  baseURL: "http://localhost:8080/api",
+  baseURL: process.env.REACT_APP_SERVER_URL + "/api",
 });
 
 let isRefreshing = false;

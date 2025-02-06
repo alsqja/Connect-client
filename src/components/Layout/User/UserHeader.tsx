@@ -26,13 +26,13 @@ export const UserHeader = () => {
   const [notificationOpen, setNotificationOpen] = useState(false);
   const [hasNewNotification, setHasNewNotification] = useState(false);
   const [readAllNotiReq, readAllNotiRes] = useReadAllNotify();
-  const eventSourceRef = useRef<EventSource | null>(null);
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
   const [reviewRating, setReviewRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
   const [reviewUrl, setReviewUrl] = useState("");
   const [postReviewReq, postReviewRes] = useCreateReview();
   const [reviewMessage, setReviewMessage] = useState("");
+  const eventSourceRef = useRef<EventSource | null>(null);
 
   const handleDropdownToggle = () => {
     setDropdownOpen((prev) => !prev);
@@ -70,7 +70,7 @@ export const UserHeader = () => {
     if (!user) return;
 
     const eventSource = new EventSource(
-      `http://localhost:8080/api/sse/subscribe/${user.id}`
+      `${process.env.REACT_APP_SERVER_URL}/api/sse/subscribe/${user.id}`
     );
     eventSourceRef.current = eventSource;
 

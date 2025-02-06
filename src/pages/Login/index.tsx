@@ -41,7 +41,7 @@ export const Login = () => {
       isRequestSent.current = true;
 
       axios
-        .get("http://localhost:8080/api/auth/login/naver/code", {
+        .get(`${process.env.REACT_APP_SERVER_URL}/api/auth/login/naver/code`, {
           params: { code, state },
         })
         .then((response) => {
