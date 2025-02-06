@@ -8,8 +8,8 @@ import { useCreateMatching } from "../../hooks/matchingApi";
 export const UserSchedule = () => {
   const id =
     +window.location.pathname.split("/")[
-      window.location.pathname.split("/").length - 1
-    ];
+    window.location.pathname.split("/").length - 1
+      ];
   const [schedule, setSchedule] = useState<ISchedule>();
   const [getReq, getRes] = useGetSchedule();
   const [postMatchingReq, postMatchingRes] = useCreateMatching();
@@ -23,7 +23,7 @@ export const UserSchedule = () => {
 
   useEffect(() => {
     if (!id) {
-      window.location.replace("/");
+      window.location.replace("/main");
       return;
     }
     getReq(id);

@@ -5,6 +5,7 @@ interface IProps {
   selected: number;
   handleSelected: (index: number) => void;
 }
+
 export const UserSidebar = ({ selected, handleSelected }: IProps) => {
   return (
     <Wrapper>
@@ -25,7 +26,8 @@ const Wrapper = styled.div`
   width: 260px;
   display: flex;
   flex-direction: column;
-  border: 1px solid black;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   border-radius: 5px;
   overflow: hidden;
   background-color: white;
@@ -39,7 +41,7 @@ const Cell = styled.div<{ isSelected: boolean }>`
   align-items: center;
   background-color: ${({ isSelected }) => (isSelected ? "#f1f1f1" : "white")};
   position: relative;
-
+  
   &:not(:last-child)::after {
     content: "";
     position: absolute;
