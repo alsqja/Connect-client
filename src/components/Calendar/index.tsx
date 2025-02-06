@@ -10,18 +10,25 @@ interface IProps {
 }
 
 export const Calendar = ({ schedules, handleClick, setActiveDate }: IProps) => {
-  const [currentDate, setCurrentDate] = useState(new Date());
+  const [currentDate, setCurrentDate] = useState(() => {
+    const now = new Date();
+    return new Date(
+      now.getTime() + now.getTimezoneOffset() * 60000 + 9 * 3600000
+    );
+  });
   const navigate = useNavigate();
 
   const firstDayOfMonth = new Date(
     currentDate.getFullYear(),
     currentDate.getMonth(),
-    1
+    1,
+    9
   );
   const lastDayOfMonth = new Date(
     currentDate.getFullYear(),
     currentDate.getMonth() + 1,
-    0
+    0,
+    9
   );
 
   const firstWeekday = firstDayOfMonth.getDay();
@@ -30,8 +37,15 @@ export const Calendar = ({ schedules, handleClick, setActiveDate }: IProps) => {
   const prevMonthLastDay = new Date(
     currentDate.getFullYear(),
     currentDate.getMonth(),
-    0
+    0,
+    9
   ).getDate();
+
+  const formatDateKST = (date: Date) => {
+    return `${date.getFullYear()}-${(date.getMonth() + 1)
+      .toString()
+      .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
+  };
 
   const handlePrevMonth = () => {
     const date = new Date(
@@ -82,6 +96,12 @@ export const Calendar = ({ schedules, handleClick, setActiveDate }: IProps) => {
     }
   }
 
+  const now = new Date();
+  const todayKST = new Date(
+    now.getTime() + now.getTimezoneOffset() * 60000 + 9 * 3600000
+  );
+  const todayFormatted = formatDateKST(todayKST);
+
   return (
     <CalendarContainer>
       <CalendarHeader>
@@ -111,10 +131,7 @@ export const Calendar = ({ schedules, handleClick, setActiveDate }: IProps) => {
               return (
                 <DayCell
                   key={index}
-                  isToday={
-                    date.isCurrentMonth &&
-                    fullDate === new Date().toISOString().split("T")[0]
-                  }
+                  isToday={date.isCurrentMonth && fullDate === todayFormatted}
                   isCurrentMonth={date.isCurrentMonth}
                   isWeekend={index === 6}
                   isSunday={index === 0}

@@ -180,8 +180,9 @@ const PostImage = styled.img`
   border-radius: 10px;
 `;
 
-const Description = styled.p`
+const Description = styled.div`
   margin-top: 20px;
   font-size: 16px;
+  white-space: pre-line;
   color: #333;
 `;
