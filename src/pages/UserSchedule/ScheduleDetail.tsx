@@ -1,11 +1,8 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 import { IContent } from "./data";
-import {
-  useDeleteSchedule,
-  useGetScheduleContent,
-} from "../../hooks/scheduleApi";
-import { AiFillEdit, AiFillDelete } from "react-icons/ai";
+import { useDeleteSchedule, useGetScheduleContent, } from "../../hooks/scheduleApi";
+import { AiFillDelete, AiFillEdit } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
 
 interface IProps {
@@ -47,7 +44,7 @@ export const ScheduleDetail = ({ id, title, date, details }: IProps) => {
   useEffect(() => {
     if (deleteRes.called && !deleteRes.error && !deleteRes.loading) {
       alert("일정이 삭제되었습니다.");
-      window.location.replace("/");
+      window.location.replace("/main");
     }
   }, [deleteRes.called, deleteRes.error, deleteRes.loading]);
 
@@ -126,6 +123,7 @@ const IconContainer = styled.div`
 const IconButton = styled.div`
   cursor: pointer;
   color: #555;
+  
   &:hover {
     color: #000;
   }
@@ -153,16 +151,16 @@ const Card = styled.div<{ $imageUrl?: string }>`
   position: relative;
   min-height: 150px;
   background-image: ${({ $imageUrl }) =>
-    $imageUrl
-      ? `url("${$imageUrl}")`
-      : "linear-gradient(135deg, #e0e0e0, #f5f5f5)"};
+      $imageUrl
+          ? `url("${$imageUrl}")`
+          : "linear-gradient(135deg, #e0e0e0, #f5f5f5)"};
   background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
   border-radius: 12px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   overflow: hidden;
-
+  
   &:hover {
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
     transform: translateY(-2px);

@@ -23,6 +23,7 @@ import { ScheduleCreationPage } from "./pages/CreateSchedule";
 import { ScheduleEditPage } from "./pages/UpdateSchedule";
 import { Membership } from "./pages/Membership";
 import { AdminChart } from "./pages/AdminChart";
+import { LandingPage } from "./pages/Landing";
 
 function App() {
   return (
@@ -30,8 +31,9 @@ function App() {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/" element={<LandingPage />} />
         <Route element={<UserLayout />}>
-          <Route path="/" element={<UserMain />} />
+          <Route path="/main" element={<UserMain />} />
           <Route path="/point" element={<UserPointCharge />} />
           <Route path="/user/my/:type" element={<UserMy />} />
           <Route path="/schedule/:id" element={<UserSchedule />} />

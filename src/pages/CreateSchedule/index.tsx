@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 import { useCreateSchedule } from "../../hooks/scheduleApi";
 import { DateSelector } from "../../components/DateSelector";
@@ -91,7 +91,7 @@ export const ScheduleCreationPage = () => {
   useEffect(() => {
     if (postScheduleRes.data && postScheduleRes.called) {
       alert("일정이 생성되었습니다.");
-      window.location.replace("/");
+      window.location.replace("/main");
     }
   }, [postScheduleRes]);
 

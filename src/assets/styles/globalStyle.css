@@ -21,6 +21,8 @@ body {
 }
 
 :root {
+  scrollbar-width: none;
+  
   --main-color-5: rgba(212, 206, 255, 0.5);
   --main-color: rgba(212, 206, 255);
 
