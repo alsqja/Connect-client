@@ -1,11 +1,11 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 import { IContent } from "./data";
 import {
   useDeleteSchedule,
   useGetScheduleContent,
 } from "../../hooks/scheduleApi";
-import { AiFillEdit, AiFillDelete } from "react-icons/ai";
+import { AiFillDelete, AiFillEdit } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
 
 interface IProps {
@@ -47,7 +47,7 @@ export const ScheduleDetail = ({ id, title, date, details }: IProps) => {
   useEffect(() => {
     if (deleteRes.called && !deleteRes.error && !deleteRes.loading) {
       alert("일정이 삭제되었습니다.");
-      window.location.replace("/");
+      window.location.replace("/main");
     }
   }, [deleteRes.called, deleteRes.error, deleteRes.loading]);
 
@@ -78,7 +78,6 @@ export const ScheduleDetail = ({ id, title, date, details }: IProps) => {
             <Card key={content.id} $imageUrl={content.subCategoryImageUrl}>
               <Overlay>
                 <CategoryName>{content.subCategoryName}</CategoryName>
-                <Description>{content.description}</Description>
               </Overlay>
             </Card>
           );
@@ -126,6 +125,7 @@ const IconContainer = styled.div`
 const IconButton = styled.div`
   cursor: pointer;
   color: #555;
+
   &:hover {
     color: #000;
   }

@@ -46,7 +46,7 @@ export const Login = () => {
         })
         .then((response) => {
           setTokens(response.data.data);
-          navigate("/");
+          navigate("/main");
         })
         .catch((error) => {
           alert("로그인에 실패했습니다.");
@@ -56,7 +56,7 @@ export const Login = () => {
 
   useEffect(() => {
     if (!!tokens) {
-      if (tokens.role === "USER") navigate("/");
+      if (tokens.role === "USER") navigate("/main");
       else navigate("/admin/user");
     }
   }, [navigate, tokens]);

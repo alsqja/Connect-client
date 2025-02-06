@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import logo from "../../../assets/images/logo.png";
-import React, { useEffect, useState, useCallback, useRef } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useRecoilState } from "recoil";
 import { IUserWithToken } from "../../../hooks";
 import { userState } from "../../../stores/session";
@@ -185,7 +185,7 @@ export const UserHeader = () => {
     if (user?.role === "ADMIN") {
       navigate("/admin/user");
     } else {
-      navigate("/");
+      navigate("/main");
     }
   }, [navigate, user]);
 

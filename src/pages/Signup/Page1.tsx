@@ -168,7 +168,7 @@ export const Page1 = ({
           type="password"
           error={
             !isPasswordValid && password.length > 0
-              ? "8자 이상, 영문, 숫자, 특수문자 포함해야 합니다."
+              ? "8자 이상, 대문자, 영문, 숫자, 특수문자를 포함해야 합니다."
               : ""
           }
         />
