@@ -1,0 +1,50 @@
+body {
+  font-family: SpoqaHanSans, sans-serif;
+  width: 100vw;
+  height: 100vh;
+  /* display: flex;
+  align-items: center;
+  justify-content: center; */
+  background-color: #f3f3f3;
+}
+
+.react-datepicker {
+  z-index: 1050; /* 원하는 z-index 값 */
+}
+
+.react-datepicker__portal {
+  z-index: 1050; /* 모달 z-index */
+}
+
+.react-datepicker__popover {
+  z-index: 1050; /* 팝업 z-index */
+}
+
+:root {
+  scrollbar-width: none;
+  
+  --main-color-5: rgba(212, 206, 255, 0.5);
+  --main-color: rgba(212, 206, 255);
+
+  --button-active-color-5: rgba(183, 173, 255, 0.5);
+  --button-active-color: rgba(183, 173, 255, 1);
+}
+
+.w-10 {
+  width: 100px;
+}
+
+div {
+  user-select: none; /* 드래그 비활성화 */
+}
+
+input,
+textarea {
+  user-select: text; /* 드래그 활성화 */
+}
+
+.notice {
+  font-size: 12px;
+  color: #828282;
+  font-weight: bold;
+}

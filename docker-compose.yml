@@ -1,0 +1,20 @@
+version: "3.8"
+
+services:
+  react-app:
+    build: .
+    container_name: my-react-container
+    ports:
+      - "3000:3000" # 로컬 포트:컨테이너 포트 매핑
+    volumes:
+      - .:/usr/src/app # 로컬 코드 변경 시 컨테이너 내부에 반영
+      - /usr/src/app/node_modules # node_modules는 볼륨 마운트 제외
+    environment:
+      - NODE_ENV=development
+    stdin_open: true # React 앱의 인터랙티브 모드를 지원
+    tty: true
+# docker-compose down -v
+# docker-compose build --no-cache
+# docker-compose up -d
+# docker-compose run --rm react-app npm run build
+
