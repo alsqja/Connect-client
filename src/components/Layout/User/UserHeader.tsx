@@ -176,7 +176,6 @@ export const UserHeader = () => {
   useEffect(() => {
     if (postReviewRes.called && postReviewRes.data) {
       alert("리뷰 작성이 완료되었습니다.");
-      readAllNotiReq(user?.id as number);
       window.location.reload();
     }
   }, [postReviewRes, readAllNotiReq, user?.id]);
@@ -195,6 +194,12 @@ export const UserHeader = () => {
       return;
     }
   }, [navigate, user]);
+
+  useEffect(() => {
+    if (isReviewModalOpen) {
+      readAllNotiReq(user?.id as number);
+    }
+  }, [isReviewModalOpen, readAllNotiReq, user?.id]);
 
   return (
     <Wrapper>
