@@ -33,6 +33,11 @@
 </div>
 
 
+## 백엔드
+
+👉🏻 [Github - 백엔드](https://github.com/alsqja/Connect)
+
+
 <br>
 
 ## 와이어프레임
