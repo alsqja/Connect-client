@@ -3,6 +3,12 @@ import { UserHeader } from "./UserHeader";
 import { Outlet } from "react-router-dom";
 
 export const UserLayout = () => {
+  const isMobile = window.innerWidth <= 768;
+
+  if (isMobile) {
+    return <MobileMessage>PC 환경에서만 사용 가능합니다.</MobileMessage>;
+  }
+
   return (
     <Wrapper>
       <UserHeader />
@@ -27,4 +33,14 @@ const Container = styled.div`
   width: 100%;
   margin-top: 100px;
   justify-content: center;
+`;
+
+const MobileMessage = styled.div`
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  color: red;
+  background-color: #fff;
 `;
